@@ -59,7 +59,7 @@ export const $signUp = createServerFn({ method: "POST" })
 export const $signIn = createServerFn({ method: "POST" })
 	.validator((data: unknown) => signInSchema.parse(data))
 	.handler(async (ctx) => {
-		const { email, password } = ctx.data;
+		const { email, password, rememberMe } = ctx.data;
 
 		// Sign in user
 		let response: Response;
@@ -68,6 +68,7 @@ export const $signIn = createServerFn({ method: "POST" })
 				body: {
 					email,
 					password,
+					rememberMe,
 				},
 				asResponse: true,
 			});

@@ -5,6 +5,8 @@ export * from "./loader";
 export * from "./primitive";
 export * from "./text-field";
 export * from './button';
+export * from './checkbox';
+export * from './field';
 export * from './link';
 export * from './loader';
 export * from './note';

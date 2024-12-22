@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TextField, Button } from "ui";
+import { TextField, Button, Checkbox } from "ui";
 import { useController, useForm } from "react-hook-form";
 import { Note } from "ui";
 import type { z } from "zod";
@@ -18,11 +18,12 @@ function RouteComponent() {
 		handleSubmit,
 		setError,
 		formState: { errors },
-	} = useForm({
+	} = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: {
 			email: "",
 			password: "",
+			rememberMe: false,
 		},
 	});
 
@@ -49,6 +50,7 @@ function RouteComponent() {
 
 	const emailField = useController({ control, name: "email" });
 	const passwordField = useController({ control, name: "password" });
+	const rememberMeField = useController({ control, name: "rememberMe" });
 
 	const onSubmit = handleSubmit((data) => {
 		signIn(data);
@@ -88,6 +90,15 @@ function RouteComponent() {
 							{...passwordField.field}
 							isInvalid={!!errors.password}
 							errorMessage={errors.password?.message}
+						/>
+						<Checkbox
+							label="Remember me"
+							isSelected={rememberMeField.field.value}
+							onChange={rememberMeField.field.onChange}
+							onBlur={rememberMeField.field.onBlur}
+							name={rememberMeField.field.name}
+							isDisabled={rememberMeField.field.disabled}
+							isInvalid={!!errors.rememberMe}
 						/>
 					</div>
 					<Button
