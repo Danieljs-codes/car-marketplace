@@ -121,7 +121,7 @@ const Button = ({
 				<>
 					<span
 						className={cn(
-							"[grid-area:stack] flex items-center justify-center",
+							"[grid-area:stack] flex items-center justify-center visible",
 							values.isPending && "invisible",
 						)}
 					>
@@ -131,7 +131,7 @@ const Button = ({
 					</span>
 					<span
 						className={cn(
-							"[grid-area:stack] flex items-center justify-center",
+							"[grid-area:stack] flex items-center justify-center invisible",
 							values.isPending && "visible",
 						)}
 					>

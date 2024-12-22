@@ -78,7 +78,12 @@ function RouteComponent() {
 							errorMessage={errors.password?.message}
 						/>
 					</div>
-					<Button isPending type="submit" className="Ola mt-6" size="small">
+					<Button
+						isPending={false}
+						type="submit"
+						className="Ola mt-6"
+						size="small"
+					>
 						Sign up
 					</Button>
 				</form>
