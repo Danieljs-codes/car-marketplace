@@ -1,11 +1,29 @@
 import {
 	boolean,
 	integer,
+	jsonb,
+	pgEnum,
 	pgTable,
 	text,
 	timestamp,
-	varchar,
 } from "drizzle-orm/pg-core";
+import { createId as cuid } from "@paralleldrive/cuid2";
+
+export const listingStatusEnum = pgEnum("listing_status", [
+	"active",
+	"sold",
+	"expired",
+]);
+export const transmissionTypeEnum = pgEnum("transmission_type", [
+	"automatic",
+	"manual",
+]);
+export const fuelTypeEnum = pgEnum("fuel_type", [
+	"gasoline",
+	"diesel",
+	"electric",
+	"hybrid",
+]);
 
 export const usersTable = pgTable("users", {
 	id: text().primaryKey(),
@@ -57,11 +75,71 @@ export const verificationsTable = pgTable("verifications", {
 	updatedAt: timestamp(),
 });
 
+export const sellersTable = pgTable("sellers", {
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => cuid()),
+	userId: text()
+		.notNull()
+		.references(() => usersTable.id),
+	paystackSubaccountId: text().notNull(),
+	createdAt: timestamp().notNull().defaultNow(),
+	updatedAt: timestamp()
+		.notNull()
+		.defaultNow()
+		.$onUpdateFn(() => new Date()),
+});
+
+export const carListingsTable = pgTable("car_listings", {
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => cuid()),
+	sellerId: text()
+		.notNull()
+		.references(() => sellersTable.id),
+	make: text().notNull(),
+	model: text().notNull(),
+	year: integer().notNull(),
+	condition: text().notNull(),
+	price: integer().notNull(), // Store price in Kobo
+	mileage: integer().notNull(),
+	transmission: transmissionTypeEnum().notNull(),
+	fuelType: fuelTypeEnum().notNull(),
+	description: text(),
+	status: listingStatusEnum().default("active").notNull(),
+	features: jsonb().$type<string[]>(),
+	images: jsonb().$type<string[]>(),
+	location: text("location").notNull(),
+	vin: text("vin"), // Vehicle Identification Number
+	createdAt: timestamp().notNull().defaultNow(),
+	updatedAt: timestamp()
+		.notNull()
+		.defaultNow()
+		.$onUpdateFn(() => new Date()),
+});
+
+// Favorites table
+export const favoritesTable = pgTable("favorites", {
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => cuid()),
+	userId: text()
+		.notNull()
+		.references(() => usersTable.id),
+	listingId: text()
+		.notNull()
+		.references(() => carListingsTable.id),
+	createdAt: timestamp().defaultNow(),
+});
+
 const schema = {
 	users: usersTable,
 	sessions: sessionsTable,
 	accounts: accountsTable,
 	verifications: verificationsTable,
+	sellers: sellersTable,
+	favorites: favoritesTable,
+	carListings: carListingsTable,
 };
 
 export default schema;
