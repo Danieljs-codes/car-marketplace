@@ -79,9 +79,9 @@ function RouteComponent() {
 						/>
 					</div>
 					<Button
-						isPending={false}
+						isPending={isSubmitting}
 						type="submit"
-						className="Ola mt-6"
+						className="w-full mt-6"
 						size="small"
 					>
 						Sign up

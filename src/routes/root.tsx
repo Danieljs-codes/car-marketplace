@@ -4,9 +4,12 @@ import {
 	createRootRoute,
 } from "@tanstack/react-router";
 import { Meta, Scripts } from "@tanstack/start";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Providers } from "~/components/providers";
 import globalStyle from "../styles/global.css?url";
+import { $getToastCookie } from "~/server/actions/misc";
+import { toast as showToast } from "sonner";
+import { Toast } from "ui";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -58,14 +61,28 @@ export const Route = createRootRoute({
 					},
 				],
 	}),
+	loader: async () => {
+		const toast = await $getToastCookie();
 
+		return { toast };
+	},
 	component: RootComponent,
 });
 
 function RootComponent() {
+	const { toast } = Route.useLoaderData();
+
+	useEffect(() => {
+		if (!toast) return;
+		setTimeout(() => {
+			showToast[toast.intent](toast.message);
+		}, 0);
+	}, [toast]);
+
 	return (
 		<RootDocument>
 			<Outlet />
+			<Toast />
 		</RootDocument>
 	);
 }
