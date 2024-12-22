@@ -7,4 +7,5 @@ export * from "./text-field";
 export * from './button';
 export * from './link';
 export * from './loader';
+export * from './note';
 export * from './toast';

@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Link, TextField } from "ui";
+import { Button, Link, Note, TextField } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useController, useForm } from "react-hook-form";
 import { signUpSchema } from "~/utils/zod-schema";
+import { useMutation } from "@tanstack/react-query";
+import { $signUp } from "~/server/actions/auth";
+import type { z } from "zod";
 
 export const Route = createFileRoute("/_auth-layout-id/sign-up")({
 	component: RouteComponent,
@@ -12,7 +15,8 @@ function RouteComponent() {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		setError,
+		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
@@ -23,13 +27,34 @@ function RouteComponent() {
 		},
 	});
 
+	const { mutate: signUp, isPending: isSubmitting } = useMutation({
+		mutationKey: ["sign-up"],
+		mutationFn: async (data: z.infer<typeof signUpSchema>) => {
+			const response = await $signUp({
+				data,
+			});
+
+			if (response.status === "error") {
+				throw new Error(response.message);
+			}
+
+			return response;
+		},
+
+		onError: (err) => {
+			setError("root", {
+				message: err.message,
+			});
+		},
+	});
+
 	const firstNameField = useController({ control, name: "firstName" });
 	const lastNameField = useController({ control, name: "lastName" });
 	const emailField = useController({ control, name: "email" });
 	const passwordField = useController({ control, name: "password" });
 
 	const onSubmit = handleSubmit((data) => {
-		console.log(data);
+		signUp(data);
 	});
 
 	return (
@@ -45,6 +70,11 @@ function RouteComponent() {
 			</div>
 			<div className="mt-6">
 				<form className="w-full" onSubmit={onSubmit}>
+					{errors.root?.message && (
+						<Note className="mb-4" intent="danger">
+							{errors.root?.message}
+						</Note>
+					)}
 					<div className="space-y-5">
 						<TextField
 							label="First Name"

@@ -16,8 +16,8 @@ export const auth = betterAuth({
 	},
 	emailVerification: {
 		sendOnSignUp: true,
-		sendVerificationEmail: async (_, url) => {
-			console.log(`Verification URL: ${url}`);
+		sendVerificationEmail: async (url) => {
+			console.log(`Verification URL: ${url.url}`);
 		},
 	},
 	trustedOrigins: ["http://localhost:3000", "http://192.168.71.157:3000"],

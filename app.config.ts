@@ -10,6 +10,7 @@ import {
 	layout,
 	physical,
 } from "@tanstack/virtual-file-routes";
+import { envOnlyMacros } from "vite-env-only";
 
 const config = {
 	appDirectory: "src",
@@ -61,6 +62,7 @@ const app = defineConfig({
 			viteTsConfigPaths({
 				projects: ["./tsconfig.json"],
 			}),
+			envOnlyMacros(),
 		],
 	},
 });

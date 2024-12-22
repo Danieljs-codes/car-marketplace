@@ -11,7 +11,7 @@ export const signUpSchema = z.object({
 	password: z
 		.string()
 		.min(6, { message: "Password must be at least 6 characters" })
-		.regex(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/, {
+		.regex(/[a-zA-Z][0-9]|[0-9][a-zA-Z]/, {
 			message: "Password must include letters and numbers",
 		}),
 });

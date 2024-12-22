@@ -5,7 +5,8 @@
 		"dev": "vinxi dev --host",
 		"build": "vinxi build",
 		"start": "vinxi start",
-		"push": "drizzle-kit push"
+		"push": "drizzle-kit push",
+		"studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
