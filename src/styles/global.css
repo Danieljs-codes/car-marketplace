@@ -172,3 +172,14 @@
 		--chart-5: oklch(0.938 0.127 124.321);
 	}
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	transition: background-color 60000000s 0s, color 60000000s 0s;
+}
+
+input[data-autocompleted] {
+	background-color: transparent;
+}
