@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/start";
 import { auth } from "~/utils/auth";
-import { signUpSchema } from "~/utils/zod-schema";
+import { signInSchema, signUpSchema } from "~/utils/zod-schema";
 import { APIError } from "better-auth/api";
 import { appendHeader, setResponseHeader } from "vinxi/http";
 import { setToastCookie } from "./misc";
@@ -49,6 +49,55 @@ export const $signUp = createServerFn({ method: "POST" })
 		setToastCookie({
 			intent: "success",
 			message: "Signed up successfully",
+		});
+
+		throw redirect({
+			to: "/",
+		});
+	});
+
+export const $signIn = createServerFn({ method: "POST" })
+	.validator((data: unknown) => signInSchema.parse(data))
+	.handler(async (ctx) => {
+		const { email, password } = ctx.data;
+
+		// Sign in user
+		let response: Response;
+		try {
+			response = await auth.api.signInEmail({
+				body: {
+					email,
+					password,
+				},
+				asResponse: true,
+			});
+
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+
+			if (error instanceof APIError) {
+				return {
+					status: "error" as const,
+					message: error.body.message,
+				};
+			}
+
+			return {
+				status: "error" as const,
+				message: "Failed to sign in",
+			};
+		}
+
+		// Get the headers returned from the response and set it manually
+		const headers = response.headers;
+		for (const [key, value] of headers.entries()) {
+			appendHeader(key, value);
+		}
+
+		setToastCookie({
+			intent: "success",
+			message: "Signed in successfully",
 		});
 
 		throw redirect({

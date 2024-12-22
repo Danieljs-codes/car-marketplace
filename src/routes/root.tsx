@@ -75,7 +75,9 @@ function RootComponent() {
 	useEffect(() => {
 		if (!toast) return;
 		setTimeout(() => {
-			showToast[toast.intent](toast.message);
+			showToast[toast.intent](toast.message, {
+				description: toast.description,
+			});
 		}, 0);
 	}, [toast]);
 

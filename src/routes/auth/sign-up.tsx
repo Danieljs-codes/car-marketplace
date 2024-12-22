@@ -61,11 +61,10 @@ function RouteComponent() {
 		<div>
 			<div>
 				<h1 className="text-xl text-center font-bold tracking-tight leading-tight">
-					Sign up for an account to start buying and selling tickets
+					Your Ticket to Events Starts Here – Get Started!
 				</h1>
 				<p className="text-center text-sm  mt-2 max-w-md mx-auto text-muted-fg mt-2 px-3">
-					No account yet? No problem! Sign up and start buying and selling
-					tickets immediately.
+					our journey to unforgettable events starts with a simple sign-up.
 				</p>
 			</div>
 			<div className="mt-6">

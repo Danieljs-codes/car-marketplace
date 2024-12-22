@@ -11,6 +11,7 @@ export const $getToastCookie = createServerFn({ method: "GET" }).handler(
 		const data = JSON.parse(toast) as {
 			intent: "success" | "error" | "info" | "warning";
 			message: string;
+			description?: string;
 		};
 
 		deleteCookie("toast");
@@ -23,6 +24,7 @@ export const setToastCookie = serverOnly$(
 	(toast: {
 		intent: "success" | "error" | "info" | "warning";
 		message: string;
+		description?: string;
 	}) => {
 		const data = JSON.stringify(toast);
 		return setCookie("toast", data);
