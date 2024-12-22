@@ -4,15 +4,17 @@ import {
 	composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
+import { Loader } from "./loader";
 
 import { focusButtonStyles } from "./primitive";
+import { cn } from "~/utils/classes";
 
 const buttonStyles = tv({
 	extend: focusButtonStyles,
 	base: [
-		"kbt32x before:absolute after:absolute box-border relative no-underline isolate inline-flex items-center justify-center gap-x-2 border font-medium",
+		"kbt32x before:absolute after:absolute box-border relative no-underline isolate  items-center justify-center gap-x-2 border font-medium grid [grid-template-areas:_'stack']",
 		"forced-colors:[--button-icon:ButtonText] forced-colors:data-hovered:[--button-icon:ButtonText]",
-		"*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-1 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-(--button-icon)",
+		"*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-1 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-(--button-icon) text-center",
 	],
 	variants: {
 		intent: {
@@ -117,9 +119,24 @@ const Button = ({
 		>
 			{(values) => (
 				<>
-					{typeof props.children === "function"
-						? props.children(values)
-						: props.children}
+					<span
+						className={cn(
+							"[grid-area:stack] flex items-center justify-center",
+							values.isPending && "invisible",
+						)}
+					>
+						{typeof props.children === "function"
+							? props.children(values)
+							: props.children}
+					</span>
+					<span
+						className={cn(
+							"[grid-area:stack] flex items-center justify-center",
+							values.isPending && "visible",
+						)}
+					>
+						<Loader variant="spin" size="small" />
+					</span>
 				</>
 			)}
 		</ButtonPrimitive>
