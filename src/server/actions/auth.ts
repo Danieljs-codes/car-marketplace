@@ -1,9 +1,9 @@
-import { createServerFn } from "@tanstack/start";
+import { createMiddleware, createServerFn } from "@tanstack/start";
 import { auth } from "~/utils/auth";
 import { signInSchema, signUpSchema } from "~/utils/zod-schema";
 import { APIError } from "better-auth/api";
-import { appendHeader, setResponseHeader } from "vinxi/http";
-import { setToastCookie } from "./misc";
+import { appendHeader, getWebRequest, setResponseHeader } from "vinxi/http";
+import { setCookieAndRedirect, setToastCookie } from "./misc";
 import { redirect } from "@tanstack/react-router";
 
 export const $signUp = createServerFn({ method: "POST" })
@@ -92,6 +92,8 @@ export const $signIn = createServerFn({ method: "POST" })
 
 		// Get the headers returned from the response and set it manually
 		const headers = response.headers;
+		console.log(response.headers);
+
 		for (const [key, value] of headers.entries()) {
 			appendHeader(key, value);
 		}
@@ -104,4 +106,46 @@ export const $signIn = createServerFn({ method: "POST" })
 		throw redirect({
 			to: "/",
 		});
+	});
+
+export const maybeUserMiddleware = createMiddleware().server(
+	async ({ next }) => {
+		const request = getWebRequest();
+
+		const authData = await auth.api.getSession({
+			headers: request.headers,
+		});
+		return next({
+			context: {
+				auth: authData,
+			},
+		});
+	},
+);
+
+export const validateUserMiddleware = createMiddleware()
+	.middleware([maybeUserMiddleware])
+	.server(async ({ context, next }) => {
+		if (!context.auth) {
+			throw setCookieAndRedirect({
+				intent: "error",
+				message: "You must be signed in to access this page",
+				description: "Please sign in to continue using the application",
+				to: "/sign-in",
+			});
+		}
+
+		return next({
+			context: {
+				auth: context.auth,
+			},
+		});
+	});
+
+export const $getAuthStatus = createServerFn({ method: "GET" })
+	.middleware([maybeUserMiddleware])
+	.handler(async ({ context }) => {
+		return {
+			auth: context.auth,
+		};
 	});

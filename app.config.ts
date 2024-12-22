@@ -18,7 +18,7 @@ const config = {
 };
 
 const routes = rootRoute("root.tsx", [
-	index("index.tsx"),
+	layout("main-layout-id", "main/layout.tsx", [index("index.tsx")]),
 	layout("auth-layout-id", "auth/layout.tsx", [
 		route("sign-in", "auth/sign-in.tsx"),
 		route("sign-up", "auth/sign-up.tsx"),

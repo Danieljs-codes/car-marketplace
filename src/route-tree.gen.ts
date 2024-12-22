@@ -11,21 +11,21 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/root'
+import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
-import { Route as indexImport } from './routes/index'
 import { Route as authSignUpImport } from './routes/auth/sign-up'
 import { Route as authSignInImport } from './routes/auth/sign-in'
+import { Route as indexImport } from './routes/index'
 
 // Create/Update Routes
 
-const authLayoutRoute = authLayoutImport.update({
-  id: '/_auth-layout-id',
+const mainLayoutRoute = mainLayoutImport.update({
+  id: '/_main-layout-id',
   getParentRoute: () => rootRoute,
 } as any)
 
-const indexRoute = indexImport.update({
-  id: '/',
-  path: '/',
+const authLayoutRoute = authLayoutImport.update({
+  id: '/_auth-layout-id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -41,23 +41,36 @@ const authSignInRoute = authSignInImport.update({
   getParentRoute: () => authLayoutRoute,
 } as any)
 
+const indexRoute = indexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => mainLayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof indexImport
-      parentRoute: typeof rootRoute
-    }
     '/_auth-layout-id': {
       id: '/_auth-layout-id'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authLayoutImport
       parentRoute: typeof rootRoute
+    }
+    '/_main-layout-id': {
+      id: '/_main-layout-id'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof mainLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/_main-layout-id/': {
+      id: '/_main-layout-id/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexImport
+      parentRoute: typeof mainLayoutImport
     }
     '/_auth-layout-id/sign-in': {
       id: '/_auth-layout-id/sign-in'
@@ -92,50 +105,64 @@ const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
   authLayoutRouteChildren,
 )
 
+interface mainLayoutRouteChildren {
+  indexRoute: typeof indexRoute
+}
+
+const mainLayoutRouteChildren: mainLayoutRouteChildren = {
+  indexRoute: indexRoute,
+}
+
+const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
+  mainLayoutRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
+  '': typeof mainLayoutRouteWithChildren
   '/': typeof indexRoute
-  '': typeof authLayoutRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof indexRoute
   '': typeof authLayoutRouteWithChildren
+  '/': typeof indexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof indexRoute
   '/_auth-layout-id': typeof authLayoutRouteWithChildren
+  '/_main-layout-id': typeof mainLayoutRouteWithChildren
+  '/_main-layout-id/': typeof indexRoute
   '/_auth-layout-id/sign-in': typeof authSignInRoute
   '/_auth-layout-id/sign-up': typeof authSignUpRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/sign-in' | '/sign-up'
+  fullPaths: '' | '/' | '/sign-in' | '/sign-up'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/sign-in' | '/sign-up'
+  to: '' | '/' | '/sign-in' | '/sign-up'
   id:
     | '__root__'
-    | '/'
     | '/_auth-layout-id'
+    | '/_main-layout-id'
+    | '/_main-layout-id/'
     | '/_auth-layout-id/sign-in'
     | '/_auth-layout-id/sign-up'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  indexRoute: typeof indexRoute
   authLayoutRoute: typeof authLayoutRouteWithChildren
+  mainLayoutRoute: typeof mainLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  indexRoute: indexRoute,
   authLayoutRoute: authLayoutRouteWithChildren,
+  mainLayoutRoute: mainLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -148,12 +175,9 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "root.tsx",
       "children": [
-        "/",
-        "/_auth-layout-id"
+        "/_auth-layout-id",
+        "/_main-layout-id"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/_auth-layout-id": {
       "filePath": "auth/layout.tsx",
@@ -161,6 +185,16 @@ export const routeTree = rootRoute
         "/_auth-layout-id/sign-in",
         "/_auth-layout-id/sign-up"
       ]
+    },
+    "/_main-layout-id": {
+      "filePath": "main/layout.tsx",
+      "children": [
+        "/_main-layout-id/"
+      ]
+    },
+    "/_main-layout-id/": {
+      "filePath": "index.tsx",
+      "parent": "/_main-layout-id"
     },
     "/_auth-layout-id/sign-in": {
       "filePath": "auth/sign-in.tsx",
