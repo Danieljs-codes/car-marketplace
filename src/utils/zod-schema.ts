@@ -21,3 +21,7 @@ export const signInSchema = z.object({
 	password: z.string().min(1, { message: "Password is required" }),
 	rememberMe: z.boolean().default(false),
 });
+
+export const becomeASellerSchema = z.object({
+	
+});

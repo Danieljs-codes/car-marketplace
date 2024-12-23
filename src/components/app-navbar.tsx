@@ -15,8 +15,13 @@ import { Logo } from "./logo";
 import type { authClient } from "~/utils/auth-client";
 import { Link } from "@tanstack/react-router";
 import { getAvatarInitials } from "~/utils/misc";
+import type schema from "~/server/db/schema";
 
-type Auth = typeof authClient.$Infer.Session | null;
+type Auth =
+	| (typeof authClient.$Infer.Session & {
+			seller: typeof schema.sellers.$inferSelect | null;
+	  })
+	| null;
 
 export default function AppNavbar({
 	children,
@@ -36,9 +41,9 @@ export default function AppNavbar({
 						<Navbar.Item isCurrent href="/">
 							Home
 						</Navbar.Item>
-						<Navbar.Item href="/">Discover</Navbar.Item>
-						<Navbar.Item href="/">My Tickets</Navbar.Item>
+						<Navbar.Item href="/">Browse Cars</Navbar.Item>
 						<Navbar.Item href="/">Wishlist</Navbar.Item>
+						<Navbar.Item href="/">My Purchases</Navbar.Item>
 					</Navbar.Section>
 					<Navbar.Section className="hidden ml-auto sm:flex">
 						<Navbar.Flex>
@@ -59,7 +64,7 @@ export default function AppNavbar({
 							<ThemeSwitcher appearance="plain" />
 						</Navbar.Flex>
 						<Separator orientation="vertical" className="mr-3 ml-1 h-6" />
-						{auth ? (
+						{auth?.seller ? (
 							<UserMenu auth={auth} />
 						) : (
 							<Link
@@ -80,7 +85,7 @@ export default function AppNavbar({
 						<Navbar.Trigger className="-ml-2" />
 						<Separator orientation="vertical" className="h-6 sm:mx-1" />
 						<Navbar.Logo aria-label="Go to home page" href="/">
-							<Logo className="w-24" />
+							<Logo iconOnly className="w-6" />
 						</Navbar.Logo>
 					</Navbar.Flex>
 					<Navbar.Flex>
@@ -102,9 +107,8 @@ export default function AppNavbar({
 							<ThemeSwitcher appearance="plain" />
 						</Navbar.Flex>
 						<Separator orientation="vertical" className="mr-3 ml-1 h-6" />
-						{auth ? (
-							<UserMenu auth={auth} />
-						) : (
+						{auth?.seller && <UserMenu auth={auth} />}
+						{!auth && (
 							<Link
 								className={buttonStyles({
 									intent: "primary",
@@ -113,6 +117,17 @@ export default function AppNavbar({
 								to="/sign-in"
 							>
 								Sign in
+							</Link>
+						)}
+						{auth && !auth.seller && (
+							<Link
+								className={buttonStyles({
+									intent: "primary",
+									size: "extra-small",
+								})}
+								to="/become-seller"
+							>
+								Become a seller
 							</Link>
 						)}
 					</Navbar.Flex>

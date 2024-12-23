@@ -5,6 +5,9 @@ import { APIError } from "better-auth/api";
 import { appendHeader, getWebRequest, setResponseHeader } from "vinxi/http";
 import { setCookieAndRedirect, setToastCookie } from "./misc";
 import { redirect } from "@tanstack/react-router";
+import { db } from "../db";
+import schema from "../db/schema";
+import { eq } from "drizzle-orm";
 
 export const $signUp = createServerFn({ method: "POST" })
 	.validator((data: unknown) => signUpSchema.parse(data))
@@ -145,7 +148,30 @@ export const validateUserMiddleware = createMiddleware()
 export const $getAuthStatus = createServerFn({ method: "GET" })
 	.middleware([maybeUserMiddleware])
 	.handler(async ({ context }) => {
+		if (!context.auth) {
+			return {
+				auth: null,
+			};
+		}
+		const sellerProfile = await db
+			.select()
+			.from(schema.sellers)
+			.where(eq(schema.sellers.userId, context.auth.user.id))
+			.limit(1);
+
+		if (sellerProfile.length === 0) {
+			return {
+				auth: {
+					...context.auth,
+					seller: null,
+				},
+			};
+		}
+
 		return {
-			auth: context.auth,
+			auth: {
+				...context.auth,
+				seller: sellerProfile[0],
+			},
 		};
 	});

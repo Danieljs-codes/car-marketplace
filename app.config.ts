@@ -18,7 +18,10 @@ const config = {
 };
 
 const routes = rootRoute("root.tsx", [
-	layout("main-layout-id", "main/layout.tsx", [index("index.tsx")]),
+	layout("main-layout-id", "main/layout.tsx", [
+		index("index.tsx"),
+		route("become-seller", "main/become-seller.tsx"),
+	]),
 	layout("auth-layout-id", "auth/layout.tsx", [
 		route("sign-in", "auth/sign-in.tsx"),
 		route("sign-up", "auth/sign-up.tsx"),
@@ -58,11 +61,11 @@ const app = defineConfig({
 	},
 	vite: {
 		plugins: [
-			tailwindcss(),
 			viteTsConfigPaths({
 				projects: ["./tsconfig.json"],
 			}),
 			envOnlyMacros(),
+			tailwindcss(),
 		],
 	},
 });

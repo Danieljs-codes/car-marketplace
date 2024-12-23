@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/root'
 import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
+import { Route as mainBecomeSellerImport } from './routes/main/become-seller'
 import { Route as authSignUpImport } from './routes/auth/sign-up'
 import { Route as authSignInImport } from './routes/auth/sign-in'
 import { Route as indexImport } from './routes/index'
@@ -27,6 +28,12 @@ const mainLayoutRoute = mainLayoutImport.update({
 const authLayoutRoute = authLayoutImport.update({
   id: '/_auth-layout-id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const mainBecomeSellerRoute = mainBecomeSellerImport.update({
+  id: '/become-seller',
+  path: '/become-seller',
+  getParentRoute: () => mainLayoutRoute,
 } as any)
 
 const authSignUpRoute = authSignUpImport.update({
@@ -86,6 +93,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignUpImport
       parentRoute: typeof authLayoutImport
     }
+    '/_main-layout-id/become-seller': {
+      id: '/_main-layout-id/become-seller'
+      path: '/become-seller'
+      fullPath: '/become-seller'
+      preLoaderRoute: typeof mainBecomeSellerImport
+      parentRoute: typeof mainLayoutImport
+    }
   }
 }
 
@@ -107,10 +121,12 @@ const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
 
 interface mainLayoutRouteChildren {
   indexRoute: typeof indexRoute
+  mainBecomeSellerRoute: typeof mainBecomeSellerRoute
 }
 
 const mainLayoutRouteChildren: mainLayoutRouteChildren = {
   indexRoute: indexRoute,
+  mainBecomeSellerRoute: mainBecomeSellerRoute,
 }
 
 const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
@@ -122,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/': typeof indexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/become-seller': typeof mainBecomeSellerRoute
 }
 
 export interface FileRoutesByTo {
@@ -129,6 +146,7 @@ export interface FileRoutesByTo {
   '/': typeof indexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/become-seller': typeof mainBecomeSellerRoute
 }
 
 export interface FileRoutesById {
@@ -138,13 +156,14 @@ export interface FileRoutesById {
   '/_main-layout-id/': typeof indexRoute
   '/_auth-layout-id/sign-in': typeof authSignInRoute
   '/_auth-layout-id/sign-up': typeof authSignUpRoute
+  '/_main-layout-id/become-seller': typeof mainBecomeSellerRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/sign-in' | '/sign-up'
+  fullPaths: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/' | '/sign-in' | '/sign-up'
+  to: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller'
   id:
     | '__root__'
     | '/_auth-layout-id'
@@ -152,6 +171,7 @@ export interface FileRouteTypes {
     | '/_main-layout-id/'
     | '/_auth-layout-id/sign-in'
     | '/_auth-layout-id/sign-up'
+    | '/_main-layout-id/become-seller'
   fileRoutesById: FileRoutesById
 }
 
@@ -189,7 +209,8 @@ export const routeTree = rootRoute
     "/_main-layout-id": {
       "filePath": "main/layout.tsx",
       "children": [
-        "/_main-layout-id/"
+        "/_main-layout-id/",
+        "/_main-layout-id/become-seller"
       ]
     },
     "/_main-layout-id/": {
@@ -203,6 +224,10 @@ export const routeTree = rootRoute
     "/_auth-layout-id/sign-up": {
       "filePath": "auth/sign-up.tsx",
       "parent": "/_auth-layout-id"
+    },
+    "/_main-layout-id/become-seller": {
+      "filePath": "main/become-seller.tsx",
+      "parent": "/_main-layout-id"
     }
   }
 }
