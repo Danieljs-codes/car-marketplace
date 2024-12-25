@@ -79,6 +79,9 @@ export const sellersTable = pgTable("sellers", {
 	id: text()
 		.primaryKey()
 		.$defaultFn(() => cuid()),
+	businessName: text().notNull(),
+	businessEmail: text().notNull(),
+	businessPhoneNumber: text().notNull(),
 	userId: text()
 		.notNull()
 		.references(() => usersTable.id),

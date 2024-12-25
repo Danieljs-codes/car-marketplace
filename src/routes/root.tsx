@@ -2,6 +2,7 @@ import {
 	Outlet,
 	ScrollRestoration,
 	createRootRoute,
+	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { Meta, Scripts } from "@tanstack/start";
 import { useEffect, type ReactNode } from "react";
@@ -10,8 +11,11 @@ import globalStyle from "../styles/global.css?url";
 import { $getToastCookie } from "~/server/actions/misc";
 import { toast as showToast } from "sonner";
 import { Toast } from "ui";
+import type { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+	queryClient: QueryClient;
+}>()({
 	head: () => ({
 		meta: [
 			{

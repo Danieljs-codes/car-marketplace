@@ -64,9 +64,8 @@ export default function AppNavbar({
 							<ThemeSwitcher appearance="plain" />
 						</Navbar.Flex>
 						<Separator orientation="vertical" className="mr-3 ml-1 h-6" />
-						{auth?.seller ? (
-							<UserMenu auth={auth} />
-						) : (
+						{auth?.seller && <UserMenu auth={auth} />}
+						{!auth && (
 							<Link
 								className={buttonStyles({
 									intent: "primary",
@@ -75,6 +74,17 @@ export default function AppNavbar({
 								to="/sign-in"
 							>
 								Sign in
+							</Link>
+						)}
+						{auth && !auth.seller && (
+							<Link
+								className={buttonStyles({
+									intent: "primary",
+									size: "extra-small",
+								})}
+								to="/become-seller"
+							>
+								Become a seller
 							</Link>
 						)}
 					</Navbar.Section>

@@ -175,3 +175,28 @@ export const $getAuthStatus = createServerFn({ method: "GET" })
 			},
 		};
 	});
+
+export const $protectBecomeASellerRoute = createServerFn({
+	method: "GET",
+})
+	.middleware([validateUserMiddleware])
+	.handler(async ({ context }) => {
+		const sellerProfile = await db
+			.select()
+			.from(schema.sellers)
+			.where(eq(schema.sellers.userId, context.auth.user.id))
+			.limit(1);
+
+		if (sellerProfile.length > 0) {
+			// TODO: Redirect to their seller dashboard
+			throw setCookieAndRedirect({
+				intent: "error",
+				message: "You are already a seller",
+				to: "/",
+			});
+		}
+
+		return {
+			auth: context.auth,
+		};
+	});

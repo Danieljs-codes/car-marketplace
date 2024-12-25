@@ -23,5 +23,23 @@ export const signInSchema = z.object({
 });
 
 export const becomeASellerSchema = z.object({
-	
+	businessName: z
+		.string()
+		.min(2, { message: "Business name must be at least 2 characters" }),
+	accountNumber: z.string().length(10, {
+		message: "Account number must be 10 digits",
+	}),
+	// We need the bank code but the user needs to select a bank that is why the error message says "Bank is required" instead of "Bank code is required"
+	bankCode: z.string().min(1, {
+		message: "Bank is required",
+	}),
+	businessPhoneNumber: z
+		.string()
+		.min(1, {
+			message: "Business phone number is required",
+		})
+		.length(11, {
+			message: "Business phone number must be 11 digits",
+		}),
+	businessEmail: z.string().email({ message: "Invalid email address" }),
 });
