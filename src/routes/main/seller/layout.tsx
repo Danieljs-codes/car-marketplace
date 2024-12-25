@@ -1,4 +1,4 @@
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, useRouteContext } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { SidebarInset, SidebarProvider } from "ui";
 import AppSidebar from "~/components/app-sidebar";
@@ -7,17 +7,18 @@ import { $protectSellerRoute } from "~/server/actions/auth";
 
 export const Route = createFileRoute("/_seller-layout-id")({
 	beforeLoad: async () => {
-		const { seller } = await $protectSellerRoute();
+		const { seller, user } = await $protectSellerRoute();
 
-		return seller;
+		return { seller, user };
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const { user } = Route.useRouteContext();
 	return (
 		<SidebarProvider>
-			<AppSidebar collapsible="dock" />
+			<AppSidebar auth={user} collapsible="dock" />
 			<SidebarInset>
 				<AppSidebarNav />
 				<div className="p-4 lg:p-6">

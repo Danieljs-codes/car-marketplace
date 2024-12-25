@@ -231,5 +231,6 @@ export const $protectSellerRoute = createServerFn({ method: "GET" })
 	.handler(async ({ context }) => {
 		return {
 			seller: context.seller,
+			user: context.auth.user,
 		};
 	});

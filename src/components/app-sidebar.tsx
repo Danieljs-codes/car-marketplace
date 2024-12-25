@@ -45,6 +45,8 @@ import {
 } from "ui";
 import { Logo } from "./logo";
 import { useAnimation, type Variants, motion } from "motion/react";
+import type { authClient } from "~/utils/auth-client";
+import { getAvatarInitials } from "~/utils/misc";
 
 const pathVariants: Variants = {
 	normal: {
@@ -57,9 +59,12 @@ const pathVariants: Variants = {
 	},
 };
 
-export default function AppSidebar(
-	props: React.ComponentProps<typeof Sidebar>,
-) {
+export default function AppSidebar({
+	auth,
+	...props
+}: React.ComponentProps<typeof Sidebar> & {
+	auth: (typeof authClient.$Infer.Session)["user"];
+}) {
 	const controls = useAnimation();
 	const { state, isMobile } = useSidebar();
 	const collapsed = state === "collapsed" && !isMobile;
@@ -212,6 +217,7 @@ export default function AppSidebar(
 						</SidebarItem>
 					</SidebarSection>
 
+					{/* TODO: Remove it or replace it with something else */}
 					<SidebarDisclosureGroup defaultExpandedKeys={[1]}>
 						<SidebarDisclosure id={1}>
 							<SidebarDisclosureTrigger>
@@ -268,11 +274,17 @@ export default function AppSidebar(
 						aria-label="Profile"
 						data-slot="menu-trigger"
 					>
-						<Avatar shape="square" src="/images/avatar/cobain.jpg" />
+						<Avatar
+							shape="square"
+							src={auth.image}
+							initials={getAvatarInitials(auth.name)}
+						/>
 						<div className="in-data-[sidebar-collapsible=dock]:hidden text-sm">
-							<SidebarLabel>Kurt Cobain</SidebarLabel>
-							<span className="block -mt-0.5 text-muted-fg">
-								kurt@cobain.com
+							<SidebarLabel className="capitalize">
+								{auth.name.toLowerCase()}
+							</SidebarLabel>
+							<span className="block -mt-0.5 text-muted-fg overflow-hidden text-ellipsis w-[86%]">
+								{auth.email.toLowerCase()}
 							</span>
 						</div>
 						<IconChevronLgDown
@@ -286,8 +298,12 @@ export default function AppSidebar(
 					>
 						<Menu.Section>
 							<Menu.Header separator>
-								<span className="block">Kurt Cobain</span>
-								<span className="font-normal text-muted-fg">@cobain</span>
+								<span className="block capitalize">
+									{auth.name.toLowerCase()}
+								</span>
+								<span className="font-normal text-muted-fg capitalize">
+									{auth.email.toLowerCase()}
+								</span>
 							</Menu.Header>
 						</Menu.Section>
 
