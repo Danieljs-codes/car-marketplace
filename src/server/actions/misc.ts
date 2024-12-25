@@ -8,9 +8,6 @@ export const $getToastCookie = createServerFn({ method: "GET" }).handler(
 	async () => {
 		const toast = getCookie("toast");
 
-		console.log("I just ran");
-		console.log(toast);
-
 		if (!toast) return null;
 
 		const data = JSON.parse(toast) as {
@@ -19,7 +16,7 @@ export const $getToastCookie = createServerFn({ method: "GET" }).handler(
 			description?: string;
 		};
 
-		console.log(data);
+
 
 		deleteCookie("toast");
 		return data;

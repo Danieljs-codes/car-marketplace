@@ -25,11 +25,7 @@ export const $signUp = createServerFn({ method: "POST" })
 				},
 				asResponse: true,
 			});
-
-			console.log(response);
 		} catch (error) {
-			console.log(error);
-
 			if (error instanceof APIError) {
 				return {
 					status: "error" as const,
@@ -75,11 +71,7 @@ export const $signIn = createServerFn({ method: "POST" })
 				},
 				asResponse: true,
 			});
-
-			console.log(response);
 		} catch (error) {
-			console.log(error);
-
 			if (error instanceof APIError) {
 				return {
 					status: "error" as const,
@@ -95,7 +87,6 @@ export const $signIn = createServerFn({ method: "POST" })
 
 		// Get the headers returned from the response and set it manually
 		const headers = response.headers;
-		console.log(response.headers);
 
 		for (const [key, value] of headers.entries()) {
 			appendHeader(key, value);
@@ -233,4 +224,12 @@ export const validateSellerMiddleware = createMiddleware()
 				seller: context.seller,
 			},
 		});
+	});
+
+export const $protectSellerRoute = createServerFn({ method: "GET" })
+	.middleware([validateSellerMiddleware])
+	.handler(async ({ context }) => {
+		return {
+			seller: context.seller,
+		};
 	});
