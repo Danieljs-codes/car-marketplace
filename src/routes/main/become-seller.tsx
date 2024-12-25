@@ -3,10 +3,14 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useController, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button, Card, ComboBox, Modal, TextField } from "ui";
 import type { z } from "zod";
 import { $protectBecomeASellerRoute } from "~/server/actions/auth";
-import { $validateBankDetails } from "~/server/actions/seller";
+import {
+	$createSellerAccount,
+	$validateBankDetails,
+} from "~/server/actions/seller";
 import { getAllBanksQueryOptions } from "~/utils/query-options";
 import { becomeASellerSchema } from "~/utils/zod-schema";
 
@@ -65,6 +69,30 @@ function RouteComponent() {
 				setError("bankCode", { message: err.message }, { shouldFocus: true });
 			},
 		});
+	const { mutate: createSellerProfile, isPending: isCreating } = useMutation({
+		mutationKey: ["create-seller"],
+		mutationFn: async (data: z.infer<typeof becomeASellerSchema>) => {
+			const response = await $createSellerAccount({
+				data,
+			});
+
+			if (response.status === "error") {
+				throw new Error(response.message);
+			}
+
+			return response;
+		},
+
+		onError: (err) => {
+			console.log(err);
+			// toast.error(err.message);
+		},
+
+		onSettled: () => {
+			setIsModalOpen(false);
+			setBankDetails(null);
+		},
+	});
 
 	const businessNameField = useController({
 		control,
@@ -181,10 +209,10 @@ function RouteComponent() {
 						role="alertdialog"
 						isOpen={isModalOpen}
 						onOpenChange={(val) => {
-							// Reset the bank details
 							setBankDetails(null);
 							setIsModalOpen(val);
 						}}
+						isBlurred
 					>
 						<Modal.Header>
 							<Modal.Title>Bank Details</Modal.Title>
@@ -211,9 +239,21 @@ function RouteComponent() {
 							<Modal.Close size="small" appearance="outline">
 								Cancel
 							</Modal.Close>
-							<Modal.Close size="small" appearance="solid">
+							<Button
+								isPending={isCreating}
+								size="small"
+								onPress={() => {
+									createSellerProfile({
+										accountNumber: bankDetails.accountNumber,
+										bankCode: bankCodeField.field.value,
+										businessEmail: businessEmailField.field.value,
+										businessName: businessNameField.field.value,
+										businessPhoneNumber: businessPhoneNumberField.field.value,
+									});
+								}}
+							>
 								Continue
-							</Modal.Close>
+							</Button>
 						</Modal.Footer>
 					</Modal.Content>
 				</Modal>

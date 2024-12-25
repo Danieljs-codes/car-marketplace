@@ -22,6 +22,9 @@ const routes = rootRoute("root.tsx", [
 		index("index.tsx"),
 		route("become-seller", "main/become-seller.tsx"),
 	]),
+	layout("seller-layout-id", "main/seller/layout.tsx", [
+		route("dashboard", "main/seller/dashboard.tsx"),
+	]),
 	layout("auth-layout-id", "auth/layout.tsx", [
 		route("sign-in", "auth/sign-in.tsx"),
 		route("sign-up", "auth/sign-up.tsx"),

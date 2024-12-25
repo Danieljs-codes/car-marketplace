@@ -37,10 +37,6 @@ export function createRouter() {
 		defaultPreloadStaleTime: 0,
 	});
 
-	// handle redirect without useServerFn when using tanstack query
-	queryClient.getQueryCache().config.onError = handleRedirectError;
-	queryClient.getMutationCache().config.onError = handleRedirectError;
-
 	function handleRedirectError(error: Error) {
 		if (isRedirect(error)) {
 			router.navigate(
@@ -52,13 +48,16 @@ export function createRouter() {
 		}
 	}
 
+	// handle redirect without useServerFn when using tanstack query
+	queryClient.getQueryCache().config.onError = handleRedirectError;
+	queryClient.getMutationCache().config.onError = handleRedirectError;
+
 	// expose router and query client to window for use outside React (e.g. for Better Auth)
 	if (typeof window !== "undefined") {
 		window.getRouter = () => router;
 		window.getQueryClient = () => queryClient;
 	}
 
-	// @ts-expect-error - To be fixed later
 	return routerWithQueryClient(router, queryClient);
 }
 

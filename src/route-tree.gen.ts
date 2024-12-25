@@ -11,14 +11,21 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/root'
+import { Route as mainSellerLayoutImport } from './routes/main/seller/layout'
 import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
+import { Route as mainSellerDashboardImport } from './routes/main/seller/dashboard'
 import { Route as mainBecomeSellerImport } from './routes/main/become-seller'
 import { Route as authSignUpImport } from './routes/auth/sign-up'
 import { Route as authSignInImport } from './routes/auth/sign-in'
 import { Route as indexImport } from './routes/index'
 
 // Create/Update Routes
+
+const mainSellerLayoutRoute = mainSellerLayoutImport.update({
+  id: '/_seller-layout-id',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const mainLayoutRoute = mainLayoutImport.update({
   id: '/_main-layout-id',
@@ -28,6 +35,12 @@ const mainLayoutRoute = mainLayoutImport.update({
 const authLayoutRoute = authLayoutImport.update({
   id: '/_auth-layout-id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const mainSellerDashboardRoute = mainSellerDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => mainSellerLayoutRoute,
 } as any)
 
 const mainBecomeSellerRoute = mainBecomeSellerImport.update({
@@ -72,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainLayoutImport
       parentRoute: typeof rootRoute
     }
+    '/_seller-layout-id': {
+      id: '/_seller-layout-id'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof mainSellerLayoutImport
+      parentRoute: typeof rootRoute
+    }
     '/_main-layout-id/': {
       id: '/_main-layout-id/'
       path: '/'
@@ -99,6 +119,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/become-seller'
       preLoaderRoute: typeof mainBecomeSellerImport
       parentRoute: typeof mainLayoutImport
+    }
+    '/_seller-layout-id/dashboard': {
+      id: '/_seller-layout-id/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof mainSellerDashboardImport
+      parentRoute: typeof mainSellerLayoutImport
     }
   }
 }
@@ -133,56 +160,81 @@ const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
   mainLayoutRouteChildren,
 )
 
+interface mainSellerLayoutRouteChildren {
+  mainSellerDashboardRoute: typeof mainSellerDashboardRoute
+}
+
+const mainSellerLayoutRouteChildren: mainSellerLayoutRouteChildren = {
+  mainSellerDashboardRoute: mainSellerDashboardRoute,
+}
+
+const mainSellerLayoutRouteWithChildren =
+  mainSellerLayoutRoute._addFileChildren(mainSellerLayoutRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '': typeof mainLayoutRouteWithChildren
+  '': typeof mainSellerLayoutRouteWithChildren
   '/': typeof indexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
+  '/dashboard': typeof mainSellerDashboardRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof authLayoutRouteWithChildren
+  '': typeof mainSellerLayoutRouteWithChildren
   '/': typeof indexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
+  '/dashboard': typeof mainSellerDashboardRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_auth-layout-id': typeof authLayoutRouteWithChildren
   '/_main-layout-id': typeof mainLayoutRouteWithChildren
+  '/_seller-layout-id': typeof mainSellerLayoutRouteWithChildren
   '/_main-layout-id/': typeof indexRoute
   '/_auth-layout-id/sign-in': typeof authSignInRoute
   '/_auth-layout-id/sign-up': typeof authSignUpRoute
   '/_main-layout-id/become-seller': typeof mainBecomeSellerRoute
+  '/_seller-layout-id/dashboard': typeof mainSellerDashboardRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller'
+  fullPaths:
+    | ''
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/become-seller'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller'
+  to: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller' | '/dashboard'
   id:
     | '__root__'
     | '/_auth-layout-id'
     | '/_main-layout-id'
+    | '/_seller-layout-id'
     | '/_main-layout-id/'
     | '/_auth-layout-id/sign-in'
     | '/_auth-layout-id/sign-up'
     | '/_main-layout-id/become-seller'
+    | '/_seller-layout-id/dashboard'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   authLayoutRoute: typeof authLayoutRouteWithChildren
   mainLayoutRoute: typeof mainLayoutRouteWithChildren
+  mainSellerLayoutRoute: typeof mainSellerLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   authLayoutRoute: authLayoutRouteWithChildren,
   mainLayoutRoute: mainLayoutRouteWithChildren,
+  mainSellerLayoutRoute: mainSellerLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -196,7 +248,8 @@ export const routeTree = rootRoute
       "filePath": "root.tsx",
       "children": [
         "/_auth-layout-id",
-        "/_main-layout-id"
+        "/_main-layout-id",
+        "/_seller-layout-id"
       ]
     },
     "/_auth-layout-id": {
@@ -211,6 +264,12 @@ export const routeTree = rootRoute
       "children": [
         "/_main-layout-id/",
         "/_main-layout-id/become-seller"
+      ]
+    },
+    "/_seller-layout-id": {
+      "filePath": "main/seller/layout.tsx",
+      "children": [
+        "/_seller-layout-id/dashboard"
       ]
     },
     "/_main-layout-id/": {
@@ -228,6 +287,10 @@ export const routeTree = rootRoute
     "/_main-layout-id/become-seller": {
       "filePath": "main/become-seller.tsx",
       "parent": "/_main-layout-id"
+    },
+    "/_seller-layout-id/dashboard": {
+      "filePath": "main/seller/dashboard.tsx",
+      "parent": "/_seller-layout-id"
     }
   }
 }

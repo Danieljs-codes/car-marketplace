@@ -188,15 +188,49 @@ export const $protectBecomeASellerRoute = createServerFn({
 			.limit(1);
 
 		if (sellerProfile.length > 0) {
-			// TODO: Redirect to their seller dashboard
 			throw setCookieAndRedirect({
 				intent: "error",
 				message: "You are already a seller",
-				to: "/",
+				to: "/dashboard",
 			});
 		}
 
 		return {
 			auth: context.auth,
 		};
+	});
+
+export const maybeSellerMiddleware = createMiddleware()
+	.middleware([validateUserMiddleware])
+	.server(async ({ context, next }) => {
+		const sellerProfile = await db
+			.select()
+			.from(schema.sellers)
+			.where(eq(schema.sellers.userId, context.auth.user.id))
+			.limit(1);
+
+		return next({
+			context: {
+				seller: sellerProfile.length > 0 ? sellerProfile[0] : null,
+			},
+		});
+	});
+
+export const validateSellerMiddleware = createMiddleware()
+	.middleware([maybeSellerMiddleware])
+	.server(async ({ context, next }) => {
+		if (!context.seller) {
+			throw setCookieAndRedirect({
+				intent: "error",
+				message: "You must be a seller to access this page",
+				description: "Please become a seller to continue using the application",
+				to: "/become-seller",
+			});
+		}
+
+		return next({
+			context: {
+				seller: context.seller,
+			},
+		});
 	});

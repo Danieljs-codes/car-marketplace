@@ -7,3 +7,30 @@ export const getAvatarInitials = (name: string) => {
 
 	return `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
 };
+
+const pickFunc = <T extends {}, K extends keyof T>(
+	obj: T,
+	predicate: (k: string) => boolean,
+): Pick<T, K> =>
+	Object.keys(obj)
+		.filter(predicate)
+		.reduce(
+			(filteredObj: Pick<T, K>, key) => ({
+				// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+				...filteredObj,
+				[key]: obj[key as keyof T],
+			}),
+			{} as Pick<T, K>,
+		);
+
+// filters an object based on an array of keys
+export const pick = <T extends {}, K extends keyof T>(
+	obj: T,
+	keys: Array<K>,
+): Pick<T, K> => pickFunc(obj, (k) => keys.includes(k as K));
+
+// filters an object based on an array of keys
+export const omit = <T extends {}, K extends keyof T>(
+	obj: T,
+	keys: Array<K>,
+): Pick<T, K> => pickFunc(obj, (k) => !keys.includes(k as K));
