@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import {
+	$getRecentListingsForSeller,
 	$getSellerActiveListings,
 	$getSellerCarStats,
 	$getTotalRevenueForSeller,
@@ -82,6 +83,16 @@ export const getSellerCarStatsQueryOptions = () =>
 		queryKey: ["getSellerCarStats"],
 		queryFn: async () => {
 			const response = await $getSellerCarStats();
+
+			return response;
+		},
+	});
+
+export const getRecentListingsForSellerQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getRecentListingsForSeller"],
+		queryFn: async () => {
+			const response = await $getRecentListingsForSeller();
 
 			return response;
 		},

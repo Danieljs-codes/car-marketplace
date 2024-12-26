@@ -10,7 +10,7 @@ import { PERCENTAGE_CHARGE, setCookieAndRedirect } from "./misc";
 import { omit } from "~/utils/misc";
 import schema, { listingStatusEnum } from "../db/schema";
 import { db } from "../db";
-import { and, count, eq, sum } from "drizzle-orm";
+import { and, count, desc, eq, sum } from "drizzle-orm";
 
 export const $validateBankDetails = createServerFn({
 	method: "POST",
@@ -162,4 +162,31 @@ export const $getSellerCarStats = createServerFn({
 			totalSold: soldCount[0]?.count ?? 0,
 			totalListed: result[0]?.totalListed ?? 0,
 		};
+	});
+
+export const $getRecentListingsForSeller = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.handler(async ({ context, data }) => {
+		const recentListings = await db
+			.select({
+				id: schema.carListings.id,
+				make: schema.carListings.make,
+				model: schema.carListings.model,
+				year: schema.carListings.year,
+				price: schema.carListings.price,
+				status: schema.carListings.status,
+				createdAt: schema.carListings.createdAt,
+			})
+			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.orderBy(desc(schema.carListings.createdAt))
+			.limit(5)
+			.execute();
+
+		return recentListings.map((listing) => ({
+			...listing,
+			price: listing.price / 100, // Convert from kobo to naira
+		}));
 	});

@@ -1,32 +1,60 @@
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { IconCar, IconMoneybag } from "justd-icons";
-import { Card, Heading } from "ui";
+import { Badge, Card, Heading, Table } from "ui";
 import { formatCurrency } from "~/utils/misc";
 import {
+	getRecentListingsForSellerQueryOptions,
 	getSellerActiveListingsQueryOptions,
 	getSellerCarStatsQueryOptions,
 	getTotalRevenueForSellerQueryOptions,
 } from "~/utils/query-options";
+import { DateFormatter } from "@internationalized/date";
+
+type ListingStatus = "active" | "sold" | "expired";
+
+const getBadgeIntent = (listingStatus: ListingStatus) => {
+	if (listingStatus === "active") {
+		return "success";
+	}
+	if (listingStatus === "sold") {
+		return "danger";
+	}
+	return "warning";
+};
 
 export const Route = createFileRoute("/_seller-layout-id/dashboard")({
 	loader: async ({ context }) => {
 		context.queryClient.ensureQueryData(getSellerActiveListingsQueryOptions());
 		context.queryClient.ensureQueryData(getTotalRevenueForSellerQueryOptions());
 		context.queryClient.ensureQueryData(getSellerCarStatsQueryOptions());
+		context.queryClient.ensureQueryData(
+			getRecentListingsForSellerQueryOptions(),
+		);
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const [{ data: totalRevenue }, { data: activeListings }, { data: carStats }] =
-		useSuspenseQueries({
-			queries: [
-				getTotalRevenueForSellerQueryOptions(),
-				getSellerActiveListingsQueryOptions(),
-				getSellerCarStatsQueryOptions(),
-			],
-		});
+	const [
+		{ data: totalRevenue },
+		{ data: activeListings },
+		{ data: carStats },
+		{ data: recentListings },
+	] = useSuspenseQueries({
+		queries: [
+			getTotalRevenueForSellerQueryOptions(),
+			getSellerActiveListingsQueryOptions(),
+			getSellerCarStatsQueryOptions(),
+			getRecentListingsForSellerQueryOptions(),
+		],
+	});
+
+	const dateFormatter = new DateFormatter("en-NG", {
+		year: "numeric",
+		month: "long",
+		day: "2-digit",
+	});
 
 	return (
 		<div>
@@ -115,6 +143,66 @@ function RouteComponent() {
 					<Card.Content>
 						<div className="text-2xl font-bold">{carStats.totalSold}</div>
 					</Card.Content>
+				</Card>
+			</div>
+			{/* Recent seller listings */}
+			<div className="mt-8">
+				<Card.Header
+					className="px-0 pt-0"
+					title="Latest Car Listings"
+					description="Keep track of your recently added cars and their performance."
+				/>
+				<Card>
+					<Table aria-label="Recent Listings">
+						<Table.Header>
+							<Table.Column isRowHeader>ID</Table.Column>
+							<Table.Column>Make</Table.Column>
+							<Table.Column>Model</Table.Column>
+							<Table.Column>Price</Table.Column>
+							<Table.Column>Year</Table.Column>
+							<Table.Column>Status</Table.Column>
+							<Table.Column>Listed At</Table.Column>
+						</Table.Header>
+						<Table.Body
+							items={recentListings}
+							renderEmptyState={() => (
+								<div className="flex flex-col items-center justify-center p-4">
+									<h2 className="text-lg font-bold mb-2">
+										No Listings Available
+									</h2>
+									<p className="text-muted-fg text-sm text-center max-w-[400px]">
+										It looks like you haven't added any cars yet. Create your
+										first listing today to connect with buyers and grow your
+										sales!
+									</p>
+								</div>
+							)}
+						>
+							{(item) => (
+								<Table.Row id={item.id}>
+									<Table.Cell>{item.id}</Table.Cell>
+									<Table.Cell>{item.make}</Table.Cell>
+									<Table.Cell>{item.model}</Table.Cell>
+									<Table.Cell className="font-medium">
+										{formatCurrency(item.price)}
+									</Table.Cell>
+									<Table.Cell>{item.year}</Table.Cell>
+									<Table.Cell>
+										<Badge
+											className="capitalize"
+											intent={getBadgeIntent(item.status as ListingStatus)}
+											shape="square"
+										>
+											{item.status.toLowerCase()}
+										</Badge>
+									</Table.Cell>
+									<Table.Cell>
+										{dateFormatter.format(item.createdAt)}
+									</Table.Cell>
+								</Table.Row>
+							)}
+						</Table.Body>
+					</Table>
 				</Card>
 			</div>
 		</div>

@@ -28,6 +28,7 @@ export * from './select';
 export * from './separator';
 export * from './sheet';
 export * from './sidebar';
+export * from './table';
 export * from './toast';
 export * from './tooltip';
 export * from './visually-hidden';
