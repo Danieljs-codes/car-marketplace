@@ -7,8 +7,7 @@ import {
 	rootRoute,
 	route,
 	index,
-	layout,
-	physical,
+	layout
 } from "@tanstack/virtual-file-routes";
 import { envOnlyMacros } from "vite-env-only";
 
@@ -24,7 +23,10 @@ const routes = rootRoute("root.tsx", [
 	]),
 	layout("seller-layout-id", "main/seller/layout.tsx", [
 		route("dashboard", "main/seller/dashboard.tsx"),
-		route("listings", "main/seller/listings.tsx"),
+		route("listings", [
+			index("main/seller/listings/listings.tsx"),
+			route("new", "main/seller/listings/new.tsx"),
+		]),
 	]),
 	layout("auth-layout-id", "auth/layout.tsx", [
 		route("sign-in", "auth/sign-in.tsx"),

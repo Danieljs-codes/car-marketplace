@@ -8,18 +8,27 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/root'
 import { Route as mainSellerLayoutImport } from './routes/main/seller/layout'
 import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
-import { Route as mainSellerListingsImport } from './routes/main/seller/listings'
 import { Route as mainSellerDashboardImport } from './routes/main/seller/dashboard'
 import { Route as mainBecomeSellerImport } from './routes/main/become-seller'
 import { Route as authSignUpImport } from './routes/auth/sign-up'
 import { Route as authSignInImport } from './routes/auth/sign-in'
 import { Route as indexImport } from './routes/index'
+import { Route as mainSellerListingsNewImport } from './routes/main/seller/listings/new'
+import { Route as mainSellerListingsListingsImport } from './routes/main/seller/listings/listings'
+
+// Create Virtual Routes
+
+const SellerLayoutIdListingsImport = createFileRoute(
+  '/_seller-layout-id/listings',
+)()
 
 // Create/Update Routes
 
@@ -38,7 +47,7 @@ const authLayoutRoute = authLayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const mainSellerListingsRoute = mainSellerListingsImport.update({
+const SellerLayoutIdListingsRoute = SellerLayoutIdListingsImport.update({
   id: '/listings',
   path: '/listings',
   getParentRoute: () => mainSellerLayoutRoute,
@@ -73,6 +82,20 @@ const indexRoute = indexImport.update({
   path: '/',
   getParentRoute: () => mainLayoutRoute,
 } as any)
+
+const mainSellerListingsNewRoute = mainSellerListingsNewImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => SellerLayoutIdListingsRoute,
+} as any)
+
+const mainSellerListingsListingsRoute = mainSellerListingsListingsImport.update(
+  {
+    id: '/',
+    path: '/',
+    getParentRoute: () => SellerLayoutIdListingsRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -138,8 +161,22 @@ declare module '@tanstack/react-router' {
       id: '/_seller-layout-id/listings'
       path: '/listings'
       fullPath: '/listings'
-      preLoaderRoute: typeof mainSellerListingsImport
+      preLoaderRoute: typeof SellerLayoutIdListingsImport
       parentRoute: typeof mainSellerLayoutImport
+    }
+    '/_seller-layout-id/listings/': {
+      id: '/_seller-layout-id/listings/'
+      path: '/'
+      fullPath: '/listings/'
+      preLoaderRoute: typeof mainSellerListingsListingsImport
+      parentRoute: typeof SellerLayoutIdListingsImport
+    }
+    '/_seller-layout-id/listings/new': {
+      id: '/_seller-layout-id/listings/new'
+      path: '/new'
+      fullPath: '/listings/new'
+      preLoaderRoute: typeof mainSellerListingsNewImport
+      parentRoute: typeof SellerLayoutIdListingsImport
     }
   }
 }
@@ -174,14 +211,30 @@ const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
   mainLayoutRouteChildren,
 )
 
+interface SellerLayoutIdListingsRouteChildren {
+  mainSellerListingsListingsRoute: typeof mainSellerListingsListingsRoute
+  mainSellerListingsNewRoute: typeof mainSellerListingsNewRoute
+}
+
+const SellerLayoutIdListingsRouteChildren: SellerLayoutIdListingsRouteChildren =
+  {
+    mainSellerListingsListingsRoute: mainSellerListingsListingsRoute,
+    mainSellerListingsNewRoute: mainSellerListingsNewRoute,
+  }
+
+const SellerLayoutIdListingsRouteWithChildren =
+  SellerLayoutIdListingsRoute._addFileChildren(
+    SellerLayoutIdListingsRouteChildren,
+  )
+
 interface mainSellerLayoutRouteChildren {
   mainSellerDashboardRoute: typeof mainSellerDashboardRoute
-  mainSellerListingsRoute: typeof mainSellerListingsRoute
+  SellerLayoutIdListingsRoute: typeof SellerLayoutIdListingsRouteWithChildren
 }
 
 const mainSellerLayoutRouteChildren: mainSellerLayoutRouteChildren = {
   mainSellerDashboardRoute: mainSellerDashboardRoute,
-  mainSellerListingsRoute: mainSellerListingsRoute,
+  SellerLayoutIdListingsRoute: SellerLayoutIdListingsRouteWithChildren,
 }
 
 const mainSellerLayoutRouteWithChildren =
@@ -194,7 +247,9 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
   '/dashboard': typeof mainSellerDashboardRoute
-  '/listings': typeof mainSellerListingsRoute
+  '/listings': typeof SellerLayoutIdListingsRouteWithChildren
+  '/listings/': typeof mainSellerListingsListingsRoute
+  '/listings/new': typeof mainSellerListingsNewRoute
 }
 
 export interface FileRoutesByTo {
@@ -204,7 +259,8 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
   '/dashboard': typeof mainSellerDashboardRoute
-  '/listings': typeof mainSellerListingsRoute
+  '/listings': typeof mainSellerListingsListingsRoute
+  '/listings/new': typeof mainSellerListingsNewRoute
 }
 
 export interface FileRoutesById {
@@ -217,7 +273,9 @@ export interface FileRoutesById {
   '/_auth-layout-id/sign-up': typeof authSignUpRoute
   '/_main-layout-id/become-seller': typeof mainBecomeSellerRoute
   '/_seller-layout-id/dashboard': typeof mainSellerDashboardRoute
-  '/_seller-layout-id/listings': typeof mainSellerListingsRoute
+  '/_seller-layout-id/listings': typeof SellerLayoutIdListingsRouteWithChildren
+  '/_seller-layout-id/listings/': typeof mainSellerListingsListingsRoute
+  '/_seller-layout-id/listings/new': typeof mainSellerListingsNewRoute
 }
 
 export interface FileRouteTypes {
@@ -230,6 +288,8 @@ export interface FileRouteTypes {
     | '/become-seller'
     | '/dashboard'
     | '/listings'
+    | '/listings/'
+    | '/listings/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -239,6 +299,7 @@ export interface FileRouteTypes {
     | '/become-seller'
     | '/dashboard'
     | '/listings'
+    | '/listings/new'
   id:
     | '__root__'
     | '/_auth-layout-id'
@@ -250,6 +311,8 @@ export interface FileRouteTypes {
     | '/_main-layout-id/become-seller'
     | '/_seller-layout-id/dashboard'
     | '/_seller-layout-id/listings'
+    | '/_seller-layout-id/listings/'
+    | '/_seller-layout-id/listings/new'
   fileRoutesById: FileRoutesById
 }
 
@@ -322,8 +385,20 @@ export const routeTree = rootRoute
       "parent": "/_seller-layout-id"
     },
     "/_seller-layout-id/listings": {
-      "filePath": "main/seller/listings.tsx",
-      "parent": "/_seller-layout-id"
+      "filePath": "",
+      "parent": "/_seller-layout-id",
+      "children": [
+        "/_seller-layout-id/listings/",
+        "/_seller-layout-id/listings/new"
+      ]
+    },
+    "/_seller-layout-id/listings/": {
+      "filePath": "main/seller/listings/listings.tsx",
+      "parent": "/_seller-layout-id/listings"
+    },
+    "/_seller-layout-id/listings/new": {
+      "filePath": "main/seller/listings/new.tsx",
+      "parent": "/_seller-layout-id/listings"
     }
   }
 }

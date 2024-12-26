@@ -1,11 +1,5 @@
-"use client";
 
-import {
-	IconCircleHalf,
-	IconDeviceDesktop2,
-	IconMoon,
-	IconSun,
-} from "justd-icons";
+import { IconCircleHalf, IconMoon, IconSun } from "justd-icons";
 import { useTheme } from "next-themes";
 import { Button, composeTailwindRenderProps, Tooltip } from "ui";
 

@@ -1,3 +1,18 @@
 {
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"tailwindCSS.classAttributes": [
+		"class",
+		"className",
+		"ngClass",
+		"class:list",
+		"popoverClassName",
+		"*class*"
+	],
+	"tailwindCSS.experimental.classRegex": [
+  [
+    "(Classes.*=\\s*\\{(?:[^{}]*|\\{[^{}]*\\})*\\})",
+    "[\"'`]([^\"'`]*)[\"'`]"
+  ],
+  "Classes.*=\\s*[\"'`]([^\"'`]*)[\"'`]"
+],
 }

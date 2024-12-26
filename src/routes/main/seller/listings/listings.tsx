@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Badge, buttonStyles, Card, Heading, Menu, Table } from "ui";
+import { Badge, Button, buttonStyles, Card, Heading, Menu, Table } from "ui";
 import { z } from "zod";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { getPaginatedListingsForSellerQueryOptions } from "~/utils/query-options";
@@ -10,14 +10,20 @@ import {
 	type ListingStatus,
 } from "~/utils/misc";
 import { DateFormatter } from "@internationalized/date";
-import { IconDotsVertical, IconFolderDelete, IconPencilBox } from "justd-icons";
+import {
+	IconChevronLeft,
+	IconChevronRight,
+	IconDotsVertical,
+	IconFolderDelete,
+	IconPencilBox,
+} from "justd-icons";
 
 const listingsSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
 	pageSize: fallback(z.number(), 10).default(10),
 });
 
-export const Route = createFileRoute("/_seller-layout-id/listings")({
+export const Route = createFileRoute("/_seller-layout-id/listings/")({
 	validateSearch: zodValidator(listingsSearchSchema),
 	loaderDeps: ({ search: { page, pageSize } }) => ({ page, pageSize }),
 	loader: async ({ context, deps: { page, pageSize } }) => {
@@ -44,7 +50,10 @@ const dummyListings = Array.from({ length: 10 }).map((_, i) => ({
 }));
 
 function RouteComponent() {
-	const { data: listings } = useSuspenseQueryDeferred(
+	const navigate = Route.useNavigate();
+	const {
+		data: { listings, page, pageSize, totalCount, totalPages },
+	} = useSuspenseQueryDeferred(
 		getPaginatedListingsForSellerQueryOptions({ page: 1, pageSize: 10 }),
 	);
 
@@ -63,7 +72,7 @@ function RouteComponent() {
 						intent: "primary",
 						size: "small",
 					})}
-					to="."
+					to="/listings/new"
 				>
 					Add new listing
 				</Link>
@@ -82,7 +91,7 @@ function RouteComponent() {
 							<Table.Column />
 						</Table.Header>
 						<Table.Body
-							items={dummyListings}
+							items={listings}
 							renderEmptyState={() => (
 								<div className="flex flex-col items-center justify-center p-4">
 									<h2 className="text-lg font-bold mb-2">
@@ -148,6 +157,29 @@ function RouteComponent() {
 						</Table.Body>
 					</Table>
 				</Card>
+				<div className="flex items-center justify-between mt-4">
+					<Button
+						size="extra-small"
+						appearance="outline"
+						isDisabled={page === 1}
+						onPress={() => navigate({ search: { page: page - 1, pageSize } })}
+					>
+						<IconChevronLeft />
+						Previous
+					</Button>
+					<p className="text-sm text-muted-fg">
+						Page {page} of {Math.ceil(dummyListings.length / pageSize)}
+					</p>
+					<Button
+						size="extra-small"
+						appearance="outline"
+						isDisabled={page * pageSize >= dummyListings.length}
+						onPress={() => navigate({ search: { page: page + 1, pageSize } })}
+					>
+						Next
+						<IconChevronRight />
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
