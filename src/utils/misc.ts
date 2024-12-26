@@ -1,3 +1,4 @@
+import { NumberFormatter } from "@internationalized/number";
 export const getAvatarInitials = (name: string) => {
 	const [firstName, lastName] = name.split(" ");
 
@@ -36,8 +37,22 @@ export const omit = <T extends {}, K extends keyof T>(
 ): Pick<T, K> => pickFunc(obj, (k) => !keys.includes(k as K));
 
 export const formatCurrency = (amount: number) => {
-	return new Intl.NumberFormat("en-NG", {
+	const formatter = new NumberFormatter("en-NG", {
 		style: "currency",
 		currency: "NGN",
-	}).format(amount);
+	});
+
+	return formatter.format(amount);
+};
+
+export type ListingStatus = "active" | "sold" | "expired";
+
+export const getBadgeIntent = (listingStatus: ListingStatus) => {
+	if (listingStatus === "active") {
+		return "success";
+	}
+	if (listingStatus === "sold") {
+		return "danger";
+	}
+	return "warning";
 };

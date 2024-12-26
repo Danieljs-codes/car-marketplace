@@ -2,7 +2,11 @@ import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { IconCar, IconMoneybag } from "justd-icons";
 import { Badge, Card, Heading, Table } from "ui";
-import { formatCurrency } from "~/utils/misc";
+import {
+	formatCurrency,
+	getBadgeIntent,
+	type ListingStatus,
+} from "~/utils/misc";
 import {
 	getRecentListingsForSellerQueryOptions,
 	getSellerActiveListingsQueryOptions,
@@ -10,18 +14,6 @@ import {
 	getTotalRevenueForSellerQueryOptions,
 } from "~/utils/query-options";
 import { DateFormatter } from "@internationalized/date";
-
-type ListingStatus = "active" | "sold" | "expired";
-
-const getBadgeIntent = (listingStatus: ListingStatus) => {
-	if (listingStatus === "active") {
-		return "success";
-	}
-	if (listingStatus === "sold") {
-		return "danger";
-	}
-	return "warning";
-};
 
 export const Route = createFileRoute("/_seller-layout-id/dashboard")({
 	loader: async ({ context }) => {

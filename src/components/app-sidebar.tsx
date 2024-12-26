@@ -122,7 +122,7 @@ export default function AppSidebar({
 											strokeLinecap="round"
 										/>
 									</svg>
-									<SidebarLink href="/">
+									<SidebarLink href="/listings">
 										<SidebarLabel>Listings</SidebarLabel>
 									</SidebarLink>
 									{!isCollapsed && isHovered && (
@@ -131,7 +131,7 @@ export default function AppSidebar({
 												<IconDotsHorizontal />
 											</Menu.Trigger>
 											<Menu.Content offset={0} placement="right top">
-												<Menu.Item href="/">
+												<Menu.Item href="/listings">
 													<IconListBullets />
 													Active Listings
 												</Menu.Item>

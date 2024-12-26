@@ -11,6 +11,7 @@ import { omit } from "~/utils/misc";
 import schema, { listingStatusEnum } from "../db/schema";
 import { db } from "../db";
 import { and, count, desc, eq, sum } from "drizzle-orm";
+import { z } from "zod";
 
 export const $validateBankDetails = createServerFn({
 	method: "POST",
@@ -189,4 +190,63 @@ export const $getRecentListingsForSeller = createServerFn({
 			...listing,
 			price: listing.price / 100, // Convert from kobo to naira
 		}));
+	});
+
+const paginatedListingsForSellerSchema = z.object({
+	page: z
+		.number()
+		.min(1)
+		.default(1)
+		.catch(() => 1),
+	pageSize: z
+		.number()
+		.min(1)
+		.max(50)
+		.default(10)
+		.catch(() => 10),
+});
+
+// Get all seller listings with pagination
+export const $getPaginatedListingsForSeller = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.validator((data: unknown) => paginatedListingsForSellerSchema.parse(data))
+	.handler(async ({ context, data }) => {
+		const { page, pageSize } = data;
+		const offset = (page - 1) * pageSize;
+
+		const listings = await db
+			.select({
+				id: schema.carListings.id,
+				make: schema.carListings.make,
+				model: schema.carListings.model,
+				year: schema.carListings.year,
+				price: schema.carListings.price,
+				status: schema.carListings.status,
+				createdAt: schema.carListings.createdAt,
+			})
+			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.orderBy(desc(schema.carListings.createdAt))
+			.limit(pageSize)
+			.offset(offset)
+			.execute();
+
+		const totalCount = await db
+			.select({ count: count(schema.carListings.id) })
+			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.execute();
+
+		return {
+			listings: listings.map((listing) => ({
+				...listing,
+				price: listing.price / 100, // Convert from kobo to naira
+			})),
+			totalCount: Number(totalCount[0]?.count) || 0,
+			page,
+			pageSize,
+			totalPages: Math.ceil((Number(totalCount[0]?.count) || 0) / pageSize),
+		};
 	});

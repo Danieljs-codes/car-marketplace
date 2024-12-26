@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/root'
 import { Route as mainSellerLayoutImport } from './routes/main/seller/layout'
 import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
+import { Route as mainSellerListingsImport } from './routes/main/seller/listings'
 import { Route as mainSellerDashboardImport } from './routes/main/seller/dashboard'
 import { Route as mainBecomeSellerImport } from './routes/main/become-seller'
 import { Route as authSignUpImport } from './routes/auth/sign-up'
@@ -35,6 +36,12 @@ const mainLayoutRoute = mainLayoutImport.update({
 const authLayoutRoute = authLayoutImport.update({
   id: '/_auth-layout-id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const mainSellerListingsRoute = mainSellerListingsImport.update({
+  id: '/listings',
+  path: '/listings',
+  getParentRoute: () => mainSellerLayoutRoute,
 } as any)
 
 const mainSellerDashboardRoute = mainSellerDashboardImport.update({
@@ -127,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainSellerDashboardImport
       parentRoute: typeof mainSellerLayoutImport
     }
+    '/_seller-layout-id/listings': {
+      id: '/_seller-layout-id/listings'
+      path: '/listings'
+      fullPath: '/listings'
+      preLoaderRoute: typeof mainSellerListingsImport
+      parentRoute: typeof mainSellerLayoutImport
+    }
   }
 }
 
@@ -162,10 +176,12 @@ const mainLayoutRouteWithChildren = mainLayoutRoute._addFileChildren(
 
 interface mainSellerLayoutRouteChildren {
   mainSellerDashboardRoute: typeof mainSellerDashboardRoute
+  mainSellerListingsRoute: typeof mainSellerListingsRoute
 }
 
 const mainSellerLayoutRouteChildren: mainSellerLayoutRouteChildren = {
   mainSellerDashboardRoute: mainSellerDashboardRoute,
+  mainSellerListingsRoute: mainSellerListingsRoute,
 }
 
 const mainSellerLayoutRouteWithChildren =
@@ -178,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
   '/dashboard': typeof mainSellerDashboardRoute
+  '/listings': typeof mainSellerListingsRoute
 }
 
 export interface FileRoutesByTo {
@@ -187,6 +204,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpRoute
   '/become-seller': typeof mainBecomeSellerRoute
   '/dashboard': typeof mainSellerDashboardRoute
+  '/listings': typeof mainSellerListingsRoute
 }
 
 export interface FileRoutesById {
@@ -199,6 +217,7 @@ export interface FileRoutesById {
   '/_auth-layout-id/sign-up': typeof authSignUpRoute
   '/_main-layout-id/become-seller': typeof mainBecomeSellerRoute
   '/_seller-layout-id/dashboard': typeof mainSellerDashboardRoute
+  '/_seller-layout-id/listings': typeof mainSellerListingsRoute
 }
 
 export interface FileRouteTypes {
@@ -210,8 +229,16 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/become-seller'
     | '/dashboard'
+    | '/listings'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/' | '/sign-in' | '/sign-up' | '/become-seller' | '/dashboard'
+  to:
+    | ''
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/become-seller'
+    | '/dashboard'
+    | '/listings'
   id:
     | '__root__'
     | '/_auth-layout-id'
@@ -222,6 +249,7 @@ export interface FileRouteTypes {
     | '/_auth-layout-id/sign-up'
     | '/_main-layout-id/become-seller'
     | '/_seller-layout-id/dashboard'
+    | '/_seller-layout-id/listings'
   fileRoutesById: FileRoutesById
 }
 
@@ -269,7 +297,8 @@ export const routeTree = rootRoute
     "/_seller-layout-id": {
       "filePath": "main/seller/layout.tsx",
       "children": [
-        "/_seller-layout-id/dashboard"
+        "/_seller-layout-id/dashboard",
+        "/_seller-layout-id/listings"
       ]
     },
     "/_main-layout-id/": {
@@ -290,6 +319,10 @@ export const routeTree = rootRoute
     },
     "/_seller-layout-id/dashboard": {
       "filePath": "main/seller/dashboard.tsx",
+      "parent": "/_seller-layout-id"
+    },
+    "/_seller-layout-id/listings": {
+      "filePath": "main/seller/listings.tsx",
       "parent": "/_seller-layout-id"
     }
   }
