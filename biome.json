@@ -21,7 +21,8 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"noUnusedTemplateLiteral": "off"
+				"noUnusedTemplateLiteral": "off",
+				"useSelfClosingElements": "off"
 			},
 			"a11y": {
 				"noSvgWithoutTitle": "off"

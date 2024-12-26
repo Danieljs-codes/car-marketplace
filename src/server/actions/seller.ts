@@ -1,11 +1,16 @@
 import { createServerFn } from "@tanstack/start";
 import { becomeASellerSchema } from "~/utils/zod-schema";
-import { maybeSellerMiddleware, validateUserMiddleware } from "./auth";
+import {
+	maybeSellerMiddleware,
+	validateSellerMiddleware,
+	validateUserMiddleware,
+} from "./auth";
 import { paystack } from "../paystack";
 import { PERCENTAGE_CHARGE, setCookieAndRedirect } from "./misc";
 import { omit } from "~/utils/misc";
-import schema from "../db/schema";
+import schema, { listingStatusEnum } from "../db/schema";
 import { db } from "../db";
+import { and, count, eq, sum } from "drizzle-orm";
 
 export const $validateBankDetails = createServerFn({
 	method: "POST",
@@ -86,4 +91,75 @@ export const $createSellerAccount = createServerFn({
 			description: "You can now list your cars for sale",
 			to: "/dashboard",
 		});
+	});
+
+export const $getSellerActiveListings = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.handler(async ({ context, data }) => {
+		const result = await db
+			.select({
+				activeListingsCount: count(schema.carListings.id),
+			})
+			.from(schema.carListings)
+			.where(
+				and(
+					eq(schema.carListings.sellerId, context.seller.id),
+					eq(schema.carListings.status, "active"),
+				),
+			)
+			.execute();
+
+		return result[0]?.activeListingsCount ?? 0;
+	});
+export const $getTotalRevenueForSeller = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.handler(async ({ context, data }) => {
+		const result = await db
+			.select({
+				totalRevenue: sum(schema.carListings.price),
+			})
+			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.execute();
+
+		// Convert from kobo to naira and round to 2 decimal places
+		const totalRevenueInNaira = (Number(result[0]?.totalRevenue) || 0) / 100;
+		return Math.round(totalRevenueInNaira * 100) / 100;
+	});
+export const $getSellerCarStats = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.handler(async ({ context }) => {
+		const result = await db
+			.select({
+				totalSold: count(schema.carListings.id),
+				totalListed: count(schema.carListings.id),
+			})
+			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.groupBy(schema.carListings.sellerId)
+			.execute();
+
+		const soldCount = await db
+			.select({
+				count: count(schema.carListings.id),
+			})
+			.from(schema.carListings)
+			.where(
+				and(
+					eq(schema.carListings.sellerId, context.seller.id),
+					eq(schema.carListings.status, "sold"),
+				),
+			)
+			.execute();
+
+		return {
+			totalSold: soldCount[0]?.count ?? 0,
+			totalListed: result[0]?.totalListed ?? 0,
+		};
 	});

@@ -34,3 +34,10 @@ export const omit = <T extends {}, K extends keyof T>(
 	obj: T,
 	keys: Array<K>,
 ): Pick<T, K> => pickFunc(obj, (k) => !keys.includes(k as K));
+
+export const formatCurrency = (amount: number) => {
+	return new Intl.NumberFormat("en-NG", {
+		style: "currency",
+		currency: "NGN",
+	}).format(amount);
+};

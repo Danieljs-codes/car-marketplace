@@ -368,7 +368,7 @@ const SidebarContent = ({
 		<div
 			data-sidebar-content="true"
 			className={cn(
-				"flex min-h-0 flex-1 flex-col overflow-auto scroll-mb-96",
+				"flex min-h-0 flex-1 flex-col overflow-auto scroll-mb-96 no-scrollbar",
 				state === "collapsed" && "items-center",
 				className,
 			)}

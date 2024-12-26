@@ -1,7 +1,5 @@
-"use client";
-
-import { IconSearch } from "justd-icons";
-import { Breadcrumbs, Button, Separator, SidebarNav, SidebarTrigger } from "ui";
+import { Breadcrumbs, Separator, SidebarNav, SidebarTrigger } from "ui";
+import { ThemeSwitcher } from "./theme-switcher";
 
 export default function AppSidebarNav() {
 	return (
@@ -16,9 +14,7 @@ export default function AppSidebarNav() {
 			</span>
 
 			<div className="flex gap-x-2 items-center ml-auto">
-				<Button appearance="plain" aria-label="Search..." size="square-petite">
-					<IconSearch />
-				</Button>
+				<ThemeSwitcher appearance="plain" />
 			</div>
 		</SidebarNav>
 	);

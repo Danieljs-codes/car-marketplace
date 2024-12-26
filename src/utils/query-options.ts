@@ -1,4 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
+import {
+	$getSellerActiveListings,
+	$getSellerCarStats,
+	$getTotalRevenueForSeller,
+} from "~/server/actions/seller";
 
 export interface PaystackBankResponse {
 	message: string;
@@ -50,4 +55,34 @@ export const getAllBanksQueryOptions = () =>
 
 				return uniqueBanks;
 			}, []),
+	});
+
+export const getSellerActiveListingsQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getSellerTotalListings"],
+		queryFn: async () => {
+			const response = await $getSellerActiveListings();
+
+			return response;
+		},
+	});
+
+export const getTotalRevenueForSellerQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getTotalRevenueForSeller"],
+		queryFn: async () => {
+			const response = await $getTotalRevenueForSeller();
+
+			return response;
+		},
+	});
+
+export const getSellerCarStatsQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getSellerCarStats"],
+		queryFn: async () => {
+			const response = await $getSellerCarStats();
+
+			return response;
+		},
 	});
