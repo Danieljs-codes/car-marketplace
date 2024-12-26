@@ -56,3 +56,17 @@ export const getBadgeIntent = (listingStatus: ListingStatus) => {
 	}
 	return "warning";
 };
+
+export const carConditionEnum = [
+	"new",
+	"used",
+	"refurbished",
+	"damaged",
+	"for-parts",
+] as const;
+
+export const kebabToSentence = (str: string) =>
+	str
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ");

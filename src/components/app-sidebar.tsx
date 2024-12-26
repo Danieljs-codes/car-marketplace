@@ -1,4 +1,3 @@
-
 import {
 	IconCheck,
 	IconChevronLgDown,
@@ -46,6 +45,7 @@ import { Logo } from "./logo";
 import { useAnimation, type Variants, motion } from "motion/react";
 import type { authClient } from "~/utils/auth-client";
 import { getAvatarInitials } from "~/utils/misc";
+import { useLocation } from "@tanstack/react-router";
 
 const pathVariants: Variants = {
 	normal: {
@@ -64,6 +64,7 @@ export default function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
 	auth: (typeof authClient.$Infer.Session)["user"];
 }) {
+	const activeRoute = useLocation().pathname;
 	const controls = useAnimation();
 	const { state, isMobile } = useSidebar();
 	const collapsed = state === "collapsed" && !isMobile;
@@ -85,12 +86,18 @@ export default function AppSidebar({
 			<SidebarContent>
 				<SidebarSectionGroup>
 					<SidebarSection title="Overview">
-						<SidebarItem isCurrent href="/">
+						<SidebarItem
+							isCurrent={activeRoute.toLowerCase() === "/dashboard"}
+							href="/"
+						>
 							<IconDashboard />
 							<SidebarLabel>Overview</SidebarLabel>
 						</SidebarItem>
 
-						<SidebarItem>
+						<SidebarItem
+							isCurrent={activeRoute.toLowerCase().includes("listing")}
+							href="/listings?page=1&pageSize=10"
+						>
 							{({ isHovered, isCollapsed }) => (
 								<>
 									<svg
@@ -152,7 +159,10 @@ export default function AppSidebar({
 								</>
 							)}
 						</SidebarItem>
-						<SidebarItem>
+						<SidebarItem
+							isCurrent={activeRoute.toLowerCase().includes("orders")}
+							href="/"
+						>
 							{({ isHovered, isCollapsed }) => (
 								<>
 									<IconShoppingBag />
@@ -210,7 +220,11 @@ export default function AppSidebar({
 								</>
 							)}
 						</SidebarItem>
-						<SidebarItem href="/" badge="4 Pending">
+						<SidebarItem
+							isCurrent={activeRoute.toLowerCase().includes("payments")}
+							href="/"
+							badge="4 Pending"
+						>
 							<IconCreditCard />
 							<SidebarLabel>Payments</SidebarLabel>
 						</SidebarItem>
@@ -224,19 +238,31 @@ export default function AppSidebar({
 								<SidebarLabel>Support</SidebarLabel>
 							</SidebarDisclosureTrigger>
 							<SidebarDisclosurePanel>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("tickets")}
+									href="/"
+								>
 									<IconTicket />
 									<SidebarLabel>Tickets</SidebarLabel>
 								</SidebarItem>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("chat")}
+									href="/"
+								>
 									<IconMessage />
 									<SidebarLabel>Chat Support</SidebarLabel>
 								</SidebarItem>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("faq")}
+									href="/"
+								>
 									<IconCircleQuestionmark />
 									<SidebarLabel>FAQ</SidebarLabel>
 								</SidebarItem>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("docs")}
+									href="/"
+								>
 									<IconNotes />
 									<SidebarLabel>Documentation</SidebarLabel>
 								</SidebarItem>
@@ -248,15 +274,24 @@ export default function AppSidebar({
 								<SidebarLabel>Inventory</SidebarLabel>
 							</SidebarDisclosureTrigger>
 							<SidebarDisclosurePanel>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("stock")}
+									href="/"
+								>
 									<IconMinus />
 									<SidebarLabel>Stock Levels</SidebarLabel>
 								</SidebarItem>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("warehouse")}
+									href="/"
+								>
 									<IconMinus />
 									<SidebarLabel>Warehouse</SidebarLabel>
 								</SidebarItem>
-								<SidebarItem href="/">
+								<SidebarItem
+									isCurrent={activeRoute.toLowerCase().includes("shipping")}
+									href="/"
+								>
 									<IconMinus />
 									<SidebarLabel>Shipping</SidebarLabel>
 								</SidebarItem>

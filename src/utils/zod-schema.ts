@@ -43,3 +43,32 @@ export const becomeASellerSchema = z.object({
 		}),
 	businessEmail: z.string().email({ message: "Invalid email address" }),
 });
+
+export const createListingSchema = z.object({
+	title: z.string().min(1, { message: "Title is required" }),
+	make: z.string().min(1, { message: "Make is required" }),
+	model: z.string().min(1, { message: "Model is required" }),
+	year: z
+		.number()
+		.min(1886, { message: "Year must be after 1886 or later" })
+		.max(new Date().getFullYear() + 1, { message: "Invalid year" }),
+	condition: z.string().min(1, { message: "Condition is required" }),
+	price: z
+		.number()
+		.min(1, { message: "Price must be greater than 0" })
+		.transform((val) => val * 100), // Convert to kobo
+	mileage: z.number().min(0, { message: "Mileage must be 0 or greater" }),
+	transmission: z.enum(["automatic", "manual"], {
+		errorMap: () => ({ message: "Please select a transmission type" }),
+	}),
+	fuelType: z.enum(["gasoline", "diesel", "electric", "hybrid"], {
+		errorMap: () => ({ message: "Please select a fuel type" }),
+	}),
+	description: z.string().optional(),
+	features: z.array(z.string()).optional(),
+	images: z
+		.array(z.string())
+		.min(1, { message: "At least one image is required" }),
+	location: z.string().min(1, { message: "Location is required" }),
+	vin: z.string().optional(),
+});
