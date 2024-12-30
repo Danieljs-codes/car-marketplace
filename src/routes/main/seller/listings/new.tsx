@@ -365,7 +365,7 @@ function RouteComponent() {
 								isPending ? (
 									<>
 										<Loader />
-										"Creating Listing"
+										Creating Listing
 									</>
 								) : (
 									"Create Listing"
