@@ -54,7 +54,7 @@ function RouteComponent() {
 			<div className="grid md:grid-cols-4 gap-4">
 				<Card>
 					<Card.Header className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<Card.Title className="text-sm font-medium text-muted-fg">
+						<Card.Title className="text-sm sm:text-sm font-medium">
 							Total Revenue
 						</Card.Title>
 						<IconMoneybag className="size-4 text-muted-fg" />
@@ -67,7 +67,7 @@ function RouteComponent() {
 				</Card>
 				<Card>
 					<Card.Header className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<Card.Title className="text-sm font-medium">
+						<Card.Title className="text-sm sm:text-sm font-medium">
 							Active Listings
 						</Card.Title>
 						<IconCar className="size-4 text-muted-fg" />
@@ -78,7 +78,7 @@ function RouteComponent() {
 				</Card>
 				<Card>
 					<Card.Header className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<Card.Title className="text-sm font-medium">
+						<Card.Title className="text-sm sm:text-sm font-medium">
 							Total Listings
 						</Card.Title>
 						<IconCar className="size-4 text-muted-fg" />
@@ -89,7 +89,9 @@ function RouteComponent() {
 				</Card>
 				<Card>
 					<Card.Header className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<Card.Title className="text-sm font-medium ">Total Sold</Card.Title>
+						<Card.Title className="text-sm sm:text-sm font-medium ">
+							Total Sold
+						</Card.Title>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"

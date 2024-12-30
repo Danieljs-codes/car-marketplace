@@ -122,13 +122,17 @@ export const $getTotalRevenueForSeller = createServerFn({
 	.handler(async ({ context, data }) => {
 		const result = await db
 			.select({
-				totalRevenue: sum(schema.carListings.price),
+				totalRevenue: sum(schema.orders.amount),
 			})
-			.from(schema.carListings)
-			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.from(schema.orders)
+			.where(
+				and(
+					eq(schema.orders.sellerId, context.seller.id),
+					eq(schema.orders.status, "completed"),
+				),
+			)
 			.execute();
 
-		// Convert from kobo to naira and round to 2 decimal places
 		const totalRevenueInNaira = (Number(result[0]?.totalRevenue) || 0) / 100;
 		return Math.round(totalRevenueInNaira * 100) / 100;
 	});
@@ -137,32 +141,30 @@ export const $getSellerCarStats = createServerFn({
 })
 	.middleware([validateSellerMiddleware])
 	.handler(async ({ context }) => {
-		const result = await db
-			.select({
-				totalSold: count(schema.carListings.id),
-				totalListed: count(schema.carListings.id),
-			})
-			.from(schema.carListings)
-			.where(eq(schema.carListings.sellerId, context.seller.id))
-			.groupBy(schema.carListings.sellerId)
-			.execute();
-
-		const soldCount = await db
+		const totalListed = await db
 			.select({
 				count: count(schema.carListings.id),
 			})
 			.from(schema.carListings)
+			.where(eq(schema.carListings.sellerId, context.seller.id))
+			.execute();
+
+		const totalSold = await db
+			.select({
+				count: count(schema.orders.id),
+			})
+			.from(schema.orders)
 			.where(
 				and(
-					eq(schema.carListings.sellerId, context.seller.id),
-					eq(schema.carListings.status, "sold"),
+					eq(schema.orders.sellerId, context.seller.id),
+					eq(schema.orders.status, "completed"),
 				),
 			)
 			.execute();
 
 		return {
-			totalSold: soldCount[0]?.count ?? 0,
-			totalListed: result[0]?.totalListed ?? 0,
+			totalSold: totalSold[0]?.count ?? 0,
+			totalListed: totalListed[0]?.count ?? 0,
 		};
 	});
 

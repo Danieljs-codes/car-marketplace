@@ -145,6 +145,45 @@ export const favoritesTable = pgTable("favorites", {
 	createdAt: timestamp().defaultNow(),
 });
 
+export const orderStatusEnum = pgEnum("order_status", [
+	"pending",
+	"completed",
+	"cancelled",
+]);
+
+export const ordersTable = pgTable("orders", {
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => cuid()),
+	buyerId: text()
+		.notNull()
+		.references(() => usersTable.id),
+	listingId: text()
+		.notNull()
+		.references(() => carListingsTable.id),
+	sellerId: text()
+		.notNull()
+		.references(() => sellersTable.id),
+	amount: bigint({ mode: "number" }).notNull(), // in kobo
+	status: orderStatusEnum().default("pending").notNull(),
+	paystackReference: text().notNull(),
+	paystackTransactionId: text().notNull(),
+	paymentMetadata: jsonb().$type<{
+		channel?: string;
+		currency?: string;
+		gatewayResponse?: string;
+	}>(),
+	metadata: jsonb().$type<{
+		deliveryAddress?: string;
+		additionalNotes?: string;
+	}>(),
+	createdAt: timestamp().notNull().defaultNow(),
+	updatedAt: timestamp()
+		.notNull()
+		.defaultNow()
+		.$onUpdateFn(() => new Date()),
+});
+
 const schema = {
 	users: usersTable,
 	sessions: sessionsTable,
@@ -153,6 +192,7 @@ const schema = {
 	sellers: sellersTable,
 	favorites: favoritesTable,
 	carListings: carListingsTable,
+	orders: ordersTable,
 };
 
 export default schema;
