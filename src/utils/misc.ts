@@ -36,13 +36,17 @@ export const omit = <T extends {}, K extends keyof T>(
 	keys: Array<K>,
 ): Pick<T, K> => pickFunc(obj, (k) => !keys.includes(k as K));
 
-export const formatCurrency = (amount: number) => {
+export const formatCurrency = ({
+	amount,
+	isKobo = false,
+}: { amount: number; isKobo?: boolean }) => {
 	const formatter = new NumberFormatter("en-NG", {
 		style: "currency",
 		currency: "NGN",
 	});
 
-	return formatter.format(amount);
+	const finalAmount = isKobo ? koboToNaira(amount) : amount;
+	return formatter.format(finalAmount);
 };
 
 export type ListingStatus = "active" | "sold" | "expired";
@@ -70,3 +74,5 @@ export const kebabToSentence = (str: string) =>
 		.split("-")
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
 		.join(" ");
+
+export const koboToNaira = (amount: number) => amount / 100;

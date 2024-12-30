@@ -109,7 +109,7 @@ function RouteComponent() {
 								<Table.Row id={item.id}>
 									<Table.Cell>{item.id}</Table.Cell>
 									<Table.Cell className="font-medium">
-										{formatCurrency(item.price)}
+										{formatCurrency({ amount: item.price })}
 									</Table.Cell>
 									<Table.Cell className="capitalize">
 										{item.make.toLowerCase()}
@@ -144,7 +144,7 @@ function RouteComponent() {
 														<IconPencilBox />
 														Edit
 													</Menu.Item>
-													<Menu.Item className="text-sm">
+													<Menu.Item className="text-sm" isDanger>
 														<IconFolderDelete />
 														Delete
 													</Menu.Item>

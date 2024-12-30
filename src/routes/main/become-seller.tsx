@@ -3,8 +3,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useController, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { Button, Card, ComboBox, Modal, TextField } from "ui";
+import { Button, Card, ComboBox, Modal, TextField, Loader } from "ui";
 import type { z } from "zod";
 import { $protectBecomeASellerRoute } from "~/server/actions/auth";
 import {
@@ -198,7 +197,12 @@ function RouteComponent() {
 							type="submit"
 							isPending={isValidating}
 						>
-							Become a seller
+							{({ isPending }) => (
+								<>
+									{isPending && <Loader variant="spin" />}
+									{isPending ? "Becoming a seller" : "Become a seller"}
+								</>
+							)}
 						</Button>
 					</form>
 				</Card.Content>
@@ -252,7 +256,12 @@ function RouteComponent() {
 									});
 								}}
 							>
-								Continue
+								{({ isPending }) => (
+									<>
+										{isPending && <Loader variant="spin" />}
+										{isPending ? "Continuing" : "Continue"}
+									</>
+								)}
 							</Button>
 						</Modal.Footer>
 					</Modal.Content>

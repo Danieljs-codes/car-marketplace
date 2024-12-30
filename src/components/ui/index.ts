@@ -14,6 +14,7 @@ export * from './combo-box';
 export * from './dialog';
 export * from './dropdown';
 export * from './field';
+export * from './file-trigger';
 export * from './heading';
 export * from './keyboard';
 export * from './link';

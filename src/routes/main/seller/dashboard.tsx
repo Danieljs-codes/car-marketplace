@@ -1,4 +1,4 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQueries } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { IconCar, IconMoneybag } from "justd-icons";
 import { Badge, Card, Heading, Table } from "ui";
@@ -61,7 +61,7 @@ function RouteComponent() {
 					</Card.Header>
 					<Card.Content>
 						<div className="text-2xl font-bold">
-							{formatCurrency(totalRevenue)}
+							{formatCurrency({ amount: totalRevenue })}
 						</div>
 					</Card.Content>
 				</Card>
@@ -176,7 +176,7 @@ function RouteComponent() {
 									<Table.Cell>{item.make}</Table.Cell>
 									<Table.Cell>{item.model}</Table.Cell>
 									<Table.Cell className="font-medium">
-										{formatCurrency(item.price)}
+										{formatCurrency({ amount: item.price })}
 									</Table.Cell>
 									<Table.Cell>{item.year}</Table.Cell>
 									<Table.Cell>

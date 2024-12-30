@@ -8,7 +8,8 @@
 		"strictNullChecks": true,
 		"paths": {
 			"ui": ["./src/components/ui/index.ts"],
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"~server/*": ["./src/server/*"]
 		}
 	}
 }

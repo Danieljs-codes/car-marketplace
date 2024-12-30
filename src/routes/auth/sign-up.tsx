@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Link, Note, TextField } from "ui";
+import { Button, Link, Note, TextField, Loader } from "ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useController, useForm } from "react-hook-form";
 import { signUpSchema } from "~/utils/zod-schema";
@@ -113,7 +113,12 @@ function RouteComponent() {
 						className="w-full mt-6"
 						size="small"
 					>
-						Sign up
+						{({ isPending }) => (
+							<>
+								{isPending && <Loader variant="spin" />}
+								{isPending ? "Signing up..." : "Sign up"}
+							</>
+						)}
 					</Button>
 				</form>
 				<p className="text-center text-sm  mx-auto text-muted-fg mt-4">

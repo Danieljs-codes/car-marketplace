@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { TextField, Button, Checkbox } from "ui";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useController, useForm } from "react-hook-form";
-import { Note } from "ui";
+import { Button, Checkbox, Loader, Note, TextField } from "ui";
 import type { z } from "zod";
-import { signInSchema } from "~/utils/zod-schema";
 import { $signIn } from "~/server/actions/auth";
+import { signInSchema } from "~/utils/zod-schema";
 
 export const Route = createFileRoute("/_auth-layout-id/sign-in")({
 	component: RouteComponent,
@@ -107,7 +106,12 @@ function RouteComponent() {
 						className="w-full mt-6"
 						size="small"
 					>
-						Sign in
+						{({ isPending }) => (
+							<>
+								{isPending && <Loader variant="spin" />}
+								{isPending ? "Signing in..." : "Sign in"}
+							</>
+						)}
 					</Button>
 				</form>
 				<p className="text-center text-sm  mx-auto text-muted-fg mt-4">

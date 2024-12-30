@@ -8,13 +8,11 @@ import {
 	IconDashboard,
 	IconDotsHorizontal,
 	IconHeadphones,
-	IconListBullets,
 	IconLogout,
 	IconMessage,
 	IconMinus,
 	IconNotes,
 	IconPackage,
-	IconPlus,
 	IconSettings,
 	IconShield,
 	IconShoppingBag,
@@ -96,7 +94,7 @@ export default function AppSidebar({
 
 						<SidebarItem
 							isCurrent={activeRoute.toLowerCase().includes("listing")}
-							href="/listings?page=1&pageSize=10"
+							href="/listings"
 						>
 							{({ isHovered, isCollapsed }) => (
 								<>
@@ -131,31 +129,6 @@ export default function AppSidebar({
 									<SidebarLink href="/listings">
 										<SidebarLabel>Listings</SidebarLabel>
 									</SidebarLink>
-									{!isCollapsed && isHovered && (
-										<Menu>
-											<Menu.Trigger aria-label="Manage">
-												<IconDotsHorizontal />
-											</Menu.Trigger>
-											<Menu.Content offset={0} placement="right top">
-												<Menu.Item href="/listings">
-													<IconListBullets />
-													Active Listings
-												</Menu.Item>
-												<Menu.Item href="/">
-													<IconPlus />
-													Add New Car
-												</Menu.Item>
-												<Menu.Item href="/">
-													<IconListBullets />
-													Drafts
-												</Menu.Item>
-												<Menu.Item href="/">
-													<IconListBullets />
-													Expired Listings
-												</Menu.Item>
-											</Menu.Content>
-										</Menu>
-									)}
 								</>
 							)}
 						</SidebarItem>

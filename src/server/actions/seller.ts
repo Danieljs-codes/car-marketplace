@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/start";
-import { becomeASellerSchema } from "~/utils/zod-schema";
+import { becomeASellerSchema, createListingSchema } from "~/utils/zod-schema";
 import {
 	maybeSellerMiddleware,
 	validateSellerMiddleware,
@@ -7,11 +7,12 @@ import {
 } from "./auth";
 import { paystack } from "../paystack";
 import { PERCENTAGE_CHARGE, setCookieAndRedirect } from "./misc";
-import { omit } from "~/utils/misc";
-import schema, { listingStatusEnum } from "../db/schema";
+import schema from "../db/schema";
 import { db } from "../db";
 import { and, count, desc, eq, sum } from "drizzle-orm";
 import { z } from "zod";
+import { processImage } from "../utils/image";
+import { uploadToStorage } from "../utils/storage";
 
 export const $validateBankDetails = createServerFn({
 	method: "POST",
@@ -249,4 +250,94 @@ export const $getPaginatedListingsForSeller = createServerFn({
 			pageSize,
 			totalPages: Math.ceil((Number(totalCount[0]?.count) || 0) / pageSize),
 		};
+	});
+
+export const $createListing = createServerFn({
+	method: "POST",
+})
+	.middleware([validateSellerMiddleware])
+	.validator((data: unknown) => {
+		if (!(data instanceof FormData)) {
+			throw new Error("Invalid form data");
+		}
+
+		const title = data.get("title");
+		const make = data.get("make");
+		const model = data.get("model");
+		const year = data.get("year");
+		const condition = data.get("condition");
+		const price = data.get("price");
+		const mileage = data.get("mileage");
+		const transmission = data.get("transmission");
+		const fuelType = data.get("fuelType");
+		const description = data.get("description");
+		const location = data.get("location");
+		const vin = data.get("vin");
+		const images = data.getAll("images");
+
+		console.log({ images });
+
+		if (!images.length) {
+			throw new Error("At least one image is required");
+		}
+
+		if (!images.every((file) => file instanceof File)) {
+			throw new Error("Invalid image files");
+		}
+
+		const validated = createListingSchema.parse({
+			title,
+			make,
+			model,
+			year: Number(year),
+			condition,
+			price: Number(price) * 100, // Convert naira to kobo
+			mileage: Number(mileage),
+			transmission,
+			fuelType,
+			description,
+			location,
+			vin,
+			images,
+		});
+
+		return {
+			...validated,
+			images: images,
+		};
+	})
+	.handler(async ({ context, data }) => {
+		const processedImages = await Promise.all(
+			data.images.map(async (file) => {
+				const processed = await processImage(file);
+				const key = `listings/${context.seller.id}/${crypto.randomUUID()}`;
+
+				const uploadResult = await uploadToStorage({
+					file,
+					key,
+					contentType: file.type,
+				});
+
+				return {
+					...uploadResult,
+					blurhash: processed.blurhash,
+					size: file.size,
+				};
+			}),
+		);
+
+		await db.insert(schema.carListings).values({
+			...data,
+			mileage: data.mileage.toString(),
+			sellerId: context.seller.id,
+			images: processedImages,
+			status: "active",
+		});
+
+		throw setCookieAndRedirect({
+			intent: "success",
+			message: "Listing created successfully",
+			description: "Your car listing has been created and is now active",
+			to: "/listings",
+		});
 	});

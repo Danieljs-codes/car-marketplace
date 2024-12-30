@@ -1,4 +1,6 @@
 import z from "zod";
+// Maximum price in Kobo (₦100,000,000.00 = 10,000,000,000 Kobo)
+const MAX_PRICE_KOBO = 10_000_000_000;
 
 export const signUpSchema = z.object({
 	firstName: z
@@ -56,19 +58,33 @@ export const createListingSchema = z.object({
 	price: z
 		.number()
 		.min(1, { message: "Price must be greater than 0" })
-		.transform((val) => val * 100), // Convert to kobo
+		.max(MAX_PRICE_KOBO, { message: "Price cannot exceed ₦100,000,000" }),
 	mileage: z.number().min(0, { message: "Mileage must be 0 or greater" }),
 	transmission: z.enum(["automatic", "manual"], {
 		errorMap: () => ({ message: "Please select a transmission type" }),
 	}),
-	fuelType: z.enum(["gasoline", "diesel", "electric", "hybrid"], {
+	fuelType: z.enum(["petrol", "diesel", "electric", "hybrid"], {
 		errorMap: () => ({ message: "Please select a fuel type" }),
 	}),
 	description: z.string().optional(),
-	features: z.array(z.string()).optional(),
 	images: z
-		.array(z.string())
-		.min(1, { message: "At least one image is required" }),
+		.array(z.instanceof(File))
+		.refine((files) => {
+			if (!files) return false;
+			return files.length > 0;
+		}, "At least one image is required")
+		.refine((files) => {
+			if (!files) return false;
+			return files.length >= 3;
+		}, "Minimum of 3 images is required")
+		.refine((files) => {
+			if (!files) return false;
+			return files.length <= 6;
+		}, "Maximum of 6 images allowed")
+		.refine((files) => {
+			if (!files) return false;
+			return files.every((file) => file.size <= 5 * 1024 * 1024); // 5MB in bytes
+		}, "Each image must be less than 5MB"),
 	location: z.string().min(1, { message: "Location is required" }),
 	vin: z.string().optional(),
 });

@@ -1,4 +1,5 @@
 import {
+	bigint,
 	boolean,
 	integer,
 	jsonb,
@@ -19,7 +20,7 @@ export const transmissionTypeEnum = pgEnum("transmission_type", [
 	"manual",
 ]);
 export const fuelTypeEnum = pgEnum("fuel_type", [
-	"gasoline",
+	"petrol",
 	"diesel",
 	"electric",
 	"hybrid",
@@ -105,14 +106,22 @@ export const carListingsTable = pgTable("car_listings", {
 	model: text().notNull(),
 	year: integer().notNull(),
 	condition: text().notNull(),
-	price: integer().notNull(), // Store price in Kobo
-	mileage: integer().notNull(),
+	price: bigint({ mode: "number" }).notNull(), // Store price in Kobo using bigint
+	mileage: text().notNull(),
 	transmission: transmissionTypeEnum().notNull(),
 	fuelType: fuelTypeEnum().notNull(),
 	description: text(),
 	status: listingStatusEnum().default("active").notNull(),
-	features: jsonb().$type<string[]>(),
-	images: jsonb().$type<string[]>(),
+	images:
+		jsonb().$type<
+			Array<{
+				url: string;
+				blurhash: string;
+				key: string;
+				name: string;
+				size: number;
+			}>
+		>(),
 	location: text("location").notNull(),
 	vin: text("vin"), // Vehicle Identification Number
 	createdAt: timestamp().notNull().defaultNow(),
