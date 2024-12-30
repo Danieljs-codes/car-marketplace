@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import {
 	$getPaginatedListingsForSeller,
+	$getPaginatedOrdersForSeller,
 	$getRecentListingsForSeller,
 	$getSellerActiveListings,
 	$getSellerCarStats,
@@ -107,6 +108,24 @@ export const getPaginatedListingsForSellerQueryOptions = ({
 		queryKey: ["getPaginatedListingsForSeller", page, pageSize],
 		queryFn: async () => {
 			const response = await $getPaginatedListingsForSeller({
+				data: { page, pageSize },
+			});
+
+			return response;
+		},
+	});
+
+export const getPaginatedOrdersForSellerQueryOptions = ({
+	page,
+	pageSize,
+}: {
+	page: number;
+	pageSize: number;
+}) =>
+	queryOptions({
+		queryKey: ["seller", "orders", { page, pageSize }],
+		queryFn: async () => {
+			const response = await $getPaginatedOrdersForSeller({
 				data: { page, pageSize },
 			});
 

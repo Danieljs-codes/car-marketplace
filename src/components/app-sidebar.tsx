@@ -126,7 +126,7 @@ export default function AppSidebar({
 						</SidebarItem>
 						<SidebarItem
 							isCurrent={activeRoute.toLowerCase().includes("orders")}
-							href="/"
+							href="/orders"
 						>
 							<>
 								<IconShoppingBag />

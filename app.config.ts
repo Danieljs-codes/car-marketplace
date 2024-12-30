@@ -3,12 +3,7 @@ import { join } from "node:path";
 import { defineConfig } from "@tanstack/start/config";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
-import {
-	rootRoute,
-	route,
-	index,
-	layout
-} from "@tanstack/virtual-file-routes";
+import { rootRoute, route, index, layout } from "@tanstack/virtual-file-routes";
 import { envOnlyMacros } from "vite-env-only";
 
 const config = {
@@ -27,6 +22,7 @@ const routes = rootRoute("root.tsx", [
 			index("main/seller/listings/listings.tsx"),
 			route("new", "main/seller/listings/new.tsx"),
 		]),
+		route("orders", "main/seller/orders.tsx"),
 	]),
 	layout("auth-layout-id", "auth/layout.tsx", [
 		route("sign-in", "auth/sign-in.tsx"),

@@ -343,3 +343,59 @@ export const $createListing = createServerFn({
 			to: "/listings",
 		});
 	});
+
+export const $getPaginatedOrdersForSeller = createServerFn({
+	method: "GET",
+})
+	.middleware([validateSellerMiddleware])
+	.validator((data: unknown) => paginatedListingsForSellerSchema.parse(data))
+	.handler(async ({ context, data }) => {
+		const { page, pageSize } = data;
+		const offset = (page - 1) * pageSize;
+
+		const orders = await db
+			.select({
+				id: schema.orders.id,
+				amount: schema.orders.amount,
+				status: schema.orders.status,
+				createdAt: schema.orders.createdAt,
+				listingId: schema.orders.listingId,
+				buyerId: schema.orders.buyerId,
+				listing: {
+					make: schema.carListings.make,
+					model: schema.carListings.model,
+					year: schema.carListings.year,
+				},
+				buyer: {
+					name: schema.users.name,
+					email: schema.users.email,
+				},
+			})
+			.from(schema.orders)
+			.innerJoin(
+				schema.carListings,
+				eq(schema.orders.listingId, schema.carListings.id),
+			)
+			.innerJoin(schema.users, eq(schema.orders.buyerId, schema.users.id))
+			.where(eq(schema.orders.sellerId, context.seller.id))
+			.orderBy(desc(schema.orders.createdAt))
+			.limit(pageSize)
+			.offset(offset);
+
+		const totalCount = await db
+			.select({ count: count(schema.orders.id) })
+			.from(schema.orders)
+			.where(eq(schema.orders.sellerId, context.seller.id))
+			.execute();
+
+		return {
+			orders: orders.map((order) => ({
+				...order,
+				amount: order.amount / 100, // Convert from kobo to naira
+			})),
+			totalCount: Number(totalCount[0]?.count) || 0,
+			page,
+			pageSize,
+			totalPages: Math.ceil((Number(totalCount[0]?.count) || 0) / pageSize),
+		};
+	});
