@@ -2,7 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Badge, Button, Card, Heading, Table } from "ui";
 import { z } from "zod";
 import { fallback } from "@tanstack/zod-adapter";
-import { formatCurrency, getOrderStatusBadgeIntent } from "~/utils/misc";
+import {
+	formatCurrency,
+	getOrderStatusBadgeIntent,
+	type OrderStatus,
+} from "~/utils/misc";
 import { DateFormatter } from "@internationalized/date";
 import { IconChevronLeft, IconChevronRight } from "justd-icons";
 import { getPaginatedOrdersForSellerQueryOptions } from "~/utils/query-options";
@@ -46,7 +50,8 @@ function RouteComponent() {
 					<Table.Header>
 						<Table.Column isRowHeader>Order ID</Table.Column>
 						<Table.Column>Vehicle</Table.Column>
-						<Table.Column>Buyer</Table.Column>
+						<Table.Column>Buyer Name</Table.Column>
+						<Table.Column>Buyer Email</Table.Column>
 						<Table.Column>Amount</Table.Column>
 						<Table.Column>Status</Table.Column>
 						<Table.Column>Date</Table.Column>
@@ -70,21 +75,17 @@ function RouteComponent() {
 									{order.listing.make} {order.listing.model}{" "}
 									{order.listing.year}
 								</Table.Cell>
-								<Table.Cell>
-									<div>
-										<div>{order.buyer.name}</div>
-										<div className="text-sm text-muted-fg">
-											{order.buyer.email}
-										</div>
-									</div>
-								</Table.Cell>
+								<Table.Cell>{order.buyer.name}</Table.Cell>
+								<Table.Cell>{order.buyer.email}</Table.Cell>
 								<Table.Cell className="font-medium">
 									{formatCurrency({ amount: order.amount })}
 								</Table.Cell>
 								<Table.Cell>
 									<Badge
 										className="capitalize"
-										intent={getOrderStatusBadgeIntent(order.status)}
+										intent={getOrderStatusBadgeIntent(
+											order.status as OrderStatus,
+										)}
 										shape="square"
 									>
 										{order.status.toLowerCase()}

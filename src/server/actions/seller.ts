@@ -396,6 +396,6 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 			totalCount: Number(totalCount[0]?.count) || 0,
 			page,
 			pageSize,
-			totalPages: Math.ceil((Number(totalCount[0]?.count) || 0) / pageSize),
+			totalPages: Math.ceil((Number(totalCount[0]?.count) || 1) / pageSize),
 		};
 	});
