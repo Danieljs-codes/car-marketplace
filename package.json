@@ -6,6 +6,8 @@
 		"build": "vinxi build",
 		"start": "vinxi start",
 		"push": "drizzle-kit push",
+		"gen": "drizzle-kit generate",
+		"mig": "drizzle-kit migrate",
 		"studio": "drizzle-kit studio"
 	},
 	"devDependencies": {

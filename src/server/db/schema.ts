@@ -146,7 +146,6 @@ export const favoritesTable = pgTable("favorites", {
 });
 
 export const orderStatusEnum = pgEnum("order_status", [
-	"pending",
 	"completed",
 	"cancelled",
 ]);
@@ -165,7 +164,7 @@ export const ordersTable = pgTable("orders", {
 		.notNull()
 		.references(() => sellersTable.id),
 	amount: bigint({ mode: "number" }).notNull(), // in kobo
-	status: orderStatusEnum().default("pending").notNull(),
+	status: orderStatusEnum().default("completed").notNull(),
 	paystackReference: text().notNull(),
 	paystackTransactionId: text().notNull(),
 	paymentMetadata: jsonb().$type<{

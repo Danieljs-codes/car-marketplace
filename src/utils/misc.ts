@@ -61,7 +61,7 @@ export const getBadgeIntent = (listingStatus: ListingStatus) => {
 	return "warning";
 };
 
-export type OrderStatus = "pending" | "completed" | "cancelled";
+export type OrderStatus = "completed" | "cancelled";
 
 export const getOrderStatusBadgeIntent = (orderStatus: OrderStatus) => {
 	if (orderStatus === "completed") {
@@ -70,7 +70,6 @@ export const getOrderStatusBadgeIntent = (orderStatus: OrderStatus) => {
 	if (orderStatus === "cancelled") {
 		return "danger";
 	}
-	return "warning"; // for pending
 };
 
 export const carConditionEnum = [
