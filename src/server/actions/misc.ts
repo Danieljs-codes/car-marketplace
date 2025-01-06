@@ -16,8 +16,6 @@ export const $getToastCookie = createServerFn({ method: "GET" }).handler(
 			description?: string;
 		};
 
-
-
 		deleteCookie("toast");
 		return data;
 	},
@@ -35,7 +33,7 @@ export const setToastCookie = serverOnly$(
 	},
 )!;
 
-type ValidRoutes = ParseRoute<typeof routeTree>["fullPath"];
+export type ValidRoutes = ParseRoute<typeof routeTree>["fullPath"];
 
 // biome-ignore lint/style/noNonNullAssertion: I know what i'm doing
 export const setCookieAndRedirect = serverOnly$(

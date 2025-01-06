@@ -30,6 +30,10 @@ export const Route = createFileRoute("/_seller-layout-id/orders")({
 		context.queryClient.ensureQueryData(
 			getPaginatedOrdersForSellerQueryOptions({ page, pageSize, search }),
 		);
+
+		return {
+			crumb: "Orders",
+		};
 	},
 	component: RouteComponent,
 });

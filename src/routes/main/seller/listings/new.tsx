@@ -24,6 +24,7 @@ import { carConditionEnum, kebabToSentence } from "~/utils/misc";
 import { createListingSchema } from "~/utils/zod-schema";
 
 export const Route = createFileRoute("/_seller-layout-id/listings/new")({
+	loader: () => ({ crumb: "New Listing" }),
 	component: RouteComponent,
 });
 

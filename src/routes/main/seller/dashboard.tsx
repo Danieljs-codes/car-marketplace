@@ -23,6 +23,10 @@ export const Route = createFileRoute("/_seller-layout-id/dashboard")({
 		context.queryClient.ensureQueryData(
 			getRecentListingsForSellerQueryOptions(),
 		);
+
+		return {
+			crumb: "Overview",
+		};
 	},
 	component: RouteComponent,
 });

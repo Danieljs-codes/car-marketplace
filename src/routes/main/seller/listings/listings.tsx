@@ -30,24 +30,13 @@ export const Route = createFileRoute("/_seller-layout-id/listings/")({
 		context.queryClient.ensureQueryData(
 			getPaginatedListingsForSellerQueryOptions({ page, pageSize }),
 		);
+
+		return {
+			crumb: "Listings",
+		};
 	},
 	component: RouteComponent,
 });
-
-const dummyListings = Array.from({ length: 10 }).map((_, i) => ({
-	price: (i + 1) * 1000 * (1 + Math.random() * 0.1),
-	id: `listing-${i + 1}`,
-	make: ["Toyota", "Honda", "Ford", "Nissan"][Math.floor(Math.random() * 4)],
-	model: ["Corolla", "Civic", "Focus", "Sentra"][Math.floor(Math.random() * 4)],
-	year: 2015 + Math.floor(Math.random() * 8),
-	status: ["active", "sold", "expired"][Math.floor(Math.random() * 3)] as
-		| "active"
-		| "sold"
-		| "expired",
-	createdAt: new Date(
-		Date.now() - i * 24 * 60 * 60 * 1000 + Math.floor(Math.random() * 100000),
-	),
-}));
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
@@ -168,12 +157,12 @@ function RouteComponent() {
 						Previous
 					</Button>
 					<p className="text-sm text-muted-fg">
-						Page {page} of {Math.ceil(dummyListings.length / pageSize)}
+						Page {page} of {Math.ceil(listings.length / pageSize)}
 					</p>
 					<Button
 						size="extra-small"
 						appearance="outline"
-						isDisabled={page * pageSize >= dummyListings.length}
+						isDisabled={page * pageSize >= listings.length}
 						onPress={() => navigate({ search: { page: page + 1, pageSize } })}
 					>
 						Next
