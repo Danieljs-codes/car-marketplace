@@ -60,7 +60,7 @@ export default function AppSidebar({
 }) {
 	const activeRoute = useLocation().pathname;
 	const controls = useAnimation();
-	const { state, isMobile } = useSidebar();
+	const { state, isMobile, setIsOpenOnMobile } = useSidebar();
 	const collapsed = state === "collapsed" && !isMobile;
 
 	return (
@@ -82,7 +82,7 @@ export default function AppSidebar({
 					<SidebarSection title="Overview">
 						<SidebarItem
 							isCurrent={activeRoute.toLowerCase() === "/dashboard"}
-							href="/"
+							href="/dashboard"
 						>
 							<IconDashboard />
 							<SidebarLabel>Overview</SidebarLabel>

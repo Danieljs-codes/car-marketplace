@@ -26,6 +26,7 @@ export * from './navbar';
 export * from './note';
 export * from './number-field';
 export * from './popover';
+export * from './search-field';
 export * from './select';
 export * from './separator';
 export * from './sheet';

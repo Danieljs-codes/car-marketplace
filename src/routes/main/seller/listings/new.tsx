@@ -190,6 +190,7 @@ function RouteComponent() {
 									currency: "NGN",
 									currencyDisplay: "narrowSymbol",
 								}}
+								step={100000}
 								placeholder="₦0.00"
 								isInvalid={!!priceField.fieldState.error}
 								errorMessage={priceField.fieldState.error?.message}

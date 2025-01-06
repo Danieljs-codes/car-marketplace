@@ -9,6 +9,11 @@
 		"*class*"
 	],
 	"tailwindCSS.experimental.classRegex": [
-		["(Classes.*=\\s*\\{(?:[^{}]*|\\{[^{}]*\\})*\\})", "[\"'`]([^\"'`]*)[\"'`]"]
-	]
+		[
+			"(Classes.*=\\s*\\{(?:[^{}]*|\\{[^{}]*\\})*\\})",
+			"[\"'`]([^\"'`]*)[\"'`]"
+		]
+	],
+	"tailwindCSS.experimental.configFile": "./src/styles/global.css",
+	"typescript.tsdk": "node_modules\\typescript\\lib",
 }

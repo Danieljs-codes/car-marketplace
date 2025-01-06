@@ -9,7 +9,7 @@ import { paystack } from "../paystack";
 import { PERCENTAGE_CHARGE, setCookieAndRedirect } from "./misc";
 import schema from "../db/schema";
 import { db } from "../db";
-import { and, count, desc, eq, sum } from "drizzle-orm";
+import { and, count, desc, eq, ilike, or, sum } from "drizzle-orm";
 import { z } from "zod";
 import { processImage } from "../utils/image";
 import { uploadToStorage } from "../utils/storage";
@@ -207,6 +207,7 @@ const paginatedListingsForSellerSchema = z.object({
 		.max(50)
 		.default(10)
 		.catch(() => 10),
+	search: z.string().default(""),
 });
 
 // Get all seller listings with pagination
@@ -350,7 +351,7 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 	.middleware([validateSellerMiddleware])
 	.validator((data: unknown) => paginatedListingsForSellerSchema.parse(data))
 	.handler(async ({ context, data }) => {
-		const { page, pageSize } = data;
+		const { page, pageSize, search } = data;
 		const offset = (page - 1) * pageSize;
 
 		const orders = await db
@@ -377,7 +378,21 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 				eq(schema.orders.listingId, schema.carListings.id),
 			)
 			.innerJoin(schema.users, eq(schema.orders.buyerId, schema.users.id))
-			.where(eq(schema.orders.sellerId, context.seller.id))
+			.where(
+				and(
+					eq(schema.orders.sellerId, context.seller.id),
+					search
+						? or(
+								ilike(schema.carListings.make, `%${search}%`),
+								ilike(schema.carListings.model, `%${search}%`),
+								ilike(schema.carListings.title, `%${search}%`),
+								ilike(schema.carListings.year, `%${search}%`),
+								ilike(schema.users.name, `%${search}%`),
+								ilike(schema.users.email, `%${search}%`),
+							)
+						: undefined,
+				),
+			)
 			.orderBy(desc(schema.orders.createdAt))
 			.limit(pageSize)
 			.offset(offset);

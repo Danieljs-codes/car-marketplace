@@ -118,15 +118,17 @@ export const getPaginatedListingsForSellerQueryOptions = ({
 export const getPaginatedOrdersForSellerQueryOptions = ({
 	page,
 	pageSize,
+	search,
 }: {
 	page: number;
 	pageSize: number;
+	search?: string;
 }) =>
 	queryOptions({
 		queryKey: ["seller", "orders", { page, pageSize }],
 		queryFn: async () => {
 			const response = await $getPaginatedOrdersForSeller({
-				data: { page, pageSize },
+				data: { page, pageSize, search },
 			});
 
 			return response;

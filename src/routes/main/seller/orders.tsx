@@ -1,5 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Badge, Button, Card, Heading, Table } from "ui";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+	Badge,
+	Button,
+	buttonStyles,
+	Card,
+	Heading,
+	SearchField,
+	Table,
+} from "ui";
 import { z } from "zod";
 import { fallback } from "@tanstack/zod-adapter";
 import {
@@ -11,15 +19,21 @@ import { DateFormatter } from "@internationalized/date";
 import { IconChevronLeft, IconChevronRight } from "justd-icons";
 import { getPaginatedOrdersForSellerQueryOptions } from "~/utils/query-options";
 import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
+import { useState } from "react";
 
 const ordersSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
 	pageSize: fallback(z.number(), 10).default(10),
+	search: fallback(z.string(), "").default(""),
 });
 
 export const Route = createFileRoute("/_seller-layout-id/orders")({
 	validateSearch: ordersSearchSchema,
-	loaderDeps: ({ search: { page, pageSize } }) => ({ page, pageSize }),
+	loaderDeps: ({ search: { page, pageSize, search } }) => ({
+		page,
+		pageSize,
+		search,
+	}),
 	loader: async ({ context, deps: { page, pageSize } }) => {
 		context.queryClient.ensureQueryData(
 			getPaginatedOrdersForSellerQueryOptions({ page, pageSize }),
@@ -29,7 +43,8 @@ export const Route = createFileRoute("/_seller-layout-id/orders")({
 });
 
 function RouteComponent() {
-	const { page, pageSize } = Route.useSearch();
+	const { page, pageSize, search } = Route.useSearch();
+	const [searchTerm, setSearchTerm] = useState(search);
 	const navigate = Route.useNavigate();
 
 	const { data } = useSuspenseQueryDeferred(
@@ -45,6 +60,20 @@ function RouteComponent() {
 	return (
 		<div>
 			<Heading className="mb-8">Orders</Heading>
+			<div className="mb-4 flex items-center justify-center gap-4">
+				<SearchField
+					value={searchTerm}
+					onChange={setSearchTerm}
+					className="flex-1"
+				/>
+				<Link
+					from={Route.fullPath}
+					search={(prev) => ({ ...prev, search: searchTerm })}
+					className={buttonStyles()}
+				>
+					Search
+				</Link>
+			</div>
 			<Card>
 				<Table aria-label="Orders">
 					<Table.Header>
@@ -60,10 +89,19 @@ function RouteComponent() {
 						items={data.orders}
 						renderEmptyState={() => (
 							<div className="flex flex-col items-center justify-center p-4">
-								<h2 className="text-lg font-bold mb-2">No Orders Yet</h2>
+								<h2 className="text-lg font-bold mb-2">
+									{search ? "No Results Found" : "No Orders Yet"}
+								</h2>
 								<p className="text-muted-fg text-sm text-center max-w-[400px]">
-									You haven't received any orders yet. When customers purchase
-									your vehicles, they'll appear here.
+									{search ? (
+										<>
+											No orders match your search "
+											<span className="font-semibold">{search}</span>". Try
+											adjusting your search terms.
+										</>
+									) : (
+										"You haven't received any orders yet. When customers purchase your vehicles, they'll appear here."
+									)}
 								</p>
 							</div>
 						)}
