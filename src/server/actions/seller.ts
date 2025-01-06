@@ -386,7 +386,6 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 								ilike(schema.carListings.make, `%${search}%`),
 								ilike(schema.carListings.model, `%${search}%`),
 								ilike(schema.carListings.title, `%${search}%`),
-								ilike(schema.carListings.year, `%${search}%`),
 								ilike(schema.users.name, `%${search}%`),
 								ilike(schema.users.email, `%${search}%`),
 							)

@@ -1,13 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-	Badge,
-	Button,
-	buttonStyles,
-	Card,
-	Heading,
-	SearchField,
-	Table,
-} from "ui";
+import { createFileRoute } from "@tanstack/react-router";
+import { Badge, Button, Card, Heading, SearchField, Table } from "ui";
 import { z } from "zod";
 import { fallback } from "@tanstack/zod-adapter";
 import {
@@ -34,9 +26,9 @@ export const Route = createFileRoute("/_seller-layout-id/orders")({
 		pageSize,
 		search,
 	}),
-	loader: async ({ context, deps: { page, pageSize } }) => {
+	loader: async ({ context, deps: { page, pageSize, search } }) => {
 		context.queryClient.ensureQueryData(
-			getPaginatedOrdersForSellerQueryOptions({ page, pageSize }),
+			getPaginatedOrdersForSellerQueryOptions({ page, pageSize, search }),
 		);
 	},
 	component: RouteComponent,
@@ -47,8 +39,8 @@ function RouteComponent() {
 	const [searchTerm, setSearchTerm] = useState(search);
 	const navigate = Route.useNavigate();
 
-	const { data } = useSuspenseQueryDeferred(
-		getPaginatedOrdersForSellerQueryOptions({ page, pageSize }),
+	const { data, isSuspending } = useSuspenseQueryDeferred(
+		getPaginatedOrdersForSellerQueryOptions({ page, pageSize, search }),
 	);
 
 	const dateFormatter = new DateFormatter("en-NG", {
@@ -60,20 +52,24 @@ function RouteComponent() {
 	return (
 		<div>
 			<Heading className="mb-8">Orders</Heading>
-			<div className="mb-4 flex items-center justify-center gap-4">
+			<form
+				className="mb-4 flex items-center justify-center gap-4"
+				onSubmit={(e) => {
+					e.preventDefault();
+					navigate({ search: (prev) => ({ ...prev, search: searchTerm }) });
+				}}
+			>
 				<SearchField
+					isPending={isSuspending}
 					value={searchTerm}
 					onChange={setSearchTerm}
+					onClear={() =>
+						navigate({ search: (prev) => ({ ...prev, search: "" }) })
+					}
 					className="flex-1"
 				/>
-				<Link
-					from={Route.fullPath}
-					search={(prev) => ({ ...prev, search: searchTerm })}
-					className={buttonStyles()}
-				>
-					Search
-				</Link>
-			</div>
+				<Button type="submit">Search</Button>
+			</form>
 			<Card>
 				<Table aria-label="Orders">
 					<Table.Header>
