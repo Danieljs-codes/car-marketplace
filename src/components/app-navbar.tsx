@@ -1,11 +1,8 @@
 import {
-	IconCommandRegular,
 	IconDashboard,
 	IconHeadphones,
 	IconLogout,
 	IconSearch,
-	IconSettings,
-	IconShield,
 	IconShippingBagHeart,
 	IconShoppingBag,
 } from "justd-icons";
@@ -165,9 +162,7 @@ function UserMenu({ auth }: { auth: NonNullable<Auth> }) {
 				<Menu.Section>
 					<Menu.Header separator>
 						<span className="block">{auth.user.name}</span>
-						<span className="font-normal text-muted-fg">
-							@{auth.user.email}
-						</span>
+						<span className="font-normal text-muted-fg">{auth.user.email}</span>
 					</Menu.Header>
 				</Menu.Section>
 

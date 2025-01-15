@@ -16,25 +16,15 @@ export default function AppSidebarNav() {
 		};
 	});
 
-	const newItems = [
-		{ href: "/dashboard", label: "Dashboard" } as const,
-		...items,
-	];
-
-	console.log(newItems);
-
-	// TODO: FIX THE BUG HERE
 	return (
 		<SidebarNav>
 			<span className="flex gap-x-4 items-center">
 				<SidebarTrigger className="-mx-2" />
 				<Separator className="hidden h-6 @md:block" orientation="vertical" />
-				<Breadcrumbs items={newItems} className="hidden @md:flex">
-					{(item) => (
-						<>
-							<Breadcrumbs.Item>{item.label}</Breadcrumbs.Item>
-						</>
-					)}
+				<Breadcrumbs className="hidden @md:flex">
+					<Breadcrumbs.Item>Home</Breadcrumbs.Item>
+					<Breadcrumbs.Item>Design System</Breadcrumbs.Item>
+					<Breadcrumbs.Item>Collections</Breadcrumbs.Item>
 				</Breadcrumbs>
 			</span>
 

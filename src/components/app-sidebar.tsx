@@ -248,13 +248,13 @@ export default function AppSidebar({
 								<span className="block capitalize">
 									{auth.name.toLowerCase()}
 								</span>
-								<span className="font-normal text-muted-fg capitalize">
+								<span className="font-normal text-muted-fg lowercase">
 									{auth.email.toLowerCase()}
 								</span>
 							</Menu.Header>
 						</Menu.Section>
 
-						<Menu.Item href="/">
+						<Menu.Item href="/dashboard">
 							<IconDashboard />
 							Dashboard
 						</Menu.Item>
