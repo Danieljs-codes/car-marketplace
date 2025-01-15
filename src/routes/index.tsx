@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Logo } from "~/components/logo";
+import { Hero } from "~/components/hero";
 
 export const Route = createFileRoute("/_main-layout-id/")({
 	component: RouteComponent,
@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_main-layout-id/")({
 
 function RouteComponent() {
 	return (
-		<div className="min-h-svh flex items-center justify-center w-full p-4">
-			<Logo />
+		<div>
+			<Hero />
 		</div>
 	);
 }

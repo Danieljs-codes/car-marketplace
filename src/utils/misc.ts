@@ -87,3 +87,17 @@ export const kebabToSentence = (str: string) =>
 		.join(" ");
 
 export const koboToNaira = (amount: number) => amount / 100;
+
+export const validCarCategories = [
+	"sedan",
+	"coupe",
+	"suv",
+	"crossover",
+	"wagon/hatchback",
+	"green car/hybrid",
+	"convertible",
+	"sports car",
+	"pickup truck",
+	"minivan/van",
+	"luxury car",
+] as const;

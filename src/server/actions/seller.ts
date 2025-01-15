@@ -276,6 +276,7 @@ export const $createListing = createServerFn({
 		const description = data.get("description");
 		const location = data.get("location");
 		const vin = data.get("vin");
+		const category = data.get("category");
 		const images = data.getAll("images");
 
 		console.log({ images });
@@ -302,6 +303,7 @@ export const $createListing = createServerFn({
 			location,
 			vin,
 			images,
+			category,
 		});
 
 		return {
@@ -329,9 +331,43 @@ export const $createListing = createServerFn({
 			}),
 		);
 
-		await db.insert(schema.carListings).values({
-			...data,
+		console.log({ data, seller: context.seller });
+
+		// Add debug logging before insert
+		console.log("Processed data:", {
+			title: data.title,
+			make: data.make,
+			model: data.model,
+			year: data.year,
+			condition: data.condition,
+			price: data.price,
 			mileage: data.mileage.toString(),
+			transmission: data.transmission,
+			fuelType: data.fuelType,
+			description: data.description || null,
+			category: data.category,
+			location: data.location,
+			vin: data.vin || null,
+			sellerId: context.seller.id,
+			images: processedImages,
+			status: "active",
+		});
+
+		// Modified insert statement
+		await db.insert(schema.carListings).values({
+			title: data.title,
+			make: data.make,
+			model: data.model,
+			year: data.year,
+			condition: data.condition,
+			price: data.price,
+			mileage: data.mileage.toString(),
+			transmission: data.transmission,
+			fuelType: data.fuelType,
+			description: data.description || null,
+			category: data.category,
+			location: data.location,
+			vin: data.vin || null,
 			sellerId: context.seller.id,
 			images: processedImages,
 			status: "active",

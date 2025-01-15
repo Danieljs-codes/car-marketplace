@@ -1,4 +1,5 @@
 import z from "zod";
+import { validCarCategories } from "./misc";
 // Maximum price in Kobo (₦100,000,000.00 = 10,000,000,000 Kobo)
 const MAX_PRICE_KOBO = 10_000_000_000;
 
@@ -54,7 +55,9 @@ export const createListingSchema = z.object({
 		.number()
 		.min(1886, { message: "Year must be after 1886 or later" })
 		.max(new Date().getFullYear() + 1, { message: "Invalid year" }),
-	condition: z.string().min(1, { message: "Condition is required" }),
+	condition: z.enum(["new", "used", "certified-pre-owned", "damaged"], {
+		errorMap: () => ({ message: "Please select a valid condition" }),
+	}),
 	price: z
 		.number()
 		.min(1, { message: "Price must be greater than 0" })
@@ -87,4 +90,8 @@ export const createListingSchema = z.object({
 		}, "Each image must be less than 5MB"),
 	location: z.string().min(1, { message: "Location is required" }),
 	vin: z.string().optional(),
+	category: z.enum(validCarCategories, {
+		message: "Select a valid car category",
+		required_error: "Select the car category",
+	}),
 });

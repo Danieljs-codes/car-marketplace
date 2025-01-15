@@ -20,7 +20,7 @@ import {
 import type { z } from "zod";
 import { $createListing } from "~/server/actions/seller";
 import { cn } from "~/utils/classes";
-import { carConditionEnum, kebabToSentence } from "~/utils/misc";
+import { kebabToSentence, validCarCategories } from "~/utils/misc";
 import { createListingSchema } from "~/utils/zod-schema";
 
 export const Route = createFileRoute("/_seller-layout-id/listings/new")({
@@ -37,7 +37,7 @@ function RouteComponent() {
 			title: "",
 			description: "",
 			price: undefined,
-			condition: "",
+			condition: undefined,
 			make: "",
 			fuelType: undefined,
 			images: undefined,
@@ -47,6 +47,7 @@ function RouteComponent() {
 			transmission: undefined,
 			vin: "",
 			year: new Date().getFullYear(),
+			category: undefined,
 		},
 	});
 
@@ -68,6 +69,7 @@ function RouteComponent() {
 					formData.append("images", file);
 				}
 			}
+			console.log(data);
 
 			return $createListing({ data: formData });
 		},
@@ -89,6 +91,7 @@ function RouteComponent() {
 	const modelField = useController({ control, name: "model" });
 	const transmissionField = useController({ control, name: "transmission" });
 	const vinField = useController({ control, name: "vin" });
+	const carCategory = useController({ control, name: "category" });
 
 	const handleImageSelect = (files: FileList | null) => {
 		if (!files) {
@@ -217,6 +220,7 @@ function RouteComponent() {
 									unit: "kilometer",
 									unitDisplay: "narrow",
 								}}
+								minValue={0}
 								placeholder="0 km"
 								isInvalid={!!mileageField.fieldState.error}
 								errorMessage={mileageField.fieldState.error?.message}
@@ -234,10 +238,12 @@ function RouteComponent() {
 						>
 							<Select.Trigger />
 							<Select.List
-								items={carConditionEnum.map((condition) => ({
-									id: condition,
-									value: condition,
-								}))}
+								items={["new", "used", "certified-pre-owned", "damaged"].map(
+									(condition) => ({
+										id: condition,
+										value: condition,
+									}),
+								)}
 							>
 								{(item) => (
 									<Select.Option id={item.id} textValue={item.value}>
@@ -300,6 +306,28 @@ function RouteComponent() {
 									{ id: "automatic", value: "automatic" },
 									{ id: "manual", value: "manual" },
 								]}
+							>
+								{(item) => (
+									<Select.Option id={item.id} textValue={item.value}>
+										{kebabToSentence(item.value)}
+									</Select.Option>
+								)}
+							</Select.List>
+						</Select>
+						<Select
+							label="Car Category"
+							placeholder="Select car category"
+							isInvalid={!!carCategory.fieldState.error}
+							errorMessage={carCategory.fieldState.error?.message}
+							selectedKey={carCategory.field.value}
+							onSelectionChange={(value) => carCategory.field.onChange(value)}
+						>
+							<Select.Trigger />
+							<Select.List
+								items={validCarCategories.map((category) => ({
+									id: category,
+									value: category,
+								}))}
 							>
 								{(item) => (
 									<Select.Option id={item.id} textValue={item.value}>

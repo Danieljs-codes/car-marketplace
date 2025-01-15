@@ -26,6 +26,27 @@ export const fuelTypeEnum = pgEnum("fuel_type", [
 	"hybrid",
 ]);
 
+export const carCategoryEnum = pgEnum("car_category", [
+	"sedan",
+	"coupe",
+	"suv",
+	"crossover",
+	"wagon/hatchback",
+	"green car/hybrid",
+	"convertible",
+	"sports car",
+	"pickup truck",
+	"minivan/van",
+	"luxury car",
+]);
+
+export const carConditionEnum = pgEnum("car_condition", [
+	"new",
+	"used",
+	"certified-pre-owned",
+	"damaged",
+]);
+
 export const usersTable = pgTable("users", {
 	id: text().primaryKey(),
 	name: text().notNull(),
@@ -105,12 +126,13 @@ export const carListingsTable = pgTable("car_listings", {
 	make: text().notNull(),
 	model: text().notNull(),
 	year: integer().notNull(),
-	condition: text().notNull(),
+	condition: carConditionEnum().notNull(),
 	price: bigint({ mode: "number" }).notNull(), // Store price in Kobo using bigint
 	mileage: text().notNull(),
 	transmission: transmissionTypeEnum().notNull(),
 	fuelType: fuelTypeEnum().notNull(),
 	description: text(),
+	category: carCategoryEnum().notNull(),
 	status: listingStatusEnum().default("active").notNull(),
 	images:
 		jsonb().$type<
