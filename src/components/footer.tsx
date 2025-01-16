@@ -8,7 +8,7 @@ import { Link } from "ui";
 
 export const Footer = () => {
 	return (
-		<footer className="text-white pb-16">
+		<footer className="text-white pb-6">
 			<div className="max-w-screen-xl mx-auto px-4">
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-12">
 					<div>
@@ -78,9 +78,10 @@ export const Footer = () => {
 						</div>
 					</div>
 				</div>
-				<div className="mt-12 pt-8 border-t border-gray-800 text-center">
-					<p className="text-muted-fg">
-						&copy; 2023 Car Marketplace. All rights reserved.
+				<div className="mt-12 pt-6 border-t border-border text-center">
+					<p className="text-muted-fg text-sm">
+						&copy; {new Date().getFullYear()} Car Marketplace. All rights
+						reserved.
 					</p>
 				</div>
 			</div>
