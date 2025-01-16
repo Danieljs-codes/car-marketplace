@@ -6,7 +6,7 @@ const Hero = () => {
 	return (
 		<div className="py-20">
 			<div className="text-center">
-				<h1 className="text-3xl md:text-6xl font-bold mb-2 leading-tight text-white">
+				<h1 className="text-3xl md:text-6xl font-bold mb-2 leading-tight text-fg">
 					Discover Your Dream Ride
 				</h1>
 				<p className="text-base md:text-xl mb-6 text-muted-fg">

@@ -72,9 +72,9 @@ const categories = [
 
 export const CategoryCarousel = () => {
 	return (
-		<div className="max-w-screen-xl mx-auto px-4 pb-20">
+		<div className="max-w-screen-xl mx-auto px-4 pb-16">
 			<div className="container">
-				<h2 className="text-3xl font-bold mb-8">Featured Vehicles</h2>
+				<h2 className="text-3xl font-bold mb-8">Popular Categories</h2>
 			</div>
 			<Carousel
 				opts={{

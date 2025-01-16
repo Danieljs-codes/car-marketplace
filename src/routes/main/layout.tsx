@@ -1,6 +1,7 @@
 import { Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import AppNavbar from "~/components/app-navbar";
+import { Footer } from "~/components/footer";
 import { $getAuthStatus } from "~/server/actions/auth";
 
 export const Route = createFileRoute("/_main-layout-id")({
@@ -17,6 +18,7 @@ function RouteComponent() {
 	return (
 		<AppNavbar auth={auth}>
 			<Outlet />
+			<Footer />
 		</AppNavbar>
 	);
 }
