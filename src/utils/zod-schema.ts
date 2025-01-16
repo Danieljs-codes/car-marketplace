@@ -1,5 +1,5 @@
 import z from "zod";
-import { validCarCategories } from "./misc";
+import { fuelTypeEnum, transmissionTypeEnum, validCarCategories } from "./misc";
 // Maximum price in Kobo (₦100,000,000.00 = 10,000,000,000 Kobo)
 const MAX_PRICE_KOBO = 10_000_000_000;
 
@@ -63,10 +63,10 @@ export const createListingSchema = z.object({
 		.min(1, { message: "Price must be greater than 0" })
 		.max(MAX_PRICE_KOBO, { message: "Price cannot exceed ₦100,000,000" }),
 	mileage: z.number().min(0, { message: "Mileage must be 0 or greater" }),
-	transmission: z.enum(["automatic", "manual"], {
+	transmission: z.enum(transmissionTypeEnum, {
 		errorMap: () => ({ message: "Please select a transmission type" }),
 	}),
-	fuelType: z.enum(["petrol", "diesel", "electric", "hybrid"], {
+	fuelType: z.enum(fuelTypeEnum, {
 		errorMap: () => ({ message: "Please select a fuel type" }),
 	}),
 	description: z.string().optional(),

@@ -80,6 +80,10 @@ export const carConditionEnum = [
 	"for-parts",
 ] as const;
 
+export const transmissionTypeEnum = ["automatic", "manual"] as const;
+
+export const fuelTypeEnum = ["petrol", "diesel", "electric", "hybrid"] as const;
+
 export const kebabToSentence = (str: string) =>
 	str
 		.split("-")
