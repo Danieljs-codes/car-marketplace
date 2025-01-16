@@ -13,6 +13,7 @@ export * from './carousel';
 export * from './checkbox';
 export * from './combo-box';
 export * from './dialog';
+export * from './disclosure';
 export * from './dropdown';
 export * from './field';
 export * from './file-trigger';

@@ -10,7 +10,7 @@ import { Avatar, Button, buttonStyles, Menu, Navbar, Separator } from "ui";
 import { ThemeSwitcher } from "./theme-switcher";
 import { Logo } from "./logo";
 import type { authClient } from "~/utils/auth-client";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { getAvatarInitials } from "~/utils/misc";
 import type schema from "~/server/db/schema";
 
@@ -27,6 +27,8 @@ export default function AppNavbar({
 }: React.ComponentProps<typeof Navbar> & {
 	auth: Auth;
 }) {
+	const activeRoute = useLocation().pathname;
+
 	return (
 		<>
 			<Navbar intent="inset" {...props}>
@@ -35,10 +37,15 @@ export default function AppNavbar({
 						<Logo className="w-24" />
 					</Navbar.Logo>
 					<Navbar.Section>
-						<Navbar.Item isCurrent href="/">
+						<Navbar.Item isCurrent={activeRoute === "/"} href="/">
 							Home
 						</Navbar.Item>
-						<Navbar.Item href="/browse-cars">Browse Cars</Navbar.Item>
+						<Navbar.Item
+							href="/browse-cars"
+							isCurrent={activeRoute === "/browse-cars"}
+						>
+							Browse Cars
+						</Navbar.Item>
 						<Navbar.Item href="/">Wishlist</Navbar.Item>
 						<Navbar.Item href="/">My Purchases</Navbar.Item>
 					</Navbar.Section>
