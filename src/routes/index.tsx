@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CategoryCarousel } from "~/components/category-carousel";
+import { FeaturedVehicles } from "~/components/featured-vehicles";
 import { Hero } from "~/components/hero";
 
 export const Route = createFileRoute("/_main-layout-id/")({
@@ -9,6 +11,8 @@ function RouteComponent() {
 	return (
 		<div>
 			<Hero />
+			<FeaturedVehicles />
+			<CategoryCarousel />
 		</div>
 	);
 }
