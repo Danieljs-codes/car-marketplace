@@ -1,11 +1,15 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
+import { IconFilter } from "justd-icons";
+import { useState } from "react";
 import {
+	Button,
 	Checkbox,
 	Disclosure,
 	DisclosureGroup,
 	DisclosurePanel,
 	DisclosureTrigger,
+	Sheet,
 } from "ui";
 import { z } from "zod";
 import {
@@ -56,7 +60,109 @@ export const Route = createFileRoute("/_main-layout-id/browse-cars")({
 	component: RouteComponent,
 });
 
+function FiltersContent({
+	search,
+	onCategoryChange,
+	onConditionChange,
+	onTransmissionChange,
+	onFuelTypeChange,
+}: {
+	search: z.infer<typeof validSearchParam>;
+	onCategoryChange: (category: (typeof validCarCategories)[number]) => void;
+	onConditionChange: (condition: (typeof carConditionEnum)[number]) => void;
+	onTransmissionChange: (
+		transmission: (typeof transmissionTypeEnum)[number],
+	) => void;
+	onFuelTypeChange: (fuel: (typeof fuelTypeEnum)[number]) => void;
+}) {
+	return (
+		<DisclosureGroup
+			allowsMultipleExpanded
+			defaultExpandedKeys={[1, 2, 3, 4]}
+			className="md:rounded-xl md:border md:**:data-[slot=disclosure]:last:border-b-0"
+		>
+			<Disclosure className="px-2" id={1}>
+				<DisclosureTrigger className="text-sm px-2">Category</DisclosureTrigger>
+				<DisclosurePanel className="px-2">
+					<div className="flex flex-col gap-0.5">
+						{validCarCategories.map((category) => (
+							<Checkbox
+								className="font-medium"
+								key={category}
+								isSelected={search.category.includes(category)}
+								onChange={() => onCategoryChange(category)}
+							>
+								{category.charAt(0).toUpperCase() +
+									category.slice(1).replace(/-/g, " ")}
+							</Checkbox>
+						))}
+					</div>
+				</DisclosurePanel>
+			</Disclosure>
+			<Disclosure className="px-2" id={2}>
+				<DisclosureTrigger className="text-sm px-2">
+					Condition
+				</DisclosureTrigger>
+				<DisclosurePanel className="px-2">
+					<div className="flex flex-col gap-0.5">
+						{carConditionEnum.map((condition) => (
+							<Checkbox
+								className="font-medium"
+								key={condition}
+								isSelected={search.condition.includes(condition)}
+								onChange={() => onConditionChange(condition)}
+							>
+								{condition.charAt(0).toUpperCase() +
+									condition.slice(1).replace(/-/g, " ")}
+							</Checkbox>
+						))}
+					</div>
+				</DisclosurePanel>
+			</Disclosure>
+			<Disclosure className="px-2" id={3}>
+				<DisclosureTrigger className="text-sm px-2">
+					Transmission
+				</DisclosureTrigger>
+				<DisclosurePanel className="px-2">
+					<div className="flex flex-col gap-0.5">
+						{transmissionTypeEnum.map((transmission) => (
+							<Checkbox
+								className="font-medium"
+								key={transmission}
+								isSelected={search.transmission.includes(transmission)}
+								onChange={() => onTransmissionChange(transmission)}
+							>
+								{transmission.charAt(0).toUpperCase() + transmission.slice(1)}
+							</Checkbox>
+						))}
+					</div>
+				</DisclosurePanel>
+			</Disclosure>
+			<Disclosure className="px-2" id={4}>
+				<DisclosureTrigger className="text-sm px-2">
+					Fuel Type
+				</DisclosureTrigger>
+				<DisclosurePanel className="px-2">
+					<div className="flex flex-col gap-0.5">
+						{fuelTypeEnum.map((fuel) => (
+							<Checkbox
+								className="font-medium"
+								key={fuel}
+								isSelected={search.fuelType.includes(fuel)}
+								onChange={() => onFuelTypeChange(fuel)}
+							>
+								{fuel.charAt(0).toUpperCase() + fuel.slice(1)}
+							</Checkbox>
+						))}
+					</div>
+				</DisclosurePanel>
+			</Disclosure>
+		</DisclosureGroup>
+	);
+}
+
 function RouteComponent() {
+	const [isOpen, setIsOpen] = useState(false);
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
@@ -120,93 +226,46 @@ function RouteComponent() {
 
 	return (
 		<div className="py-10 max-w-screen-xl mx-auto px-4">
-			<div className="grid grid-cols-[256px_1fr] gap-4">
-				<div className="sticky top-4 px-2">
-					<DisclosureGroup
-						allowsMultipleExpanded
-						defaultExpandedKeys={[1, 2, 3, 4]}
-						className="rounded-xl border **:data-[slot=disclosure]:last:border-b-0"
+			<div className="flex justify-end">
+				<Button
+					appearance="outline"
+					size="square-petite"
+					className="mb-6 md:hidden"
+					onPress={() => setIsOpen(true)}
+				>
+					<IconFilter />
+				</Button>
+			</div>
+			<div className="grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4">
+				<Sheet isOpen={isOpen} onOpenChange={setIsOpen}>
+					<Sheet.Content
+						classNames={{
+							content: "pb-4 md:hidden",
+						}}
 					>
-						<Disclosure className="px-2" id={1}>
-							<DisclosureTrigger className="text-sm px-2">
-								Category
-							</DisclosureTrigger>
-							<DisclosurePanel className="px-2">
-								<div className="flex flex-col gap-0.5">
-									{validCarCategories.map((category) => (
-										<Checkbox
-											className="font-medium"
-											key={category}
-											isSelected={search.category.includes(category)}
-											onChange={() => handleCategoryChange(category)}
-										>
-											{category.charAt(0).toUpperCase() +
-												category.slice(1).replace(/-/g, " ")}
-										</Checkbox>
-									))}
-								</div>
-							</DisclosurePanel>
-						</Disclosure>
-						<Disclosure className="px-2" id={2}>
-							<DisclosureTrigger className="text-sm px-2">
-								Condition
-							</DisclosureTrigger>
-							<DisclosurePanel className="px-2">
-								<div className="flex flex-col gap-0.5">
-									{carConditionEnum.map((condition) => (
-										<Checkbox
-											className="font-medium"
-											key={condition}
-											isSelected={search.condition.includes(condition)}
-											onChange={() => handleConditionChange(condition)}
-										>
-											{condition.charAt(0).toUpperCase() +
-												condition.slice(1).replace(/-/g, " ")}
-										</Checkbox>
-									))}
-								</div>
-							</DisclosurePanel>
-						</Disclosure>
-						<Disclosure className="px-2" id={3}>
-							<DisclosureTrigger className="text-sm px-2">
-								Transmission
-							</DisclosureTrigger>
-							<DisclosurePanel className="px-2">
-								<div className="flex flex-col gap-0.5">
-									{transmissionTypeEnum.map((transmission) => (
-										<Checkbox
-											className="font-medium"
-											key={transmission}
-											isSelected={search.transmission.includes(transmission)}
-											onChange={() => handleTransmissionChange(transmission)}
-										>
-											{transmission.charAt(0).toUpperCase() +
-												transmission.slice(1)}
-										</Checkbox>
-									))}
-								</div>
-							</DisclosurePanel>
-						</Disclosure>
-						<Disclosure className="px-2" id={4}>
-							<DisclosureTrigger className="text-sm px-2">
-								Fuel Type
-							</DisclosureTrigger>
-							<DisclosurePanel className="px-2">
-								<div className="flex flex-col gap-0.5">
-									{fuelTypeEnum.map((fuel) => (
-										<Checkbox
-											className="font-medium"
-											key={fuel}
-											isSelected={search.fuelType.includes(fuel)}
-											onChange={() => handleFuelTypeChange(fuel)}
-										>
-											{fuel.charAt(0).toUpperCase() + fuel.slice(1)}
-										</Checkbox>
-									))}
-								</div>
-							</DisclosurePanel>
-						</Disclosure>
-					</DisclosureGroup>
+						<Sheet.Header>
+							<Sheet.Title>Filters</Sheet.Title>
+						</Sheet.Header>
+						<Sheet.Body>
+							<FiltersContent
+								search={search}
+								onCategoryChange={handleCategoryChange}
+								onConditionChange={handleConditionChange}
+								onTransmissionChange={handleTransmissionChange}
+								onFuelTypeChange={handleFuelTypeChange}
+							/>
+						</Sheet.Body>
+					</Sheet.Content>
+				</Sheet>
+
+				<div className="sticky top-4 px-2 hidden md:block">
+					<FiltersContent
+						search={search}
+						onCategoryChange={handleCategoryChange}
+						onConditionChange={handleConditionChange}
+						onTransmissionChange={handleTransmissionChange}
+						onFuelTypeChange={handleFuelTypeChange}
+					/>
 				</div>
 				<div className="h-200 bg-red-200"></div>
 			</div>
