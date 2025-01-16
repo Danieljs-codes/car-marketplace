@@ -8,7 +8,7 @@ import { Link } from "ui";
 
 export const Footer = () => {
 	return (
-		<footer className="text-white pb-6">
+		<footer className="text-fg pb-6">
 			<div className="max-w-screen-xl mx-auto px-4">
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-12">
 					<div>
@@ -20,7 +20,7 @@ export const Footer = () => {
 						</p>
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold mb-3">Quick Links</h3>
+						<h3 className="text-lg font-semibold mb-3 text-fg">Quick Links</h3>
 						<ul className="space-y-3">
 							<li className="text-sm">
 								<Link intent="secondary" href="/">
@@ -45,7 +45,7 @@ export const Footer = () => {
 						</ul>
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold mb-3">Contact Us</h3>
+						<h3 className="text-lg font-semibold mb-3 text-fg">Contact Us</h3>
 						<p className="text-muted-fg mb-2 text-sm">
 							1234 Car Street, Auto City, AC 12345
 						</p>
@@ -55,22 +55,22 @@ export const Footer = () => {
 						</p>
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold mb-3">Follow Us</h3>
+						<h3 className="text-lg font-semibold mb-3 text-fg">Follow Us</h3>
 						<div className="flex space-x-4">
 							<a
 								href="/"
-								className="text-muted-fg hover:text-white transition duration-300"
+								className="text-muted-fg hover:text-fg transition duration-300"
 							>
 								<IconBrandFacebook className="size-6" />
 							</a>
 							<a
-								className="text-muted-fg hover:text-white transition duration-300"
+								className="text-muted-fg hover:text-fg transition duration-300"
 								href="/"
 							>
 								<IconBrandTwitter className="size-6" />
 							</a>
 							<a
-								className="text-muted-fg hover:text-white transition duration-300"
+								className="text-muted-fg hover:text-fg transition duration-300"
 								href="/"
 							>
 								<IconBrandInstagram className="size-6" />
