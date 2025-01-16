@@ -38,7 +38,7 @@ export default function AppNavbar({
 						<Navbar.Item isCurrent href="/">
 							Home
 						</Navbar.Item>
-						<Navbar.Item href="/">Browse Cars</Navbar.Item>
+						<Navbar.Item href="/browse-cars">Browse Cars</Navbar.Item>
 						<Navbar.Item href="/">Wishlist</Navbar.Item>
 						<Navbar.Item href="/">My Purchases</Navbar.Item>
 					</Navbar.Section>

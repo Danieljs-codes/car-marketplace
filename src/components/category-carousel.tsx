@@ -68,7 +68,7 @@ const categories = [
 		image:
 			"https://images.unsplash.com/photo-1563720360172-67b8f3dce741?auto=format&w=800&q=80",
 	},
-];
+] as const;
 
 export const CategoryCarousel = () => {
 	return (
@@ -86,7 +86,11 @@ export const CategoryCarousel = () => {
 				<Carousel.Content items={categories}>
 					{({ id, name, image }) => (
 						<Carousel.Item id={id} className="basis-1/2 lg:basis-1/5">
-							<Link rel="stylesheet" to="/">
+							<Link
+								rel="stylesheet"
+								to="/browse-cars"
+								search={(prev) => ({ ...prev, category: name })}
+							>
 								<Card className="flex aspect-square items-center justify-center overflow-hidden relative">
 									<img
 										src={image}
