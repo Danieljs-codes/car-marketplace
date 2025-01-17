@@ -315,7 +315,7 @@ function RouteComponent() {
 									params={{ listingId: listing.id }}
 									className="block"
 								>
-									<Card className="h-full hover:border-primary/50 transition-colors">
+									<Card className="h-full hover:border-primary/50 transition-colors overflow-hidden">
 										<Card.Content className="p-0">
 											<div className="aspect-[4/3] relative">
 												<div className="absolute inset-0 z-0">
@@ -361,7 +361,7 @@ function RouteComponent() {
 													</div>
 													<div className="flex items-center gap-1.5 text-muted-fg">
 														<IconLocation className="w-4 h-4" />
-														<span>{listing.location}</span>
+														<span className="truncate">{listing.location}</span>
 													</div>
 												</div>
 												<div className="flex flex-wrap gap-x-2 gap-y-1 mt-3 text-sm text-muted-fg">

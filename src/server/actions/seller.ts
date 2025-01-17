@@ -264,7 +264,6 @@ export const $createListing = createServerFn({
 			throw new Error("Invalid form data");
 		}
 
-		const title = data.get("title");
 		const make = data.get("make");
 		const model = data.get("model");
 		const year = data.get("year");
@@ -290,7 +289,6 @@ export const $createListing = createServerFn({
 		}
 
 		const validated = createListingSchema.parse({
-			title,
 			make,
 			model,
 			year: Number(year),
@@ -333,29 +331,8 @@ export const $createListing = createServerFn({
 
 		console.log({ data, seller: context.seller });
 
-		// Add debug logging before insert
-		console.log("Processed data:", {
-			title: data.title,
-			make: data.make,
-			model: data.model,
-			year: data.year,
-			condition: data.condition,
-			price: data.price,
-			mileage: data.mileage.toString(),
-			transmission: data.transmission,
-			fuelType: data.fuelType,
-			description: data.description || null,
-			category: data.category,
-			location: data.location,
-			vin: data.vin || null,
-			sellerId: context.seller.id,
-			images: processedImages,
-			status: "active",
-		});
-
 		// Modified insert statement
 		await db.insert(schema.carListings).values({
-			title: data.title,
 			make: data.make,
 			model: data.model,
 			year: data.year,
@@ -421,7 +398,6 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 						? or(
 								ilike(schema.carListings.make, `%${search}%`),
 								ilike(schema.carListings.model, `%${search}%`),
-								ilike(schema.carListings.title, `%${search}%`),
 								ilike(schema.users.name, `%${search}%`),
 								ilike(schema.users.email, `%${search}%`),
 							)

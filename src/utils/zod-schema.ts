@@ -48,7 +48,6 @@ export const becomeASellerSchema = z.object({
 });
 
 export const createListingSchema = z.object({
-	title: z.string().min(1, { message: "Title is required" }),
 	make: z.string().min(1, { message: "Make is required" }),
 	model: z.string().min(1, { message: "Model is required" }),
 	year: z

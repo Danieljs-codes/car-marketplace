@@ -34,7 +34,6 @@ function RouteComponent() {
 	>({
 		resolver: zodResolver(createListingSchema),
 		defaultValues: {
-			title: "",
 			description: "",
 			price: undefined,
 			condition: undefined,
@@ -78,7 +77,6 @@ function RouteComponent() {
 		},
 	});
 
-	const titleField = useController({ control, name: "title" });
 	const descriptionField = useController({ control, name: "description" });
 	const priceField = useController({ control, name: "price" });
 	const conditionField = useController({ control, name: "condition" });
@@ -159,13 +157,6 @@ function RouteComponent() {
 			<div>
 				<form onSubmit={onSubmit}>
 					<div className="space-y-5">
-						<TextField
-							label="Title"
-							{...titleField.field}
-							placeholder="2023 Toyota Camry XSE"
-							isInvalid={!!titleField.fieldState.error}
-							errorMessage={titleField.fieldState.error?.message}
-						/>
 						<div className="flex  flex-col md:flex-row gap-4">
 							<TextField
 								label="Make"

@@ -122,7 +122,6 @@ export const carListingsTable = pgTable("car_listings", {
 	sellerId: text()
 		.notNull()
 		.references(() => sellersTable.id),
-	title: text().notNull(),
 	make: text().notNull(),
 	model: text().notNull(),
 	year: integer().notNull(),
