@@ -7,6 +7,9 @@ import {
 	$getSellerCarStats,
 	$getTotalRevenueForSeller,
 } from "~/server/actions/seller";
+import { $getFiltersContent } from "~/server/actions/filter";
+import type { validSearchParam } from "~/server/actions/filter";
+import type { z } from "zod";
 
 export interface PaystackBankResponse {
 	message: string;
@@ -131,6 +134,17 @@ export const getPaginatedOrdersForSellerQueryOptions = ({
 				data: { page, pageSize, search },
 			});
 
+			return response;
+		},
+	});
+
+export const getFilteredListingsQueryOptions = (
+	filters: z.infer<typeof validSearchParam>,
+) =>
+	queryOptions({
+		queryKey: ["getFilteredListings", filters],
+		queryFn: async () => {
+			const response = await $getFiltersContent({ data: filters });
 			return response;
 		},
 	});

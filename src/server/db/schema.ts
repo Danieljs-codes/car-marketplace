@@ -134,8 +134,8 @@ export const carListingsTable = pgTable("car_listings", {
 	description: text(),
 	category: carCategoryEnum().notNull(),
 	status: listingStatusEnum().default("active").notNull(),
-	images:
-		jsonb().$type<
+	images: jsonb()
+		.$type<
 			Array<{
 				url: string;
 				blurhash: string;
@@ -143,7 +143,8 @@ export const carListingsTable = pgTable("car_listings", {
 				name: string;
 				size: number;
 			}>
-		>(),
+		>()
+		.notNull(),
 	location: text("location").notNull(),
 	vin: text("vin"), // Vehicle Identification Number
 	createdAt: timestamp().notNull().defaultNow(),

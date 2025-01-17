@@ -1,7 +1,6 @@
 import {
 	Outlet,
 	ScrollRestoration,
-	createRootRoute,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { Meta, Scripts } from "@tanstack/start";
@@ -87,6 +86,7 @@ function RootComponent() {
 
 	return (
 		<RootDocument>
+			<ScrollRestoration />
 			<Outlet />
 			<Toast />
 		</RootDocument>
@@ -103,7 +103,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			</head>
 			<body>
 				<Providers>{children}</Providers>
-				<ScrollRestoration />
+
 				<Scripts />
 			</body>
 		</html>

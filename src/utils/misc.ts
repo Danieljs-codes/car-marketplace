@@ -75,9 +75,8 @@ export const getOrderStatusBadgeIntent = (orderStatus: OrderStatus) => {
 export const carConditionEnum = [
 	"new",
 	"used",
-	"refurbished",
+	"certified-pre-owned",
 	"damaged",
-	"for-parts",
 ] as const;
 
 export const transmissionTypeEnum = ["automatic", "manual"] as const;

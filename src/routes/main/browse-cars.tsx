@@ -1,8 +1,9 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
-import { IconFilter } from "justd-icons";
+import { IconFilter, IconLocation } from "justd-icons";
 import { useState } from "react";
 import {
+	Badge,
 	Button,
 	Checkbox,
 	Disclosure,
@@ -17,19 +18,34 @@ import {
 	fuelTypeEnum,
 	transmissionTypeEnum,
 	validCarCategories,
+	formatCurrency,
 } from "~/utils/misc";
+import { getFilteredListingsQueryOptions } from "~/utils/query-options";
+import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
+import { Link } from "@tanstack/react-router";
+import { Card } from "ui";
+import { IconSpeedometer } from "~/components/icons/speedometer";
 
-const defaultValues = {
+function EmptyState() {
+	return (
+		<div className="text-center py-12">
+			<h3 className="text-lg font-semibold mb-2">No listings found</h3>
+			<p className="text-muted-fg text-sm md:text-base">
+				Try adjusting your filters to find what you're looking for.
+			</p>
+		</div>
+	);
+}
+
+export const defaultValues = {
 	category: [...validCarCategories],
 	condition: [...carConditionEnum],
 	make: "",
-	priceMin: 0,
-	priceMax: null,
 	transmission: [...transmissionTypeEnum],
 	fuelType: [...fuelTypeEnum],
 };
 
-const validSearchParam = z.object({
+export const validSearchParam = z.object({
 	category: fallback(z.array(z.enum(validCarCategories)), [
 		...defaultValues.category,
 	]).default([...defaultValues.category]),
@@ -38,12 +54,6 @@ const validSearchParam = z.object({
 		defaultValues.condition,
 	).default(defaultValues.condition),
 	make: fallback(z.string(), defaultValues.make).default(defaultValues.make),
-	priceMin: fallback(z.number(), defaultValues.priceMin).default(
-		defaultValues.priceMin,
-	),
-	priceMax: fallback(z.number().nullable(), defaultValues.priceMax).default(
-		defaultValues.priceMax,
-	),
 	transmission: fallback(z.array(z.enum(transmissionTypeEnum)), [
 		...defaultValues.transmission,
 	]).default([...defaultValues.transmission]),
@@ -56,6 +66,18 @@ export const Route = createFileRoute("/_main-layout-id/browse-cars")({
 	validateSearch: zodValidator(validSearchParam),
 	search: {
 		middlewares: [stripSearchParams(defaultValues)],
+	},
+	loaderDeps: ({
+		search: { category, condition, fuelType, make, transmission },
+	}) => ({
+		category,
+		condition,
+		fuelType,
+		make,
+		transmission,
+	}),
+	loader: async ({ deps, context }) => {
+		context.queryClient.ensureQueryData(getFilteredListingsQueryOptions(deps));
 	},
 	component: RouteComponent,
 });
@@ -81,7 +103,7 @@ function FiltersContent({
 			defaultExpandedKeys={[1, 2, 3, 4]}
 			className="md:rounded-xl md:border md:**:data-[slot=disclosure]:last:border-b-0"
 		>
-			<Disclosure className="px-2" id={1}>
+			<Disclosure className="md:px-2" id={1}>
 				<DisclosureTrigger className="text-sm px-2">Category</DisclosureTrigger>
 				<DisclosurePanel className="px-2">
 					<div className="flex flex-col gap-0.5">
@@ -166,6 +188,10 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
+	const { data } = useSuspenseQueryDeferred(
+		getFilteredListingsQueryOptions(search),
+	);
+
 	const handleCategoryChange = (
 		category: (typeof validCarCategories)[number],
 	) => {
@@ -178,6 +204,7 @@ function RouteComponent() {
 				...search,
 				category: newCategories,
 			},
+			resetScroll: false,
 		});
 	};
 
@@ -193,6 +220,7 @@ function RouteComponent() {
 				...search,
 				condition: newConditions,
 			},
+			resetScroll: false,
 		});
 	};
 
@@ -208,6 +236,7 @@ function RouteComponent() {
 				...search,
 				transmission: newTransmissions,
 			},
+			resetScroll: false,
 		});
 	};
 
@@ -221,6 +250,7 @@ function RouteComponent() {
 				...search,
 				fuelType: newFuelTypes,
 			},
+			resetScroll: false,
 		});
 	};
 
@@ -230,7 +260,7 @@ function RouteComponent() {
 				<Button
 					appearance="outline"
 					size="square-petite"
-					className="mb-6 md:hidden"
+					className="mb-4 md:hidden"
 					onPress={() => setIsOpen(true)}
 				>
 					<IconFilter />
@@ -239,6 +269,7 @@ function RouteComponent() {
 			<div className="grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4">
 				<Sheet isOpen={isOpen} onOpenChange={setIsOpen}>
 					<Sheet.Content
+						isFloat={false}
 						classNames={{
 							content: "pb-4 md:hidden",
 						}}
@@ -257,7 +288,6 @@ function RouteComponent() {
 						</Sheet.Body>
 					</Sheet.Content>
 				</Sheet>
-
 				<div className="sticky top-4 px-2 hidden md:block">
 					<FiltersContent
 						search={search}
@@ -267,7 +297,77 @@ function RouteComponent() {
 						onFuelTypeChange={handleFuelTypeChange}
 					/>
 				</div>
-				<div className="h-200 bg-red-200"></div>
+				<div className="space-y-4">
+					<div className="text-sm text-muted-fg">
+						{data.length} {data.length === 1 ? "listing" : "listings"} found
+					</div>
+					{data.length === 0 ? (
+						<EmptyState />
+					) : (
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+							{data.map((listing) => (
+								<Link
+									key={listing.id}
+									// @ts-expect-error - To be fixed
+									to="/listing/$listingId"
+									// @ts-expect-error - To be fixed
+									params={{ listingId: listing.id }}
+									className="block"
+								>
+									<Card className="h-full hover:border-primary/50 transition-colors">
+										<Card.Content className="p-0">
+											<div className="aspect-[4/3] relative">
+												<img
+													src={listing.images[0].url}
+													alt={`${listing.make} ${listing.model}`}
+													className="object-cover w-full h-full rounded-t-lg"
+												/>
+												<div className="absolute top-2 right-2">
+													<Badge shape="circle" intent="secondary">
+														{listing.condition.charAt(0).toUpperCase() +
+															listing.condition.slice(1)}
+													</Badge>
+												</div>
+											</div>
+											<div className="p-4">
+												<h3 className="font-semibold">
+													{listing.make} {listing.model}
+												</h3>
+												<p className="text-xl font-bold mt-2">
+													{formatCurrency({
+														amount: listing.price,
+														isKobo: true,
+													})}
+												</p>
+												<div className="grid grid-cols-2 gap-2 mt-3 text-sm">
+													<div className="flex items-center gap-1.5 text-muted-fg">
+														<IconSpeedometer className="w-4 h-4" />
+														<span>{listing.mileage.toLocaleString()} km</span>
+													</div>
+													<div className="flex items-center gap-1.5 text-muted-fg">
+														<IconLocation className="w-4 h-4" />
+														<span>{listing.location}</span>
+													</div>
+												</div>
+												<div className="flex flex-wrap gap-x-2 gap-y-1 mt-3 text-sm text-muted-fg">
+													<span>{listing.year}</span>
+													<span>•</span>
+													<span className="capitalize">
+														{listing.transmission.toLowerCase()}
+													</span>
+													<span>•</span>
+													<span className="capitalize">
+														{listing.fuelType.toLowerCase()}
+													</span>
+												</div>
+											</div>
+										</Card.Content>
+									</Card>
+								</Link>
+							))}
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

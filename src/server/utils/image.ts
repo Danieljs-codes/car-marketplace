@@ -30,8 +30,15 @@ export const processImage = serverOnly$(async (file: File) => {
 
 	// Optimize image
 	const optimizedBuffer = await sharp(buffer)
-		.resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
-		.jpeg({ quality: 80 })
+		.resize(1200, 1200, {
+			fit: "inside",
+			withoutEnlargement: true,
+			kernel: "lanczos3", // Better quality downscaling
+		})
+		.jpeg({
+			quality: 80,
+			mozjpeg: true, // Better compression,
+		})
 		.toBuffer();
 
 	return {
