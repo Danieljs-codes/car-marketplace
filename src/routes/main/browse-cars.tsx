@@ -25,6 +25,7 @@ import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
 import { Link } from "@tanstack/react-router";
 import { Card } from "ui";
 import { IconSpeedometer } from "~/components/icons/speedometer";
+import { Blurhash } from "react-blurhash";
 
 function EmptyState() {
 	return (
@@ -317,12 +318,26 @@ function RouteComponent() {
 									<Card className="h-full hover:border-primary/50 transition-colors">
 										<Card.Content className="p-0">
 											<div className="aspect-[4/3] relative">
+												<div className="absolute inset-0 z-0">
+													<Blurhash
+														hash={listing.images[0].blurhash}
+														width="100%"
+														height="100%"
+														resolutionX={32}
+														resolutionY={32}
+														punch={1}
+													/>
+												</div>
 												<img
 													src={listing.images[0].url}
 													alt={`${listing.make} ${listing.model}`}
-													className="object-cover w-full h-full rounded-t-lg"
+													className="object-cover w-full h-full rounded-t-lg relative z-10 transition-opacity duration-300"
+													onLoad={(e) => {
+														e.currentTarget.style.opacity = "1";
+													}}
+													style={{ opacity: 0 }}
 												/>
-												<div className="absolute top-2 right-2">
+												<div className="absolute top-2 right-2 z-20">
 													<Badge shape="circle" intent="secondary">
 														{listing.condition.charAt(0).toUpperCase() +
 															listing.condition.slice(1)}
