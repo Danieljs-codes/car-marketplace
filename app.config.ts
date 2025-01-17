@@ -16,6 +16,7 @@ const routes = rootRoute("root.tsx", [
 		index("index.tsx"),
 		route("become-seller", "main/become-seller.tsx"),
 		route("/browse-cars", "main/browse-cars.tsx"),
+		route("listings/$listingId", "main/listing.tsx"),
 	]),
 	layout("seller-layout-id", "main/seller/layout.tsx", [
 		route("dashboard", "main/seller/dashboard.tsx"),

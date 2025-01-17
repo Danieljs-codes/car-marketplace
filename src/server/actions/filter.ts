@@ -16,6 +16,8 @@ export const validSearchParam = z.object({
 	make: z.string(),
 	transmission: z.array(z.enum(transmissionTypeEnum)),
 	fuelType: z.array(z.enum(fuelTypeEnum)),
+	page: z.number().default(1),
+	limit: z.number().default(12),
 });
 
 export const $getFiltersContent = createServerFn({ method: "GET" })
@@ -48,12 +50,26 @@ export const $getFiltersContent = createServerFn({ method: "GET" })
 		// Always filter for active listings
 		conditions.push(eq(carListingsTable.status, "active"));
 
-		const listings = await db
-			.select()
-			.from(carListingsTable)
-			.where(and(...conditions))
-			.orderBy(sql`${carListingsTable.createdAt} DESC`)
-			.limit(20);
+		const offset = (data.page - 1) * data.limit;
 
-		return listings;
+		const [listings, totalCount] = await Promise.all([
+			db
+				.select()
+				.from(carListingsTable)
+				.where(and(...conditions))
+				.orderBy(sql`${carListingsTable.createdAt} DESC`)
+				.limit(data.limit)
+				.offset(offset),
+			db
+				.select({ count: sql<number>`count(*)` })
+				.from(carListingsTable)
+				.where(and(...conditions))
+				.then(result => result[0].count)
+		]);
+
+		return {
+			listings,
+			totalPages: Math.ceil(totalCount / data.limit),
+			currentPage: data.page
+		};
 	});
