@@ -1,7 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { IconChevronLeft } from "justd-icons";
-import { buttonStyles, Card, Carousel, DescriptionList } from "ui";
+import { IconCart, IconChevronLeft, IconHeart } from "justd-icons";
+import {
+	Button,
+	buttonStyles,
+	Card,
+	Carousel,
+	DescriptionList,
+	Separator,
+} from "ui";
 import { getCarDetailsQueryOptions } from "~/utils/query-options";
 import { useState } from "react";
 import { Blurhash } from "react-blurhash";
@@ -98,7 +105,7 @@ function RouteComponent() {
 				</div>
 				<div>
 					<div>
-						<h1 className="text-xl md:text-2xl font-bold mb-2">
+						<h1 className="text-xl md:text-2xl font-medium mb-2">
 							{data.year} {data.make} {data.model}
 						</h1>
 						<h2 className="font-bold text-2xl">
@@ -140,15 +147,50 @@ function RouteComponent() {
 								</>
 							)}
 						</DescriptionList>
+						<div className="mt-6 flex flex-col md:flex-row gap-4">
+							<Button appearance="outline" className="w-full">
+								<IconHeart />
+								Add to Wishlist
+							</Button>
+							<Button appearance="solid" className="w-full">
+								<IconCart />
+								Buy Now
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
+			<Separator className="mt-4 md:hidden" />
 			{data.description && (
-				<div className="mt-8">
+				<div className="mt-4 md:mt-8">
 					<h3 className="text-lg font-semibold mb-2">Description</h3>
 					<p className="text-muted-fg">{data.description}</p>
 				</div>
 			)}
+			<Separator className="my-4" />
+			<div className="mt-4">
+				<h3 className="text-lg font-semibold mb-2">Seller Information</h3>
+				<Card>
+					<div className="p-4">
+						<DescriptionList>
+							<DescriptionList.Term>Business Name</DescriptionList.Term>
+							<DescriptionList.Details>
+								{data.seller.businessName}
+							</DescriptionList.Details>
+
+							<DescriptionList.Term>Contact Email</DescriptionList.Term>
+							<DescriptionList.Details>
+								{data.seller.businessEmail}
+							</DescriptionList.Details>
+
+							<DescriptionList.Term>Phone Number</DescriptionList.Term>
+							<DescriptionList.Details>
+								{data.seller.businessPhoneNumber}
+							</DescriptionList.Details>
+						</DescriptionList>
+					</div>
+				</Card>
+			</div>
 		</div>
 	);
 }
