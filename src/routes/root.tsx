@@ -70,7 +70,12 @@ export const Route = createRootRouteWithContext<{
 		return { toast };
 	},
 	component: RootComponent,
+	notFoundComponent: NotFoundComponent,
 });
+
+function NotFoundComponent() {
+	return <div className="font-sans">This cannot be found!!!!!!!!!!!!!</div>;
+}
 
 function RootComponent() {
 	const { toast } = Route.useLoaderData();
@@ -103,7 +108,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			</head>
 			<body>
 				<Providers>{children}</Providers>
-
 				<Scripts />
 			</body>
 		</html>

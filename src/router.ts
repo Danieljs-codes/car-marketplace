@@ -4,7 +4,6 @@ import {
 	isRedirect,
 } from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
-import { lazy } from "react";
 
 import { routeTree } from "~/route-tree.gen";
 
@@ -31,6 +30,7 @@ export function createRouter() {
 		search: {
 			strict: true,
 		},
+		notFoundMode: "fuzzy",
 		defaultPreload: "intent",
 		// Since we're using React Query, we don't want loader calls to ever be stale
 		// This will ensure that the loader is always called when the route is preloaded or visited
