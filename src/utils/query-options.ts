@@ -10,6 +10,7 @@ import {
 import { $getFiltersContent } from "~/server/actions/filter";
 import type { validSearchParam } from "~/server/actions/filter";
 import type { z } from "zod";
+import { $getCarDetails } from "~/server/actions/listings";
 
 export interface PaystackBankResponse {
 	message: string;
@@ -145,6 +146,18 @@ export const getFilteredListingsQueryOptions = (
 		queryKey: ["getFilteredListings", filters],
 		queryFn: async () => {
 			const response = await $getFiltersContent({ data: filters });
+			return response;
+		},
+	});
+
+export const getCarDetailsQueryOptions = (id: string) =>
+	queryOptions({
+		queryKey: ["getCarDetails", id],
+		queryFn: async () => {
+			const response = await $getCarDetails({
+				data: { id },
+			});
+
 			return response;
 		},
 	});

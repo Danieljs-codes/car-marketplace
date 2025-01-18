@@ -12,6 +12,7 @@ export * from './card';
 export * from './carousel';
 export * from './checkbox';
 export * from './combo-box';
+export * from './description-list';
 export * from './dialog';
 export * from './disclosure';
 export * from './dropdown';
