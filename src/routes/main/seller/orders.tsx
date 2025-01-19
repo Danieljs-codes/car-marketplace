@@ -12,6 +12,7 @@ import { IconChevronLeft, IconChevronRight } from "justd-icons";
 import { getPaginatedOrdersForSellerQueryOptions } from "~/utils/query-options";
 import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
 import { useState } from "react";
+import { OrdersLoading } from "./orders.loading";
 
 const ordersSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/_seller-layout-id/orders")({
 			crumb: "Orders",
 		};
 	},
+	pendingComponent: OrdersLoading,
 	component: RouteComponent,
 });
 
@@ -77,11 +79,12 @@ function RouteComponent() {
 			<Card>
 				<Table aria-label="Orders">
 					<Table.Header>
-						<Table.Column isRowHeader>Order ID</Table.Column>
-						<Table.Column>Vehicle</Table.Column>
+						<Table.Column isRowHeader>Vehicle</Table.Column>
 						<Table.Column>Buyer Name</Table.Column>
 						<Table.Column>Buyer Email</Table.Column>
 						<Table.Column>Amount</Table.Column>
+						<Table.Column>Platform Fee</Table.Column>
+						<Table.Column>Net Amount</Table.Column>
 						<Table.Column>Status</Table.Column>
 						<Table.Column>Date</Table.Column>
 					</Table.Header>
@@ -108,17 +111,22 @@ function RouteComponent() {
 					>
 						{(order) => (
 							<Table.Row id={order.id}>
-								<Table.Cell>{order.id}</Table.Cell>
-								<Table.Cell>
+								<Table.Cell className="">
 									{order.listing.year} {order.listing.make}{" "}
 									{order.listing.model}
 								</Table.Cell>
-								<Table.Cell>{order.buyer.name}</Table.Cell>
-								<Table.Cell>{order.buyer.email}</Table.Cell>
+								<Table.Cell className="">{order.buyer.name}</Table.Cell>
+								<Table.Cell className="">{order.buyer.email}</Table.Cell>
 								<Table.Cell className="font-medium">
 									{formatCurrency({ amount: order.amount })}
 								</Table.Cell>
-								<Table.Cell>
+								<Table.Cell className="">
+									{formatCurrency({ amount: order.platformFee })}
+								</Table.Cell>
+								<Table.Cell className="">
+									{formatCurrency({ amount: order.netAmount })}
+								</Table.Cell>
+								<Table.Cell className="">
 									<Badge
 										className="capitalize"
 										intent={getOrderStatusBadgeIntent(
@@ -129,7 +137,9 @@ function RouteComponent() {
 										{order.status.toLowerCase()}
 									</Badge>
 								</Table.Cell>
-								<Table.Cell>{dateFormatter.format(order.createdAt)}</Table.Cell>
+								<Table.Cell className="">
+									{dateFormatter.format(order.createdAt)}
+								</Table.Cell>
 							</Table.Row>
 						)}
 					</Table.Body>

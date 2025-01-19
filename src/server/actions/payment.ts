@@ -68,7 +68,7 @@ export const $initializePayment = createServerFn({ method: "GET" })
 				status: "pending", // Initial status
 			}),
 			{
-				ex: 60 * 60, // 1 hour
+				ex: 60 * 60 * 24, // 1 day
 			},
 		);
 
@@ -140,6 +140,7 @@ export const $verifyPayment = createServerFn({ method: "GET" })
 			sellerId: transactionData.sellerId,
 			amount: transactionData.price,
 			status: "completed",
+			platformFee: transactionData.price * 0.02,
 			paystackReference: data.reference,
 			paystackTransactionId: response.data.reference,
 			paymentMetadata: {

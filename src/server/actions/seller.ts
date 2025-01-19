@@ -375,6 +375,7 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 				createdAt: schema.orders.createdAt,
 				listingId: schema.orders.listingId,
 				buyerId: schema.orders.buyerId,
+				platformFee: schema.orders.platformFee,
 				listing: {
 					make: schema.carListings.make,
 					model: schema.carListings.model,
@@ -418,6 +419,8 @@ export const $getPaginatedOrdersForSeller = createServerFn({
 			orders: orders.map((order) => ({
 				...order,
 				amount: order.amount / 100, // Convert from kobo to naira
+				platformFee: order.platformFee / 100, // Convert from kobo to naira
+				netAmount: (order.amount - order.platformFee) / 100, // Convert from kobo to naira
 			})),
 			totalCount: Number(totalCount[0]?.count) || 0,
 			page,

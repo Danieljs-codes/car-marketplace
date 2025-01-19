@@ -186,6 +186,7 @@ export const ordersTable = pgTable("orders", {
 		.notNull()
 		.references(() => sellersTable.id),
 	amount: bigint({ mode: "number" }).notNull(), // in kobo
+	platformFee: bigint({ mode: "number" }).notNull(),
 	status: orderStatusEnum().default("completed").notNull(),
 	paystackReference: text().notNull(),
 	paystackTransactionId: text().notNull(),
