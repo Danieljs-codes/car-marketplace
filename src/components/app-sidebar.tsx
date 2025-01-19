@@ -2,7 +2,6 @@ import {
 	IconChevronLgDown,
 	IconCircleQuestionmark,
 	IconCommandRegular,
-	IconCreditCard,
 	IconDashboard,
 	IconHeadphones,
 	IconLogout,
@@ -66,10 +65,7 @@ export default function AppSidebar({
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
-				<Link
-					className="flex items-center gap-x-2 group-data-[collapsible=dock]:size-10 group-data-[collapsible=dock]:justify-center"
-					href="/"
-				>
+				<Link className="flex items-center gap-x-2 group-data-[collapsible=dock]:size-10 group-data-[collapsible=dock]:justify-center">
 					{!collapsed ? (
 						<Logo className="w-28 h-auto" />
 					) : (
@@ -133,14 +129,6 @@ export default function AppSidebar({
 								<SidebarLabel>Orders</SidebarLabel>
 							</>
 						</SidebarItem>
-						<SidebarItem
-							isCurrent={activeRoute.toLowerCase().includes("payments")}
-							href="/"
-							badge="4 Pending"
-						>
-							<IconCreditCard />
-							<SidebarLabel>Payments</SidebarLabel>
-						</SidebarItem>
 					</SidebarSection>
 
 					{/* TODO: Remove it or replace it with something else */}
@@ -153,28 +141,24 @@ export default function AppSidebar({
 							<SidebarDisclosurePanel>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("tickets")}
-									href="/"
 								>
 									<IconTicket />
 									<SidebarLabel>Tickets</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("chat")}
-									href="/"
 								>
 									<IconMessage />
 									<SidebarLabel>Chat Support</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("faq")}
-									href="/"
 								>
 									<IconCircleQuestionmark />
 									<SidebarLabel>FAQ</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("docs")}
-									href="/"
 								>
 									<IconNotes />
 									<SidebarLabel>Documentation</SidebarLabel>
@@ -189,21 +173,18 @@ export default function AppSidebar({
 							<SidebarDisclosurePanel>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("stock")}
-									href="/"
 								>
 									<IconMinus />
 									<SidebarLabel>Stock Levels</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("warehouse")}
-									href="/"
 								>
 									<IconMinus />
 									<SidebarLabel>Warehouse</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("shipping")}
-									href="/"
 								>
 									<IconMinus />
 									<SidebarLabel>Shipping</SidebarLabel>
