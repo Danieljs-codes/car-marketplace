@@ -2,6 +2,7 @@ import { CatchNotFound, createFileRoute, Link } from "@tanstack/react-router";
 import { buttonStyles } from "ui";
 import { Listing } from "~/components/listing";
 import { getCarDetailsQueryOptions } from "~/utils/query-options";
+import { ListingLoading } from "./listing.loading";
 
 export const Route = createFileRoute("/_main-layout-id/listings/$listingId")({
 	loader: async ({ context, params }) => {
@@ -9,14 +10,14 @@ export const Route = createFileRoute("/_main-layout-id/listings/$listingId")({
 			getCarDetailsQueryOptions(params.listingId),
 		);
 	},
-	errorComponent: NotFoundComponent,
 	component: RouteComponent,
 	notFoundComponent: NotFoundComponent,
+	pendingComponent: ListingLoading,
 });
 
 function NotFoundComponent() {
 	return (
-		<div className="flex flex-col items-center justify-center min-h-[80vh] p-8">
+		<div className="flex flex-col items-center justify-center min-h-[50vh] md:min-h-[80vh] p-8">
 			<h1 className="text-xl md:text-3xl font-bold text-fg mb-2 md:mb-4">
 				Listing Not Found
 			</h1>
@@ -31,6 +32,7 @@ function NotFoundComponent() {
 					intent: "primary",
 					size: "small",
 				})}
+				to="/browse-cars"
 			>
 				Browse Other Listing
 			</Link>

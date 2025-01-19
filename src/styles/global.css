@@ -201,6 +201,11 @@ input[data-autocompleted] {
 	pointer-events: none;
 }
 
+::selection {
+	color: var(--primary-fg);
+	background-color: var(--primary);
+}
+
 #nprogress .bar {
 	background: var(--primary);
 

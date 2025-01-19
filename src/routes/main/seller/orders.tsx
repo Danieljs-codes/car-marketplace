@@ -110,8 +110,8 @@ function RouteComponent() {
 							<Table.Row id={order.id}>
 								<Table.Cell>{order.id}</Table.Cell>
 								<Table.Cell>
-									{order.listing.make} {order.listing.model}{" "}
-									{order.listing.year}
+									{order.listing.year} {order.listing.make}{" "}
+									{order.listing.model}
 								</Table.Cell>
 								<Table.Cell>{order.buyer.name}</Table.Cell>
 								<Table.Cell>{order.buyer.email}</Table.Cell>

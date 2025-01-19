@@ -14,6 +14,7 @@ import {
 	getTotalRevenueForSellerQueryOptions,
 } from "~/utils/query-options";
 import { DateFormatter } from "@internationalized/date";
+import { DashboardLoading } from "./dashboard.loading";
 
 export const Route = createFileRoute("/_seller-layout-id/dashboard")({
 	loader: async ({ context }) => {
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/_seller-layout-id/dashboard")({
 			crumb: "Overview",
 		};
 	},
+	pendingComponent: DashboardLoading,
 	component: RouteComponent,
 });
 

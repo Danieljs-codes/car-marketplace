@@ -1,5 +1,5 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useParams } from "@tanstack/react-router";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import { IconCart, IconChevronLeft, IconHeart } from "justd-icons";
 import {
 	Button,
@@ -13,6 +13,9 @@ import { getCarDetailsQueryOptions } from "~/utils/query-options";
 import { useState } from "react";
 import { Blurhash } from "react-blurhash";
 import { formatCurrency } from "~/utils/misc";
+import { $initializePayment } from "~/server/actions/payment";
+import { toast } from "sonner";
+import { Loader } from "ui";
 
 function CarouselImage({
 	item,
@@ -50,6 +53,36 @@ export const Listing = () => {
 		from: "/_main-layout-id/listings/$listingId",
 	});
 	const { data } = useSuspenseQuery(getCarDetailsQueryOptions(listingId));
+	const { auth } = useRouteContext({
+		from: "/_main-layout-id/listings/$listingId",
+	});
+
+	const { mutate: purchaseCar, isPending } = useMutation({
+		mutationKey: ["initializePayment"],
+		mutationFn: async () => {
+			if (!auth || !auth.user) {
+				toast.error("You need to be logged in to purchase this car");
+				return;
+			}
+
+			const response = await $initializePayment({
+				data: {
+					id: listingId,
+				},
+			});
+
+			if (response.status === "error") {
+				throw new Error(response.message);
+			}
+		},
+
+		onError: (error) => {
+			if (error.message.length > 0) {
+				toast.error(error.message);
+			}
+			return;
+		},
+	});
 
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 py-10">
@@ -145,9 +178,18 @@ export const Listing = () => {
 								<IconHeart />
 								Add to Wishlist
 							</Button>
-							<Button appearance="solid" className="w-full">
-								<IconCart />
-								Buy Now
+							<Button
+								appearance="solid"
+								className="w-full"
+								onPress={() => purchaseCar()}
+								isPending={isPending}
+							>
+								{({ isPending }) => (
+									<>
+										{isPending ? <Loader /> : <IconCart />}
+										{isPending ? "Processing" : "Buy Now"}
+									</>
+								)}
 							</Button>
 						</div>
 					</div>

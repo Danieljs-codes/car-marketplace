@@ -154,6 +154,7 @@ export const getCarDetailsQueryOptions = (id: string) =>
 	queryOptions({
 		queryKey: ["getCarDetails", id],
 		queryFn: async () => {
+			await new Promise((resolve) => setTimeout(resolve, 3000));
 			const response = await $getCarDetails({
 				data: { id },
 			});
