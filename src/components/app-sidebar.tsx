@@ -65,7 +65,10 @@ export default function AppSidebar({
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
-				<Link className="flex items-center gap-x-2 group-data-[collapsible=dock]:size-10 group-data-[collapsible=dock]:justify-center">
+				<Link
+					className="flex items-center gap-x-2 group-data-[collapsible=dock]:size-10 group-data-[collapsible=dock]:justify-center"
+					href="/"
+				>
 					{!collapsed ? (
 						<Logo className="w-28 h-auto" />
 					) : (

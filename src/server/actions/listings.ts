@@ -45,7 +45,7 @@ export const $getCarDetails = createServerFn({ method: "GET" })
 			.where(eq(schema.carListings.id, data.id))
 			.execute();
 
-		if (!listing.length) {
+		if (!listing.length || listing[0].status !== "active") {
 			throw notFound();
 		}
 

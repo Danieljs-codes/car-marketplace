@@ -17,6 +17,7 @@ import {
 	IconFolderDelete,
 	IconPencilBox,
 } from "justd-icons";
+import { ListingsLoading } from "./listings.loading";
 
 const listingsSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
@@ -36,12 +37,13 @@ export const Route = createFileRoute("/_seller-layout-id/listings/")({
 		};
 	},
 	component: RouteComponent,
+	pendingComponent: ListingsLoading,
 });
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
 	const {
-		data: { listings, page, pageSize, totalCount, totalPages },
+		data: { listings, page, pageSize },
 	} = useSuspenseQueryDeferred(
 		getPaginatedListingsForSellerQueryOptions({ page: 1, pageSize: 10 }),
 	);

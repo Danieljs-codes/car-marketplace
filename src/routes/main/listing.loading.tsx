@@ -45,8 +45,8 @@ export function ListingLoading() {
 							))}
 						</DescriptionList>
 						<div className="mt-6 flex flex-col md:flex-row gap-4">
-							<Skeleton className="h-10 w-full" />
-							<Skeleton className="h-10 w-full" />
+							<Skeleton className="h-10 w-full flex-1" />
+							<Skeleton className="h-10 w-full flex-1" />
 						</div>
 					</div>
 				</div>
