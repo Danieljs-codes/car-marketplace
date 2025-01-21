@@ -1,4 +1,8 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import { IconCart, IconChevronLeft, IconHeart } from "justd-icons";
 import {
@@ -16,6 +20,7 @@ import { formatCurrency } from "~/utils/misc";
 import { $initializePayment } from "~/server/actions/payment";
 import { toast } from "sonner";
 import { Loader } from "ui";
+import { $addToWishlist, $removeFromWishlist } from "~/server/actions/wishlist";
 
 function CarouselImage({
 	item,
@@ -49,10 +54,14 @@ function CarouselImage({
 }
 
 export const Listing = () => {
+	const queryClient = useQueryClient();
 	const { listingId } = useParams({
 		from: "/_main-layout-id/listings/$listingId",
 	});
 	const { data } = useSuspenseQuery(getCarDetailsQueryOptions(listingId));
+
+	console.log(data);
+
 	const { auth } = useRouteContext({
 		from: "/_main-layout-id/listings/$listingId",
 	});
@@ -83,6 +92,70 @@ export const Listing = () => {
 			return;
 		},
 	});
+
+	const { mutateAsync: addToWishlist, isPending: isAddingToWishlist } =
+		useMutation({
+			mutationKey: ["addToWishlist"],
+			mutationFn: async () => {
+				if (!auth || !auth.user) {
+					toast.error("You need to be logged in to add to wishlist");
+					return;
+				}
+
+				const response = await $addToWishlist({
+					data: {
+						listingId,
+					},
+				});
+
+				if (response.status === "error") {
+					throw new Error(response.message);
+				}
+			},
+
+			onError: (error) => {
+				if (error.message.length > 0) {
+					toast.error(error.message);
+				}
+				return;
+			},
+
+			onSuccess: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: getCarDetailsQueryOptions(listingId).queryKey,
+				});
+			},
+		});
+
+	const { mutateAsync: removeFromWishlist, isPending: isRemovingFromWishlist } =
+		useMutation({
+			mutationKey: ["removeFromWishlist"],
+			mutationFn: async () => {
+				if (!auth || !auth.user) {
+					toast.error("You need to be logged in to remove from wishlist");
+					return;
+				}
+
+				const response = await $removeFromWishlist({
+					data: {
+						listingId,
+					},
+				});
+			},
+
+			onError: (error) => {
+				if (error.message.length > 0) {
+					toast.error(error.message);
+				}
+				return;
+			},
+
+			onSuccess: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: getCarDetailsQueryOptions(listingId).queryKey,
+				});
+			},
+		});
 
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 py-10">
@@ -174,10 +247,48 @@ export const Listing = () => {
 							)}
 						</DescriptionList>
 						<div className="mt-6 flex flex-col md:flex-row gap-4">
-							<Button appearance="outline" className="w-full">
-								<IconHeart />
-								Add to Wishlist
-							</Button>
+							{data.isFavorite ? null : (
+								<Button
+									appearance="outline"
+									className="w-full"
+									isPending={isAddingToWishlist}
+									onPress={() =>
+										toast.promise(addToWishlist, {
+											loading: "Adding to wishlist",
+											success: "Added to wishlist",
+											error: "Failed to add to wishlist",
+										})
+									}
+								>
+									{({ isPending }) => (
+										<>
+											{isPending ? <Loader /> : <IconHeart />}
+											Add to Wishlist
+										</>
+									)}
+								</Button>
+							)}
+							{data.isFavorite ? (
+								<Button
+									appearance="outline"
+									className="w-full"
+									isPending={isRemovingFromWishlist}
+									onPress={() =>
+										toast.promise(removeFromWishlist, {
+											loading: "Removing from wishlist",
+											success: "Removed from wishlist",
+											error: "Failed to remove from wishlist",
+										})
+									}
+								>
+									{({ isPending }) => (
+										<>
+											{isPending ? <Loader /> : <IconHeart />}
+											Remove from Wishlist
+										</>
+									)}
+								</Button>
+							) : null}
 							<Button
 								appearance="solid"
 								className="w-full"
