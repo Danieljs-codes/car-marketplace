@@ -11,6 +11,7 @@ import { $getFiltersContent } from "~/server/actions/filter";
 import type { validSearchParam } from "~/server/actions/filter";
 import type { z } from "zod";
 import { $getCarDetails } from "~/server/actions/listings";
+import { $getUserPurchases } from "~/server/actions/purchases";
 
 export interface PaystackBankResponse {
 	message: string;
@@ -159,6 +160,15 @@ export const getCarDetailsQueryOptions = (id: string) =>
 				data: { id },
 			});
 
+			return response;
+		},
+	});
+
+export const getUserPurchasesQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getUserPurchases"],
+		queryFn: async () => {
+			const response = await $getUserPurchases();
 			return response;
 		},
 	});

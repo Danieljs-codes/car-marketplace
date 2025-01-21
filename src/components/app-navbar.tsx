@@ -47,7 +47,12 @@ export default function AppNavbar({
 							Browse Cars
 						</Navbar.Item>
 						<Navbar.Item href="/">Wishlist</Navbar.Item>
-						<Navbar.Item href="/">My Purchases</Navbar.Item>
+						<Navbar.Item
+							isCurrent={activeRoute === "/my-purchases"}
+							href="/my-purchases"
+						>
+							My Purchases
+						</Navbar.Item>
 					</Navbar.Section>
 					<Navbar.Section className="hidden ml-auto sm:flex">
 						<Navbar.Flex>
