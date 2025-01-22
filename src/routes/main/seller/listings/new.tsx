@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { IconChevronLeft, IconX } from "justd-icons";
@@ -21,6 +21,7 @@ import type { z } from "zod";
 import { $createListing } from "~/server/actions/seller";
 import { cn } from "~/utils/classes";
 import { kebabToSentence, validCarCategories } from "~/utils/misc";
+import { getPaginatedListingsForSellerQueryOptions } from "~/utils/query-options";
 import { createListingSchema } from "~/utils/zod-schema";
 
 export const Route = createFileRoute("/_seller-layout-id/listings/new")({
@@ -29,6 +30,8 @@ export const Route = createFileRoute("/_seller-layout-id/listings/new")({
 });
 
 function RouteComponent() {
+	const queryClient = useQueryClient();
+	const navigate = Route.useNavigate();
 	const { handleSubmit, control } = useForm<
 		z.infer<typeof createListingSchema>
 	>({
@@ -65,15 +68,29 @@ function RouteComponent() {
 			// Add images
 			if (data.images) {
 				for (const file of Array.from(data.images)) {
-					formData.append("images", file);
+					-formData.append("images", file);
 				}
 			}
 			console.log(data);
 
-			return $createListing({ data: formData });
+			const response = await $createListing({ data: formData });
+
+			return response;
 		},
-		onSuccess() {
-			toast.success("Listing created successfully");
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: getPaginatedListingsForSellerQueryOptions({
+					page: 1,
+					pageSize: 10,
+				}).queryKey,
+			});
+			toast.success("Listing created successfully", {
+				description: "Your car listing has been created and is now active",
+			});
+
+			navigate({
+				to: "/listings",
+			});
 		},
 	});
 

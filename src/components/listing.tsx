@@ -247,48 +247,58 @@ export const Listing = () => {
 							)}
 						</DescriptionList>
 						<div className="mt-6 flex flex-col md:flex-row gap-4">
-							{data.isFavorite ? null : (
+							{auth?.user ? (
+								data.isFavorite ? (
+									<Button
+										appearance="outline"
+										className="w-full"
+										isPending={isRemovingFromWishlist}
+										onPress={() =>
+											toast.promise(removeFromWishlist, {
+												loading: "Removing from wishlist",
+												success: "Removed from wishlist",
+												error: "Failed to remove from wishlist",
+											})
+										}
+									>
+										{({ isPending }) => (
+											<>
+												{isPending ? <Loader /> : <IconHeart />}
+												Remove from Wishlist
+											</>
+										)}
+									</Button>
+								) : (
+									<Button
+										appearance="outline"
+										className="w-full"
+										isPending={isAddingToWishlist}
+										onPress={() =>
+											toast.promise(addToWishlist, {
+												loading: "Adding to wishlist",
+												success: "Added to wishlist",
+												error: "Failed to add to wishlist",
+											})
+										}
+									>
+										{({ isPending }) => (
+											<>
+												{isPending ? <Loader /> : <IconHeart />}
+												Add to Wishlist
+											</>
+										)}
+									</Button>
+								)
+							) : (
 								<Button
 									appearance="outline"
 									className="w-full"
-									isPending={isAddingToWishlist}
-									onPress={() =>
-										toast.promise(addToWishlist, {
-											loading: "Adding to wishlist",
-											success: "Added to wishlist",
-											error: "Failed to add to wishlist",
-										})
-									}
+									onPress={() => addToWishlist()}
 								>
-									{({ isPending }) => (
-										<>
-											{isPending ? <Loader /> : <IconHeart />}
-											Add to Wishlist
-										</>
-									)}
+									<IconHeart />
+									Add to Wishlist
 								</Button>
 							)}
-							{data.isFavorite ? (
-								<Button
-									appearance="outline"
-									className="w-full"
-									isPending={isRemovingFromWishlist}
-									onPress={() =>
-										toast.promise(removeFromWishlist, {
-											loading: "Removing from wishlist",
-											success: "Removed from wishlist",
-											error: "Failed to remove from wishlist",
-										})
-									}
-								>
-									{({ isPending }) => (
-										<>
-											{isPending ? <Loader /> : <IconHeart />}
-											Remove from Wishlist
-										</>
-									)}
-								</Button>
-							) : null}
 							<Button
 								appearance="solid"
 								className="w-full"

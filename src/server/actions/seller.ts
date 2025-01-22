@@ -350,12 +350,17 @@ export const $createListing = createServerFn({
 			status: "active",
 		});
 
-		throw setCookieAndRedirect({
-			intent: "success",
-			message: "Listing created successfully",
-			description: "Your car listing has been created and is now active",
-			to: "/listings",
-		});
+		// throw setCookieAndRedirect({
+		// 	intent: "success",
+		// 	message: "Listing created successfully",
+		// 	description: "Your car listing has been created and is now active",
+		// 	to: "/listings",
+		// });
+
+		return {
+			status: "success" as const,
+			message: "New listing created successfully",
+		};
 	});
 
 export const $getPaginatedOrdersForSeller = createServerFn({
