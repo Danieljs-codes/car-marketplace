@@ -74,8 +74,6 @@ function RouteComponent() {
 
 			const response = await $createListing({ data: formData });
 
-			console.log(response);
-
 			return response;
 		},
 		onSuccess: async () => {

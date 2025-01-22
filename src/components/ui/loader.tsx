@@ -175,7 +175,7 @@ const LOADERS = {
 	spin: Spin,
 };
 
-const DEFAULT_SPINNER = "ring";
+const DEFAULT_SPINNER: keyof typeof LOADERS = "spin";
 
 interface LoaderProps
 	extends Omit<
