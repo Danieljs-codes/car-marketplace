@@ -71,9 +71,10 @@ function RouteComponent() {
 					-formData.append("images", file);
 				}
 			}
-			console.log(data);
 
 			const response = await $createListing({ data: formData });
+
+			console.log(response);
 
 			return response;
 		},
