@@ -13,6 +13,8 @@ import type { authClient } from "~/utils/auth-client";
 import { Link, useLocation } from "@tanstack/react-router";
 import { getAvatarInitials } from "~/utils/misc";
 import type schema from "~/server/db/schema";
+import { useState } from "react";
+import { SearchCommandMenu } from "./search-command-menu";
 
 type Auth =
 	| (typeof authClient.$Infer.Session & {
@@ -28,6 +30,7 @@ export default function AppNavbar({
 	auth: Auth;
 }) {
 	const activeRoute = useLocation().pathname;
+	const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
 
 	return (
 		<>
@@ -65,6 +68,7 @@ export default function AppNavbar({
 								appearance="plain"
 								size="square-petite"
 								aria-label="Search for products"
+								onPress={() => setIsCommandMenuOpen(true)}
 							>
 								<IconSearch />
 							</Button>
@@ -118,16 +122,11 @@ export default function AppNavbar({
 								appearance="plain"
 								size="square-petite"
 								aria-label="Search for products"
+								onPress={() => setIsCommandMenuOpen(true)}
 							>
 								<IconSearch />
 							</Button>
-							{/* <Button
-								appearance="plain"
-								size="square-petite"
-								aria-label="Your Bag"
-							>
-								<IconShoppingBag />
-							</Button> */}
+
 							<ThemeSwitcher appearance="plain" />
 						</Navbar.Flex>
 						<Separator orientation="vertical" className="mr-3 ml-1 h-6" />
@@ -159,6 +158,10 @@ export default function AppNavbar({
 
 				<Navbar.Inset>{children}</Navbar.Inset>
 			</Navbar>
+			<SearchCommandMenu
+				isOpen={isCommandMenuOpen}
+				onOpenChange={setIsCommandMenuOpen}
+			/>
 		</>
 	);
 }

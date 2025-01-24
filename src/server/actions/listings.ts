@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/start";
 import { z } from "zod";
 import schema from "../db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 import { db } from "../db";
 import { notFound } from "@tanstack/react-router";
 
@@ -63,4 +63,26 @@ export const $getCarDetails = createServerFn({ method: "GET" })
 			price: carDetails.price / 100, // Convert from kobo to naira
 			isFavorite: !!carDetails.isFavorite,
 		};
+	});
+
+export const $searchCarListings = createServerFn({ method: "GET" })
+	.validator(
+		z.object({
+			query: z.string().min(1),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const query = data.query.toLowerCase();
+		const listings = await db
+			.select({
+				id: schema.carListings.id,
+				make: schema.carListings.make,
+				year: schema.carListings.year,
+				model: schema.carListings.model,
+				images: schema.carListings.images,
+			})
+			.from(schema.carListings)
+			.where(ilike(schema.carListings.make, `%${query}%`));
+
+		return listings;
 	});
