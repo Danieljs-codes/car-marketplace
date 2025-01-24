@@ -253,6 +253,7 @@ export const Listing = () => {
 										appearance="outline"
 										className="w-full"
 										isPending={isRemovingFromWishlist}
+										isDisabled={data.status === "sold"}
 										onPress={() =>
 											toast.promise(removeFromWishlist, {
 												loading: "Removing from wishlist",
@@ -273,6 +274,7 @@ export const Listing = () => {
 										appearance="outline"
 										className="w-full"
 										isPending={isAddingToWishlist}
+										isDisabled={data.status === "sold"}
 										onPress={() =>
 											toast.promise(addToWishlist, {
 												loading: "Adding to wishlist",
@@ -293,6 +295,7 @@ export const Listing = () => {
 								<Button
 									appearance="outline"
 									className="w-full"
+									isDisabled={data.status === "sold"}
 									onPress={() => addToWishlist()}
 								>
 									<IconHeart />
@@ -304,11 +307,16 @@ export const Listing = () => {
 								className="w-full"
 								onPress={() => purchaseCar()}
 								isPending={isPending}
+								isDisabled={data.status === "sold"}
 							>
 								{({ isPending }) => (
 									<>
 										{isPending ? <Loader /> : <IconCart />}
-										{isPending ? "Processing" : "Buy Now"}
+										{data.status === "sold"
+											? "Sold Out"
+											: isPending
+												? "Processing"
+												: "Buy Now"}
 									</>
 								)}
 							</Button>
