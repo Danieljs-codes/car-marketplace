@@ -18,6 +18,7 @@ import { Route as mainLayoutImport } from './routes/main/layout'
 import { Route as authLayoutImport } from './routes/auth/layout'
 import { Route as mainSellerOrdersImport } from './routes/main/seller/orders'
 import { Route as mainSellerDashboardImport } from './routes/main/seller/dashboard'
+import { Route as mainWishlistImport } from './routes/main/wishlist'
 import { Route as mainMyPurchasesImport } from './routes/main/my-purchases'
 import { Route as mainBrowseCarsImport } from './routes/main/browse-cars'
 import { Route as mainBecomeSellerImport } from './routes/main/become-seller'
@@ -68,6 +69,12 @@ const mainSellerDashboardRoute = mainSellerDashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => mainSellerLayoutRoute,
+} as any)
+
+const mainWishlistRoute = mainWishlistImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => mainLayoutRoute,
 } as any)
 
 const mainMyPurchasesRoute = mainMyPurchasesImport.update({
@@ -199,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainMyPurchasesImport
       parentRoute: typeof mainLayoutImport
     }
+    '/_main-layout-id/wishlist': {
+      id: '/_main-layout-id/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof mainWishlistImport
+      parentRoute: typeof mainLayoutImport
+    }
     '/_seller-layout-id/dashboard': {
       id: '/_seller-layout-id/dashboard'
       path: '/dashboard'
@@ -272,6 +286,7 @@ interface mainLayoutRouteChildren {
   mainBecomeSellerRoute: typeof mainBecomeSellerRoute
   mainBrowseCarsRoute: typeof mainBrowseCarsRoute
   mainMyPurchasesRoute: typeof mainMyPurchasesRoute
+  mainWishlistRoute: typeof mainWishlistRoute
   mainListingRoute: typeof mainListingRoute
   mainPaymentRoute: typeof mainPaymentRoute
 }
@@ -281,6 +296,7 @@ const mainLayoutRouteChildren: mainLayoutRouteChildren = {
   mainBecomeSellerRoute: mainBecomeSellerRoute,
   mainBrowseCarsRoute: mainBrowseCarsRoute,
   mainMyPurchasesRoute: mainMyPurchasesRoute,
+  mainWishlistRoute: mainWishlistRoute,
   mainListingRoute: mainListingRoute,
   mainPaymentRoute: mainPaymentRoute,
 }
@@ -328,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/become-seller': typeof mainBecomeSellerRoute
   '/browse-cars': typeof mainBrowseCarsRoute
   '/my-purchases': typeof mainMyPurchasesRoute
+  '/wishlist': typeof mainWishlistRoute
   '/dashboard': typeof mainSellerDashboardRoute
   '/listings': typeof SellerLayoutIdListingsRouteWithChildren
   '/orders': typeof mainSellerOrdersRoute
@@ -345,6 +362,7 @@ export interface FileRoutesByTo {
   '/become-seller': typeof mainBecomeSellerRoute
   '/browse-cars': typeof mainBrowseCarsRoute
   '/my-purchases': typeof mainMyPurchasesRoute
+  '/wishlist': typeof mainWishlistRoute
   '/dashboard': typeof mainSellerDashboardRoute
   '/orders': typeof mainSellerOrdersRoute
   '/listings': typeof mainSellerListingsListingsRoute
@@ -364,6 +382,7 @@ export interface FileRoutesById {
   '/_main-layout-id/become-seller': typeof mainBecomeSellerRoute
   '/_main-layout-id/browse-cars': typeof mainBrowseCarsRoute
   '/_main-layout-id/my-purchases': typeof mainMyPurchasesRoute
+  '/_main-layout-id/wishlist': typeof mainWishlistRoute
   '/_seller-layout-id/dashboard': typeof mainSellerDashboardRoute
   '/_seller-layout-id/listings': typeof SellerLayoutIdListingsRouteWithChildren
   '/_seller-layout-id/orders': typeof mainSellerOrdersRoute
@@ -383,6 +402,7 @@ export interface FileRouteTypes {
     | '/become-seller'
     | '/browse-cars'
     | '/my-purchases'
+    | '/wishlist'
     | '/dashboard'
     | '/listings'
     | '/orders'
@@ -399,6 +419,7 @@ export interface FileRouteTypes {
     | '/become-seller'
     | '/browse-cars'
     | '/my-purchases'
+    | '/wishlist'
     | '/dashboard'
     | '/orders'
     | '/listings'
@@ -416,6 +437,7 @@ export interface FileRouteTypes {
     | '/_main-layout-id/become-seller'
     | '/_main-layout-id/browse-cars'
     | '/_main-layout-id/my-purchases'
+    | '/_main-layout-id/wishlist'
     | '/_seller-layout-id/dashboard'
     | '/_seller-layout-id/listings'
     | '/_seller-layout-id/orders'
@@ -467,6 +489,7 @@ export const routeTree = rootRoute
         "/_main-layout-id/become-seller",
         "/_main-layout-id/browse-cars",
         "/_main-layout-id/my-purchases",
+        "/_main-layout-id/wishlist",
         "/_main-layout-id/listings/$listingId",
         "/_main-layout-id/payment/callback"
       ]
@@ -501,6 +524,10 @@ export const routeTree = rootRoute
     },
     "/_main-layout-id/my-purchases": {
       "filePath": "main/my-purchases.tsx",
+      "parent": "/_main-layout-id"
+    },
+    "/_main-layout-id/wishlist": {
+      "filePath": "main/wishlist.tsx",
       "parent": "/_main-layout-id"
     },
     "/_seller-layout-id/dashboard": {

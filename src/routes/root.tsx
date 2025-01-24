@@ -100,7 +100,7 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 	return (
-		<html lang="en">
+		<html lang="en" className="antialiased font-sans">
 			<head>
 				<link rel="preconnect" href="https://rsms.me/" />
 				<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />

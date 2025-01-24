@@ -89,7 +89,7 @@ export const CategoryCarousel = () => {
 							<Link
 								rel="stylesheet"
 								to="/browse-cars"
-								search={(prev) => ({ ...prev, category: name })}
+								search={(prev) => ({ ...prev, category: [name] })}
 							>
 								<Card className="flex aspect-square items-center justify-center overflow-hidden relative">
 									<img

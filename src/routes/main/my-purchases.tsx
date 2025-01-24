@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { IconMoneybag, IconShoppingBag, IconCar } from "justd-icons";
 import { Badge, Card, Heading, Table, Skeleton } from "ui";
+import { $validateLoggedInUser } from "~/server/actions/auth";
 import { formatCurrency } from "~/utils/misc";
 import { getUserPurchasesQueryOptions } from "~/utils/query-options";
 import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
@@ -74,7 +75,8 @@ function LoadingState() {
 }
 
 export const Route = createFileRoute("/_main-layout-id/my-purchases")({
-	loader: ({ context }) => {
+	loader: async ({ context }) => {
+		await $validateLoggedInUser();
 		context.queryClient.ensureQueryData(getUserPurchasesQueryOptions());
 	},
 	component: RouteComponent,

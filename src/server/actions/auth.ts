@@ -2,7 +2,7 @@ import { createMiddleware, createServerFn } from "@tanstack/start";
 import { auth } from "~/utils/auth";
 import { signInSchema, signUpSchema } from "~/utils/zod-schema";
 import { APIError } from "better-auth/api";
-import { appendHeader, getWebRequest, setResponseHeader } from "vinxi/http";
+import { appendHeader, getWebRequest } from "vinxi/http";
 import { setCookieAndRedirect, setToastCookie } from "./misc";
 import { redirect } from "@tanstack/react-router";
 import { db } from "../db";
@@ -231,6 +231,14 @@ export const $protectSellerRoute = createServerFn({ method: "GET" })
 	.handler(async ({ context }) => {
 		return {
 			seller: context.seller,
+			user: context.auth.user,
+		};
+	});
+
+export const $validateLoggedInUser = createServerFn({ method: "GET" })
+	.middleware([validateUserMiddleware])
+	.handler(async ({ context }) => {
+		return {
 			user: context.auth.user,
 		};
 	});

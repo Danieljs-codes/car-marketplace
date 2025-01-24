@@ -46,7 +46,7 @@ export default function AppNavbar({
 						>
 							Browse Cars
 						</Navbar.Item>
-						<Navbar.Item href="/">Wishlist</Navbar.Item>
+						<Navbar.Item href="/wishlist">Wishlist</Navbar.Item>
 						<Navbar.Item
 							isCurrent={activeRoute === "/my-purchases"}
 							href="/my-purchases"
@@ -182,7 +182,7 @@ function UserMenu({ auth }: { auth: NonNullable<Auth> }) {
 					<IconDashboard />
 					Dashboard
 				</Menu.Item>
-				<Menu.Item href="/">
+				<Menu.Item href="/my-purchases">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -229,7 +229,7 @@ function UserMenu({ auth }: { auth: NonNullable<Auth> }) {
 					</svg>
 					My Purchases
 				</Menu.Item>
-				<Menu.Item href="/">
+				<Menu.Item href="/wishlist">
 					<IconShippingBagHeart />
 					My Wishlist
 				</Menu.Item>

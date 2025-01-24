@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/start";
 import { validateUserMiddleware } from "./auth";
 import { db } from "../db";
 import { carListingsTable, ordersTable } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const $getUserPurchases = createServerFn({ method: "GET" })
 	.middleware([validateUserMiddleware])
@@ -32,7 +32,7 @@ export const $getUserPurchases = createServerFn({ method: "GET" })
 				eq(ordersTable.listingId, carListingsTable.id),
 			)
 			.where(eq(ordersTable.buyerId, user.id))
-			.orderBy(ordersTable.createdAt);
+			.orderBy(desc(ordersTable.createdAt));
 
 		return purchases;
 	});

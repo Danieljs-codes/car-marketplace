@@ -12,6 +12,7 @@ import type { validSearchParam } from "~/server/actions/filter";
 import type { z } from "zod";
 import { $getCarDetails } from "~/server/actions/listings";
 import { $getUserPurchases } from "~/server/actions/purchases";
+import { $getUserWishlist } from "~/server/actions/wishlist";
 
 export interface PaystackBankResponse {
 	message: string;
@@ -169,6 +170,24 @@ export const getUserPurchasesQueryOptions = () =>
 		queryKey: ["getUserPurchases"],
 		queryFn: async () => {
 			const response = await $getUserPurchases();
+			return response;
+		},
+	});
+
+export const getUserWishlistQueryOptions = ({
+	page,
+	limit,
+}: { page: number; limit: number }) =>
+	queryOptions({
+		queryKey: ["getUserWishlist", page, limit],
+		queryFn: async () => {
+			const response = await $getUserWishlist({
+				data: {
+					page,
+					limit,
+				},
+			});
+
 			return response;
 		},
 	});

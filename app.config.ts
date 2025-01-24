@@ -16,6 +16,7 @@ const routes = rootRoute("root.tsx", [
 		index("index.tsx"),
 		route("become-seller", "main/become-seller.tsx"),
 		route("/browse-cars", "main/browse-cars.tsx"),
+		route("/wishlist", "main/wishlist.tsx"),
 		route("/my-purchases", "main/my-purchases.tsx"),
 		route("listings/$listingId", "main/listing.tsx"),
 		route("payment/callback", "main/payment.tsx"),

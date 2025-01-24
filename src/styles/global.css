@@ -72,7 +72,7 @@
 
 @layer base {
 	:root {
-		font-family: var(--font-sans);
+
 		font-feature-settings: "cv11", "liga" 1, "calt" 1; /* fix for Chrome */
 		--bg: oklch(1 0 0);
 		--fg: oklch(0.141 0.005 285.823);
