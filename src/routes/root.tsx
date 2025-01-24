@@ -6,7 +6,6 @@ import {
 import { Meta, Scripts } from "@tanstack/start";
 import { useEffect, type ReactNode } from "react";
 import { Providers } from "~/components/providers";
-import globalStyle from "../styles/global.css?url";
 import { $getToastCookie } from "~/server/actions/misc";
 import { toast as showToast } from "sonner";
 import { Toast } from "ui";
@@ -28,12 +27,12 @@ export const Route = createRootRouteWithContext<{
 				title: "TanStack Start Starter",
 			},
 		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: globalStyle,
-			},
-		],
+		// links: [
+		// 	{
+		// 		rel: "stylesheet",
+		// 		href: globalStyle,
+		// 	},
+		// ],
 		scripts: import.meta.env.PROD
 			? []
 			: [
@@ -89,7 +88,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 				<link rel="preconnect" href="https://rsms.me/" />
 				<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link href={globalStyle} rel="stylesheet" />
 				<link
 					rel="preconnect"
 					href="https://fonts.gstatic.com"
