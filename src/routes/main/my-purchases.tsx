@@ -1,15 +1,84 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { IconMoneybag, IconShoppingBag, IconCar } from "justd-icons";
-import { Badge, Card, Heading, Table } from "ui";
+import { Badge, Card, Heading, Table, Skeleton } from "ui";
 import { formatCurrency } from "~/utils/misc";
 import { getUserPurchasesQueryOptions } from "~/utils/query-options";
 import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
+
+const loadingDemoArray = Array.from({ length: 5 }).map((_, i) => ({
+	id: `loading-${i}`,
+	car: {
+		year: "Loading",
+		make: "Loading",
+		model: "Loading",
+	},
+	amount: 0,
+	status: "Loading",
+	createdAt: new Date(),
+}));
+
+function LoadingState() {
+	return (
+		<div className="py-10 max-w-screen-xl mx-auto px-4">
+			<Heading className="mb-8">My Purchases</Heading>
+
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+				{Array.from({ length: 3 }).map((_, i) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					<Card key={i}>
+						<Card.Header className="flex flex-row items-center justify-between space-y-0 pb-2">
+							<Skeleton className="h-4 w-24" />
+							<Skeleton className="size-4" />
+						</Card.Header>
+						<Card.Content>
+							<Skeleton className="h-8 w-32" />
+						</Card.Content>
+					</Card>
+				))}
+			</div>
+
+			<Card>
+				<Table aria-label="Purchase History Loading">
+					<Table.Header>
+						<Table.Column isRowHeader>Order ID</Table.Column>
+						<Table.Column>Car</Table.Column>
+						<Table.Column>Price</Table.Column>
+						<Table.Column>Status</Table.Column>
+						<Table.Column>Purchase Date</Table.Column>
+					</Table.Header>
+					<Table.Body items={loadingDemoArray}>
+						{(items) => (
+							<Table.Row id={items.id}>
+								<Table.Cell>
+									<Skeleton className="h-4 w-24" />
+								</Table.Cell>
+								<Table.Cell>
+									<Skeleton className="h-4 w-48" />
+								</Table.Cell>
+								<Table.Cell>
+									<Skeleton className="h-4 w-24" />
+								</Table.Cell>
+								<Table.Cell>
+									<Skeleton className="h-6 w-20" />
+								</Table.Cell>
+								<Table.Cell>
+									<Skeleton className="h-4 w-32" />
+								</Table.Cell>
+							</Table.Row>
+						)}
+					</Table.Body>
+				</Table>
+			</Card>
+		</div>
+	);
+}
 
 export const Route = createFileRoute("/_main-layout-id/my-purchases")({
 	loader: ({ context }) => {
 		context.queryClient.ensureQueryData(getUserPurchasesQueryOptions());
 	},
 	component: RouteComponent,
+	pendingComponent: LoadingState,
 });
 
 function RouteComponent() {

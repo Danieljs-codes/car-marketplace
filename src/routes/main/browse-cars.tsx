@@ -31,6 +31,7 @@ import { Link } from "@tanstack/react-router";
 import { Card } from "ui";
 import { IconSpeedometer } from "~/components/icons/speedometer";
 import { Blurhash } from "react-blurhash";
+import { BrowseCarsLoading } from "~/components/loading-states/browse-cars-loading";
 
 function EmptyState() {
 	return (
@@ -92,6 +93,7 @@ export const Route = createFileRoute("/_main-layout-id/browse-cars")({
 		context.queryClient.ensureQueryData(getFilteredListingsQueryOptions(deps));
 	},
 	component: RouteComponent,
+	pendingComponent: BrowseCarsLoading,
 });
 
 function FiltersContent({

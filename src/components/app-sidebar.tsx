@@ -88,7 +88,7 @@ export default function AppSidebar({
 						</SidebarItem>
 
 						<SidebarItem
-							isCurrent={activeRoute.toLowerCase().includes("listing")}
+							isCurrent={activeRoute.toLowerCase() === "/listings"}
 							href="/listings"
 						>
 							<>
@@ -175,10 +175,11 @@ export default function AppSidebar({
 							</SidebarDisclosureTrigger>
 							<SidebarDisclosurePanel>
 								<SidebarItem
-									isCurrent={activeRoute.toLowerCase().includes("stock")}
+									isCurrent={activeRoute.toLowerCase().includes("/new")}
+									href="/listings/new"
 								>
 									<IconMinus />
-									<SidebarLabel>Stock Levels</SidebarLabel>
+									<SidebarLabel>Add New Listing</SidebarLabel>
 								</SidebarItem>
 								<SidebarItem
 									isCurrent={activeRoute.toLowerCase().includes("warehouse")}

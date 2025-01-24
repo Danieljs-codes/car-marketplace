@@ -4,17 +4,8 @@
 		"class",
 		"className",
 		"ngClass",
-		"class:list",
-		"popoverClassName",
-		"*class*"
+		".*[Cc]lass.*"
 	],
-	"tailwindCSS.experimental.classRegex": [
-		[
-			"(Classes.*=\\s*\\{(?:[^{}]*|\\{[^{}]*\\})*\\})",
-			"[\"'`]([^\"'`]*)[\"'`]"
-		]
-	],
-	"tailwindCSS.experimental.configFile": "./src/styles/global.css",
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"cSpell.words": [
 		"Subaccount",
