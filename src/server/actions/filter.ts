@@ -64,12 +64,13 @@ export const $getFiltersContent = createServerFn({ method: "GET" })
 				.select({ count: sql<number>`count(*)` })
 				.from(carListingsTable)
 				.where(and(...conditions))
-				.then(result => result[0].count)
+				.then((result) => result[0].count),
 		]);
 
 		return {
 			listings,
+			totalListingCount: totalCount,
 			totalPages: Math.ceil(totalCount / data.limit),
-			currentPage: data.page
+			currentPage: data.page,
 		};
 	});

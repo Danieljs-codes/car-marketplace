@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/start";
-import { becomeASellerSchema, createListingSchema } from "~/utils/zod-schema";
+import {
+	becomeASellerSchema,
+	createListingSchema,
+	MAX_PRICE_KOBO,
+} from "~/utils/zod-schema";
 import {
 	maybeSellerMiddleware,
 	validateSellerMiddleware,
@@ -288,6 +292,14 @@ export const $createListing = createServerFn({
 			throw new Error("Invalid image files");
 		}
 
+		if (!make || !model || !year || !condition || !price || !mileage) {
+			throw new Error("All fields are required");
+		}
+
+		if (Number(price) > MAX_PRICE_KOBO) {
+			throw new Error("Price is too high");
+		}
+
 		const validated = createListingSchema.parse({
 			make,
 			model,
@@ -313,12 +325,9 @@ export const $createListing = createServerFn({
 		const processedImages = await Promise.all(
 			data.images.map(async (file) => {
 				const processed = await processImage(file);
-				const key = `listings/${context.seller.id}/${crypto.randomUUID()}`;
 
 				const uploadResult = await uploadToStorage({
 					file,
-					key,
-					contentType: file.type,
 				});
 
 				return {

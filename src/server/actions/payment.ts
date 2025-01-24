@@ -87,10 +87,12 @@ export const $initializePayment = createServerFn({ method: "GET" })
 			},
 		});
 
+		console.log(response);
+
 		if (!response.data) {
 			return {
 				status: "error" as const,
-				message: "Payment initialization failed",
+				message: response.message,
 			};
 		}
 

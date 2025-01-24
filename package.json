@@ -8,7 +8,8 @@
 		"push": "drizzle-kit push",
 		"gen": "drizzle-kit generate",
 		"mig": "drizzle-kit migrate",
-		"studio": "drizzle-kit studio"
+		"studio": "drizzle-kit studio",
+		"seed": "bun run scripts/demo-data.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
@@ -32,6 +33,7 @@
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.1",
+		"@neondatabase/serverless": "^0.10.4",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@tailwindcss/vite": "^4.0.0-beta.8",
 		"@tanstack/react-query": "^5.62.8",
@@ -47,7 +49,7 @@
 		"better-auth": "^1.1.1",
 		"blurhash": "^2.0.5",
 		"dotenv": "^16.4.7",
-		"drizzle-orm": "^0.38.2",
+		"drizzle-orm": "^0.38.4",
 		"embla-carousel-react": "^8.5.2",
 		"justd-icons": "^1.10.20",
 		"motion": "^11.15.0",

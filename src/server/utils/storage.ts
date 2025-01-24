@@ -2,12 +2,8 @@ import { utapi } from "~server/uploadthing";
 
 export async function uploadToStorage({
 	file,
-	key,
-	contentType,
 }: {
 	file: File;
-	key: string;
-	contentType: string;
 }) {
 	const result = await utapi.uploadFiles(file);
 

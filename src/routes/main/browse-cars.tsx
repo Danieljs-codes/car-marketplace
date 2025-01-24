@@ -16,6 +16,7 @@ import {
 	DisclosurePanel,
 	DisclosureTrigger,
 	Sheet,
+	Loader,
 } from "ui";
 import { z } from "zod";
 import {
@@ -202,7 +203,7 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
-	const { data } = useSuspenseQueryDeferred(
+	const { data, isSuspending } = useSuspenseQueryDeferred(
 		getFilteredListingsQueryOptions(search),
 	);
 
@@ -322,9 +323,12 @@ function RouteComponent() {
 					/>
 				</div>
 				<div className="space-y-4">
-					<div className="text-sm text-muted-fg">
-						{data.listings.length}{" "}
-						{data.listings.length === 1 ? "listing" : "listings"} found
+					<div className="flex items-center justify-between">
+						<div className="text-sm text-muted-fg">
+							{data.totalListingCount}{" "}
+							{data.totalListingCount === 1 ? "listing" : "listings"} found
+						</div>
+						{isSuspending ? <Loader className="size-4" /> : null}
 					</div>
 					{data.listings.length === 0 ? (
 						<EmptyState />
@@ -409,7 +413,10 @@ function RouteComponent() {
 							<div className="flex justify-between gap-2 mt-4 md:mt-8">
 								<Button
 									appearance="outline"
-									onPress={() => handlePageChange(data.currentPage - 1)}
+									onPress={() => {
+										window.scrollTo(0, 0);
+										handlePageChange(data.currentPage - 1);
+									}}
 									isDisabled={data.currentPage <= 1}
 									size="small"
 								>
@@ -418,7 +425,10 @@ function RouteComponent() {
 								</Button>
 								<Button
 									appearance="outline"
-									onPress={() => handlePageChange(data.currentPage + 1)}
+									onPress={() => {
+										window.scrollTo(0, 0);
+										handlePageChange(data.currentPage + 1);
+									}}
 									isDisabled={data.currentPage >= data.totalPages}
 									size="small"
 								>
