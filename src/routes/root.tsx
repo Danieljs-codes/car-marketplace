@@ -29,26 +29,10 @@ export const Route = createRootRouteWithContext<{
 			},
 		],
 		links: [
-			// {
-			// 	rel: "icon",
-			// 	href: "/favicon.ico",
-			// },
 			{
 				rel: "stylesheet",
 				href: globalStyle,
 			},
-			// {
-			// 	rel: "stylesheet",
-			// 	href: fontsourceInter,
-			// },
-			// {
-			// 	rel: "stylesheet",
-			// 	href: fontsourceJetBrainsMono,
-			// },
-			// {
-			// 	rel: "stylesheet",
-			// 	href: fontsourceNotoSansTC,
-			// },
 		],
 		scripts: import.meta.env.PROD
 			? []

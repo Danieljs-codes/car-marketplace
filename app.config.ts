@@ -39,6 +39,7 @@ const app = defineConfig({
 	server: {
 		preset: "vercel",
 	},
+
 	routers: {
 		api: {
 			entry: join(config.appDirectory, "entry-api.ts"),
@@ -68,6 +69,7 @@ const app = defineConfig({
 				"%%tsrExportStart%%{ GET: ({ request, params }) => { return json({ message:'Hello \"%%tsrPath%%\"!' }) }}%%tsrExportEnd%%\n",
 			].join(""),
 		},
+		autoCodeSplitting: true,
 	},
 	vite: {
 		plugins: [
