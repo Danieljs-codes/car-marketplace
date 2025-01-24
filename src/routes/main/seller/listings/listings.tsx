@@ -98,7 +98,7 @@ function RouteComponent() {
 						>
 							{(item) => (
 								<Table.Row id={item.id}>
-									<Table.Cell>{item.id}</Table.Cell>
+									<Table.Cell className="font-mono">{item.id}</Table.Cell>
 									<Table.Cell className="font-medium">
 										{formatCurrency({ amount: item.price })}
 									</Table.Cell>
