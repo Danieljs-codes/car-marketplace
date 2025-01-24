@@ -93,6 +93,7 @@ export const SearchCommandMenu = ({
 			shortcut="/"
 			inputValue={searchQuery}
 			onInputChange={setSearchQuery}
+			isBlurred
 		>
 			<CommandMenu.Search placeholder="Search for products" />
 			<CommandMenu.List className="scrollbar-hidden" items={data}>
@@ -102,6 +103,7 @@ export const SearchCommandMenu = ({
 						textValue={`${car.make} ${car.model} ${car.year}`}
 						onAction={() => {
 							onOpenChange(false);
+							setSearchQuery("");
 							navigate({
 								to: "/listings/$listingId",
 								params: { listingId: car.id },

@@ -36,6 +36,9 @@ const routes = rootRoute("root.tsx", [
 ]);
 
 const app = defineConfig({
+	server: {
+		preset: "vercel",
+	},
 	routers: {
 		api: {
 			entry: join(config.appDirectory, "entry-api.ts"),
