@@ -10,7 +10,7 @@ import { $getToastCookie } from "~/server/actions/misc";
 import { toast as showToast } from "sonner";
 import { Toast } from "ui";
 import type { QueryClient } from "@tanstack/react-query";
-import "../styles/global.css";
+import globalCss from "../styles/global.css?url";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -28,12 +28,12 @@ export const Route = createRootRouteWithContext<{
 				title: "TanStack Start Starter",
 			},
 		],
-		// links: [
-		// 	{
-		// 		rel: "stylesheet",
-		// 		href: globalStyle,
-		// 	},
-		// ],
+		links: [
+			{
+				rel: "stylesheet",
+				href: globalCss,
+			},
+		],
 		scripts: import.meta.env.PROD
 			? []
 			: [
