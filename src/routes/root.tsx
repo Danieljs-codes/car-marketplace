@@ -10,6 +10,7 @@ import { $getToastCookie } from "~/server/actions/misc";
 import { toast as showToast } from "sonner";
 import { Toast } from "ui";
 import type { QueryClient } from "@tanstack/react-query";
+import "../styles/global.css";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
