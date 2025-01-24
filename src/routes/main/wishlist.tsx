@@ -1,14 +1,20 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+	useSuspenseQuery,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { IconHeart, IconLocation, IconOpenLink2 } from "justd-icons";
-import { buttonStyles, Card, Heading } from "ui";
+import { buttonStyles, Card, Heading, Button, Loader } from "ui";
 import { z } from "zod";
 import { IconSpeedometer } from "~/components/icons/speedometer";
 import { getUserWishlistQueryOptions } from "~/utils/query-options";
 import { formatCurrency } from "~/utils/misc";
 import { Blurhash } from "react-blurhash";
+import { $removeFromWishlist } from "~/server/actions/wishlist";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_main-layout-id/wishlist")({
 	validateSearch: zodValidator(
@@ -25,9 +31,25 @@ export const Route = createFileRoute("/_main-layout-id/wishlist")({
 });
 
 function RouteComponent() {
+	const queryClient = useQueryClient();
 	const search = Route.useSearch();
 	const { data } = useSuspenseQuery(getUserWishlistQueryOptions(search));
 	const hasItems = data.items.length > 0;
+
+	const { mutateAsync: removeFromWishlist, isPending: isRemovingFromWishlist } =
+		useMutation({
+			mutationFn: async (listingId: string) => {
+				const response = await $removeFromWishlist({
+					data: { listingId },
+				});
+				return response;
+			},
+			onSuccess: () => {
+				queryClient.invalidateQueries({
+					queryKey: getUserWishlistQueryOptions(search).queryKey,
+				});
+			},
+		});
 
 	if (!hasItems) {
 		return (
@@ -114,13 +136,33 @@ function RouteComponent() {
 									<span>•</span>
 									<span className="capitalize">{listing.fuelType}</span>
 								</div>
-								<div className="flex justify-end mt-4">
+								<div className="flex justify-end items-center gap-2 mt-4">
+									<Button
+										appearance="outline"
+										intent="danger"
+										size="small"
+										isPending={isRemovingFromWishlist}
+										onPress={() =>
+											toast.promise(removeFromWishlist(listing.id), {
+												loading: "Removing from wishlist...",
+												success: "Removed from wishlist",
+												error: "Failed to remove from wishlist",
+											})
+										}
+									>
+										{({ isPending }) => (
+											<>
+												{isPending ? <Loader /> : <IconHeart />}
+												Remove
+											</>
+										)}
+									</Button>
 									<Link
 										to="/listings/$listingId"
 										params={{ listingId: listing.id }}
 										className={buttonStyles({
 											intent: "secondary",
-											appearance: "outline",
+
 											size: "small",
 										})}
 									>

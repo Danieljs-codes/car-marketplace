@@ -46,7 +46,12 @@ export default function AppNavbar({
 						>
 							Browse Cars
 						</Navbar.Item>
-						<Navbar.Item href="/wishlist">Wishlist</Navbar.Item>
+						<Navbar.Item
+							href="/wishlist"
+							isCurrent={activeRoute.includes("/wishlist")}
+						>
+							Wishlist
+						</Navbar.Item>
 						<Navbar.Item
 							isCurrent={activeRoute === "/my-purchases"}
 							href="/my-purchases"
