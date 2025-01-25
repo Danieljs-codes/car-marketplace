@@ -2,7 +2,6 @@ import { join } from "node:path";
 
 import { defineConfig } from "@tanstack/start/config";
 import viteTsConfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
 import { rootRoute, route, index, layout } from "@tanstack/virtual-file-routes";
 import { envOnlyMacros } from "vite-env-only";
 
@@ -77,7 +76,6 @@ const app = defineConfig({
 				projects: ["./tsconfig.json"],
 			}),
 			envOnlyMacros(),
-			tailwindcss(),
 		],
 	},
 });
