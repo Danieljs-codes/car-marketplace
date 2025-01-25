@@ -134,7 +134,6 @@ export default function AppSidebar({
 						</SidebarItem>
 					</SidebarSection>
 
-					{/* TODO: Remove it or replace it with something else */}
 					<SidebarDisclosureGroup defaultExpandedKeys={[1]}>
 						<SidebarDisclosure id={1}>
 							<SidebarDisclosureTrigger>

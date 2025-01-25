@@ -79,7 +79,7 @@ export const $initializePayment = createServerFn({ method: "GET" })
 			currency: "NGN",
 			subaccount: listing.paystackSubaccountId,
 			transaction_charge: listing.price * 0.02,
-			callback_url: "http://localhost:3000/payment/callback",
+			callback_url: `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
 			metadata: {
 				listingId: listing.id,
 				sellerId: listing.sellerId,
@@ -165,7 +165,6 @@ export const $verifyPayment = createServerFn({ method: "GET" })
 		throw setCookieAndRedirect({
 			intent: "success",
 			message: "Payment successful",
-			// TODO: Redirect to my purchases
-			to: "/browse-cars",
+			to: "/my-purchases",
 		});
 	});
