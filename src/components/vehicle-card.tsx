@@ -1,6 +1,7 @@
 import { IconHeart, IconMap } from "justd-icons";
 import { Button } from "./ui/button";
 import { formatCurrency } from "~/utils/misc";
+import { FeaturedVehicleImage } from "./featured-vehicle-image";
 
 type VehicleCardProps = {
 	title: string;
@@ -9,6 +10,8 @@ type VehicleCardProps = {
 	location: string;
 	image: string;
 	year: number;
+	transmission: "automatic" | "manual";
+	hash: string;
 };
 
 const VehicleCard = ({
@@ -18,11 +21,13 @@ const VehicleCard = ({
 	location,
 	image,
 	year,
+	transmission,
+	hash,
 }: VehicleCardProps) => {
 	return (
 		<div className="bg-card rounded-lg overflow-hidden border border-border">
 			<div className="relative aspect-[16/9] isolate">
-				<img src={image} alt={title} className="object-cover w-full h-full" />
+				<FeaturedVehicleImage image={image} alt={title} hash={hash} />
 				<Button
 					size="square-petite"
 					className="absolute top-2 right-2"
@@ -33,11 +38,13 @@ const VehicleCard = ({
 				</Button>
 			</div>
 			<div className="p-4">
-				<h3 className="font-semibold text-lg mb-2">{title}</h3>
+				<h3 className="font-semibold text-lg mb-2 truncate">{title}</h3>
 				<div className="flex items-center gap-2 text-muted-fg text-sm mb-2">
 					<span>{year}</span>
 					<span>•</span>
-					<span>{mileage}</span>
+					<span>{`${mileage}km`}</span>
+					<span>•</span>
+					<span>{transmission}</span>
 				</div>
 				<div className="flex items-center gap-1 text-sm text-muted-fg mb-3">
 					<IconMap className="w-4 h-4" />

@@ -104,3 +104,11 @@ export const validCarCategories = [
 	"minivan/van",
 	"luxury car",
 ] as const;
+
+export const parseJSON = <T>(data: string | object): T => {
+	if (typeof data === "object") {
+		return data as T;
+	}
+
+	return JSON.parse(data);
+};

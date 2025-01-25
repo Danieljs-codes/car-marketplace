@@ -384,7 +384,7 @@ function RouteComponent() {
 													<div className="grid grid-cols-2 gap-2 mt-3 text-sm">
 														<div className="flex items-center gap-1.5 text-muted-fg">
 															<IconSpeedometer className="w-4 h-4" />
-															<span>{listing.mileage.toLocaleString()} km</span>
+															<span>{listing.mileage.toLocaleString()}km</span>
 														</div>
 														<div className="flex items-center gap-1.5 text-muted-fg">
 															<IconLocation className="w-4 h-4" />

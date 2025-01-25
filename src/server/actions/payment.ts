@@ -160,7 +160,6 @@ export const $verifyPayment = createServerFn({ method: "GET" })
 			})
 			.where(eq(schema.carListings.id, transactionData.listingId));
 
-		// Delete the Redis entry
 		await redis.del(reference);
 
 		throw setCookieAndRedirect({

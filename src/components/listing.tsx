@@ -214,7 +214,7 @@ export const Listing = () => {
 					<div>
 						<DescriptionList className="mt-6">
 							<DescriptionList.Term>Mileage</DescriptionList.Term>
-							<DescriptionList.Details>{data.mileage}</DescriptionList.Details>
+							<DescriptionList.Details>{`${data.mileage}km`}</DescriptionList.Details>
 
 							<DescriptionList.Term>Condition</DescriptionList.Term>
 							<DescriptionList.Details className="capitalize">

@@ -10,7 +10,10 @@ import {
 import { $getFiltersContent } from "~/server/actions/filter";
 import type { validSearchParam } from "~/server/actions/filter";
 import type { z } from "zod";
-import { $getCarDetails } from "~/server/actions/listings";
+import {
+	$getCarDetails,
+	$getHomePageCarListings,
+} from "~/server/actions/listings";
 import { $getUserPurchases } from "~/server/actions/purchases";
 import { $getUserWishlist } from "~/server/actions/wishlist";
 
@@ -187,6 +190,16 @@ export const getUserWishlistQueryOptions = ({
 					limit,
 				},
 			});
+
+			return response;
+		},
+	});
+
+export const getHomePageCarListingsQueryOptions = () =>
+	queryOptions({
+		queryKey: ["getFeaturedVehicles"],
+		queryFn: async () => {
+			const response = await $getHomePageCarListings();
 
 			return response;
 		},
