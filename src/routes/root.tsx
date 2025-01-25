@@ -11,6 +11,8 @@ import { toast as showToast } from "sonner";
 import { Toast } from "ui";
 import type { QueryClient } from "@tanstack/react-query";
 import globalCss from "../styles/global.css?url";
+import faviconLight from "../assets/favicon-light.svg";
+import faviconDark from "../assets/favicon-dark.svg";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -25,13 +27,23 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "Spherule - A new way to buy and sell cars",
 			},
 		],
 		links: [
 			{
 				rel: "stylesheet",
 				href: globalCss,
+			},
+			{
+				rel: "icon",
+				href: faviconLight,
+				media: "(prefers-color-scheme: light)",
+			},
+			{
+				rel: "icon",
+				href: faviconDark,
+				media: "(prefers-color-scheme: dark)",
 			},
 		],
 		scripts: import.meta.env.PROD
