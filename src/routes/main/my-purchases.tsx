@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { IconMoneybag, IconShoppingBag, IconCar } from "justd-icons";
-import { Badge, Card, Heading, Table, Skeleton } from "ui";
+import { Badge, Card, Heading, Table, Skeleton, buttonStyles } from "ui";
 import { $validateLoggedInUser } from "~/server/actions/auth";
 import { formatCurrency } from "~/utils/misc";
 import { getUserPurchasesQueryOptions } from "~/utils/query-options";
@@ -144,7 +144,26 @@ function RouteComponent() {
 						<Table.Column>Status</Table.Column>
 						<Table.Column>Purchase Date</Table.Column>
 					</Table.Header>
-					<Table.Body items={data}>
+					<Table.Body
+						renderEmptyState={() => (
+							<div className="flex flex-col py-4 justify-center items-center">
+								<Heading level={3} className="mb-1.5">
+									No purchases yet
+								</Heading>
+								<p className="text-muted-fg max-w-[50ch] text-center text-pretty">
+									You haven't made any purchases yet. When you do, they will
+									appear here.
+								</p>
+								<Link
+									className={buttonStyles({ size: "small", className: "mt-4" })}
+									to="/browse-cars"
+								>
+									Browse Cars
+								</Link>
+							</div>
+						)}
+						items={data}
+					>
 						{(purchase) => (
 							<Table.Row id={purchase.id}>
 								<Table.Cell className="font-mono">{purchase.id}</Table.Cell>

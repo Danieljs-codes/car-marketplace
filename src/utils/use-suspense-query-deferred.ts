@@ -1,6 +1,5 @@
 import { useDeferredValue } from "react";
 import { useDeepCompareMemo } from "use-deep-compare";
-import { useSpinDelay } from "spin-delay";
 
 import {
 	type DefaultError,
@@ -28,7 +27,7 @@ export function useSuspenseQueryDeferred<
 	});
 
 	// 👇 Update this 👇
-	const isSuspending = useSpinDelay(queryKey !== deferredQueryKey);
+	const isSuspending = queryKey !== deferredQueryKey;
 
 	return { ...query, isSuspending };
 }

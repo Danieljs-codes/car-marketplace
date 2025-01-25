@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Badge, Button, Card, Heading, SearchField, Table } from "ui";
 import { z } from "zod";
-import { fallback } from "@tanstack/zod-adapter";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import {
 	formatCurrency,
 	getOrderStatusBadgeIntent,
@@ -21,7 +21,7 @@ const ordersSearchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_seller-layout-id/orders")({
-	validateSearch: ordersSearchSchema,
+	validateSearch: zodValidator(ordersSearchSchema),
 	loaderDeps: ({ search: { page, pageSize, search } }) => ({
 		page,
 		pageSize,

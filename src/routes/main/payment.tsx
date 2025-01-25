@@ -9,7 +9,6 @@ export const searchParamSchema = z.object({
 
 export const Route = createFileRoute("/_main-layout-id/payment/callback")({
 	validateSearch: searchParamSchema,
-
 	beforeLoad: async ({ search }) => {
 		if (!search.reference || !search.trxref) {
 			throw redirect({ to: "/" });
