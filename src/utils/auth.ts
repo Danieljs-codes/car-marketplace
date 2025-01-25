@@ -23,6 +23,6 @@ export const auth = betterAuth({
 	trustedOrigins: [
 		"http://localhost:3000",
 		"http://192.168.250.157:3000",
-		`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
+		`https://spherule-car.vercel.app`,
 	],
 });

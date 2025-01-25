@@ -79,7 +79,7 @@ export const $initializePayment = createServerFn({ method: "GET" })
 			currency: "NGN",
 			subaccount: listing.paystackSubaccountId,
 			transaction_charge: listing.price * 0.02,
-			callback_url: `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
+			callback_url: `https://spherule-car.vercel.app`,
 			metadata: {
 				listingId: listing.id,
 				sellerId: listing.sellerId,
