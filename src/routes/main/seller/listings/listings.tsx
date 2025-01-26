@@ -1,5 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Badge, Button, buttonStyles, Card, Heading, Menu, Table } from "ui";
+import {
+	Badge,
+	Button,
+	buttonStyles,
+	Card,
+	Heading,
+	Menu,
+	Table,
+	Loader,
+} from "ui";
 import { z } from "zod";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { getPaginatedListingsForSellerQueryOptions } from "~/utils/query-options";
@@ -18,6 +27,7 @@ import {
 	IconPencilBox,
 } from "justd-icons";
 import { ListingsLoading } from "./listings.loading";
+import { cn } from "~/utils/classes";
 
 const listingsSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
@@ -42,10 +52,15 @@ export const Route = createFileRoute("/_seller-layout-id/listings/")({
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
+	const search = Route.useSearch();
 	const {
-		data: { listings, page, pageSize },
+		data: { listings, page, pageSize, totalCount, totalPages },
+		isSuspending,
 	} = useSuspenseQueryDeferred(
-		getPaginatedListingsForSellerQueryOptions({ page: 1, pageSize: 10 }),
+		getPaginatedListingsForSellerQueryOptions({
+			page: search.page, // Use search.page instead of hardcoded 1
+			pageSize: search.pageSize, // Use search.pageSize instead of hardcoded 10
+		}),
 	);
 
 	const dateFormatter = new DateFormatter("en-NG", {
@@ -69,6 +84,14 @@ function RouteComponent() {
 				</Link>
 			</div>
 			<div>
+				<div
+					className={cn(
+						"flex justify-end mb-2 opacity-0",
+						isSuspending && "opacity-100",
+					)}
+				>
+					<Loader />
+				</div>
 				<Card>
 					<Table aria-label="Listings">
 						<Table.Header>
@@ -152,19 +175,21 @@ function RouteComponent() {
 					<Button
 						size="extra-small"
 						appearance="outline"
-						isDisabled={page === 1}
-						onPress={() => navigate({ search: { page: page - 1, pageSize } })}
+						isDisabled={search.page === 1}
+						onPress={() =>
+							navigate({ search: { page: search.page - 1, pageSize } })
+						} // Use search.page instead of page
 					>
 						<IconChevronLeft />
 						Previous
 					</Button>
 					<p className="text-sm text-muted-fg">
-						Page {page} of {Math.ceil(listings.length / pageSize)}
+						Page {page} of {totalPages}
 					</p>
 					<Button
 						size="extra-small"
 						appearance="outline"
-						isDisabled={page * pageSize >= listings.length}
+						isDisabled={page * pageSize >= totalCount}
 						onPress={() => navigate({ search: { page: page + 1, pageSize } })}
 					>
 						Next
