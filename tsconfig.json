@@ -7,9 +7,15 @@
 		"skipLibCheck": true,
 		"strictNullChecks": true,
 		"paths": {
-			"ui": ["./src/components/ui/index.ts"],
-			"~/*": ["./src/*"],
-			"~server/*": ["./src/server/*"]
+			"ui": [
+				"./src/components/ui/index.ts"
+			],
+			"~/*": [
+				"./src/*"
+			],
+			"~server/*": [
+				"./src/server/*"
+			]
 		}
 	}
 }

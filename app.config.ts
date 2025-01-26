@@ -10,6 +10,10 @@ const config = {
 	autoOpenBrowser: false,
 };
 
+const ReactCompilerConfig = {
+	target: "19",
+};
+
 const routes = rootRoute("root.tsx", [
 	layout("main-layout-id", "main/layout.tsx", [
 		index("index.tsx"),
@@ -77,6 +81,11 @@ const app = defineConfig({
 			}),
 			envOnlyMacros(),
 		],
+	},
+	react: {
+		babel: {
+			plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+		},
 	},
 });
 

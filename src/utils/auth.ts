@@ -22,6 +22,7 @@ export const auth = betterAuth({
 	},
 	trustedOrigins: [
 		"http://localhost:3000",
+		"http://localhost:3001",
 		"http://192.168.250.157:3000",
 		`https://spherule-car.vercel.app`,
 	],
