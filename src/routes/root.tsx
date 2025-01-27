@@ -13,6 +13,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import globalCss from "../styles/global.css?url";
 import faviconLight from "../assets/favicon-light.svg";
 import faviconDark from "../assets/favicon-dark.svg";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -115,6 +116,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			<body>
 				<Providers>{children}</Providers>
 				<Scripts />
+				<ReactQueryDevtools initialIsOpen={false} />
 			</body>
 		</html>
 	);

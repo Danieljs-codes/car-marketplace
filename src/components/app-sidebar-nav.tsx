@@ -16,15 +16,26 @@ export default function AppSidebarNav() {
 		};
 	});
 
+	const breadcrumbsItems = [
+		{
+			href: "/dashboard",
+			label: "Dashboard",
+		},
+		...items,
+	];
+
 	return (
 		<SidebarNav>
 			<span className="flex gap-x-4 items-center">
 				<SidebarTrigger className="-mx-2" />
 				<Separator className="hidden h-6 @md:block" orientation="vertical" />
 				<Breadcrumbs className="hidden @md:flex">
-					<Breadcrumbs.Item>Home</Breadcrumbs.Item>
-					<Breadcrumbs.Item>Design System</Breadcrumbs.Item>
-					<Breadcrumbs.Item>Collections</Breadcrumbs.Item>
+					{breadcrumbsItems.map((item, index) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						<Breadcrumbs.Item key={index} href={item.href}>
+							{item.label}
+						</Breadcrumbs.Item>
+					))}
 				</Breadcrumbs>
 			</span>
 

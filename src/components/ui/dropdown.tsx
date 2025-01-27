@@ -19,7 +19,7 @@ import { Keyboard } from "./keyboard"
 const dropdownItemStyles = tv({
   base: [
     "col-span-full grid grid-cols-[auto_1fr_1.5rem_0.5rem_auto] not-has-data-[slot=dropdown-item-details]:items-center has-data-[slot=dropdown-item-details]:**:data-[slot=checked-icon]:mt-[1.5px] supports-[grid-template-columns:subgrid]:grid-cols-subgrid",
-    "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-2.5 py-1.5 forced-color:text-[Highlight] text-base text-fg outline outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]",
+    "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]",
     "**:data-[slot=avatar]:*:mr-2 **:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:mr-2 **:data-[slot=avatar]:size-6 sm:**:data-[slot=avatar]:*:size-5 sm:**:data-[slot=avatar]:size-5",
     "data-danger:**:data-[slot=icon]:text-danger/70 **:data-[slot=icon]:size-4 **:data-[slot=icon]:shrink-0 **:data-[slot=icon]:text-muted-fg data-focused:data-danger:**:data-[slot=icon]:text-danger-fg",
     "data-[slot=menu-radio]:*:data-[slot=icon]:size-3 *:data-[slot=icon]:mr-2",
@@ -47,10 +47,8 @@ const dropdownItemStyles = tv({
 
 const dropdownSectionStyles = tv({
   slots: {
-    section:
-      "first:-mt-[5px] xss3 col-span-full grid grid-cols-[auto_1fr] gap-y-0.5 after:block after:h-[4px] after:content-['']",
-    header:
-      "-top-[5px] -mb-0.5 -mx-1.5 sticky z-10 col-span-full min-w-(--trigger-width) truncate border-y bg-bg px-4 py-2 font-medium text-muted-fg text-sm supports-[-moz-appearance:none]:bg-bg [&+*]:mt-1",
+    section: "col-span-full grid grid-cols-[auto_1fr]",
+    header: "col-span-full px-2.5 py-1 font-medium text-muted-fg text-sm sm:text-xs",
   },
 })
 
@@ -85,7 +83,7 @@ const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
       {composeRenderProps(props.children, (children, { isSelected }) => (
         <>
           {isSelected && <IconCheck className="-mx-0.5 mr-2" data-slot="checked-icon" />}
-          {children}
+          {typeof children === "string" ? <DropdownLabel>{children}</DropdownLabel> : children}
         </>
       ))}
     </ListBoxItemPrimitive>

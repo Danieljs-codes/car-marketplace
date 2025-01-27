@@ -12,7 +12,6 @@ import {
 import { z } from "zod";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { getPaginatedListingsForSellerQueryOptions } from "~/utils/query-options";
-import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
 import {
 	formatCurrency,
 	getBadgeIntent,
@@ -28,6 +27,7 @@ import {
 } from "justd-icons";
 import { ListingsLoading } from "./listings.loading";
 import { cn } from "~/utils/classes";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const listingsSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
@@ -47,27 +47,35 @@ export const Route = createFileRoute("/_seller-layout-id/listings/")({
 		};
 	},
 	component: RouteComponent,
-	pendingComponent: ListingsLoading,
+	// pendingComponent: ListingsLoading,
 });
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
-	const {
-		data: { listings, page, pageSize, totalCount, totalPages },
-		isSuspending,
-	} = useSuspenseQueryDeferred(
-		getPaginatedListingsForSellerQueryOptions({
-			page: search.page, // Use search.page instead of hardcoded 1
-			pageSize: search.pageSize, // Use search.pageSize instead of hardcoded 10
+	const { data, isPending, error, isFetching } = useQuery({
+		...getPaginatedListingsForSellerQueryOptions({
+			page: search.page,
+			pageSize: search.pageSize,
 		}),
-	);
+		placeholderData: keepPreviousData,
+	});
 
 	const dateFormatter = new DateFormatter("en-NG", {
 		year: "numeric",
 		month: "long",
 		day: "2-digit",
 	});
+
+	if (isPending) {
+		return <ListingsLoading />;
+	}
+
+	if (error) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	const { listings, page, pageSize, totalCount, totalPages } = data;
 
 	return (
 		<div>
@@ -87,7 +95,7 @@ function RouteComponent() {
 				<div
 					className={cn(
 						"flex justify-end mb-2 opacity-0",
-						isSuspending && "opacity-100",
+						isFetching && data && "opacity-100",
 					)}
 				>
 					<Loader />

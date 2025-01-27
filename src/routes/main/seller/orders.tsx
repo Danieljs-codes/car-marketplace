@@ -10,9 +10,9 @@ import {
 import { DateFormatter } from "@internationalized/date";
 import { IconChevronLeft, IconChevronRight } from "justd-icons";
 import { getPaginatedOrdersForSellerQueryOptions } from "~/utils/query-options";
-import { useSuspenseQueryDeferred } from "~/utils/use-suspense-query-deferred";
 import { useState } from "react";
 import { OrdersLoading } from "./orders.loading";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const ordersSearchSchema = z.object({
 	page: fallback(z.number(), 1).default(1),
@@ -36,18 +36,32 @@ export const Route = createFileRoute("/_seller-layout-id/orders")({
 			crumb: "Orders",
 		};
 	},
-	pendingComponent: OrdersLoading,
 	component: RouteComponent,
+	errorComponent: ErrorComponent,
 });
+
+function ErrorComponent() {
+	return <div>Error</div>;
+}
 
 function RouteComponent() {
 	const { page, pageSize, search } = Route.useSearch();
 	const [searchTerm, setSearchTerm] = useState(search);
 	const navigate = Route.useNavigate();
 
-	const { data, isSuspending } = useSuspenseQueryDeferred(
-		getPaginatedOrdersForSellerQueryOptions({ page, pageSize, search }),
-	);
+	const { data, isPending, error, isFetching } = useQuery({
+		...getPaginatedOrdersForSellerQueryOptions({ page, pageSize, search }),
+		placeholderData: keepPreviousData,
+	});
+
+	if (isPending) {
+		return <OrdersLoading />;
+	}
+
+	if (error) {
+		// This would manually trigger the error boundary which is what we want
+		throw new Error("Error loading orders");
+	}
 
 	const dateFormatter = new DateFormatter("en-NG", {
 		year: "numeric",
@@ -66,7 +80,7 @@ function RouteComponent() {
 				}}
 			>
 				<SearchField
-					isPending={isSuspending}
+					isPending={isFetching && !data}
 					value={searchTerm}
 					onChange={setSearchTerm}
 					onClear={() =>
