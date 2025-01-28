@@ -4,6 +4,7 @@ import { defineConfig } from "@tanstack/start/config";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 import { rootRoute, route, index, layout } from "@tanstack/virtual-file-routes";
 import { envOnlyMacros } from "vite-env-only";
+import tailwindcss from "@tailwindcss/vite";
 
 const config = {
 	appDirectory: "src",
@@ -76,6 +77,7 @@ const app = defineConfig({
 	},
 	vite: {
 		plugins: [
+			tailwindcss(),
 			viteTsConfigPaths({
 				projects: ["./tsconfig.json"],
 			}),
