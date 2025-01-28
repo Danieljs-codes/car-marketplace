@@ -1,4 +1,5 @@
 import { NumberFormatter } from "@internationalized/number";
+import { createContext, useContext } from "react";
 export const getAvatarInitials = (name: string) => {
 	const [firstName, lastName] = name.split(" ");
 
@@ -112,3 +113,26 @@ export const parseJSON = <T>(data: string | object): T => {
 
 	return JSON.parse(data);
 };
+
+export function createContextFactory<ContextData>(options?: {
+	defaultValue?: ContextData | null;
+	errorMessage?: string;
+}) {
+	const opts = {
+		defaultValue: null,
+		errorMessage: "useContext must be used within a Provider",
+		...options,
+	};
+
+	const context = createContext<ContextData | null>(opts.defaultValue);
+
+	function useContextFactory(): ContextData {
+		const contextValue = useContext(context);
+		if (contextValue === null) {
+			throw new Error(opts.errorMessage);
+		}
+		return contextValue;
+	}
+
+	return [context.Provider, useContextFactory] as const;
+}

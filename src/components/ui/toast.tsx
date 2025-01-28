@@ -12,10 +12,10 @@ import { buttonStyles } from "./button";
 import { Loader } from "./loader";
 
 const Toast = ({ ...props }: ToasterProps) => {
-	const { theme = "system" } = useTheme();
+	const { value = "system" } = useTheme();
 	return (
 		<ToasterPrimitive
-			theme={theme as ToasterProps["theme"]}
+			theme={value as ToasterProps["theme"]}
 			className="toaster group"
 			richColors
 			icons={{

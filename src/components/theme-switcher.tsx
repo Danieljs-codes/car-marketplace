@@ -1,7 +1,7 @@
-
 import { IconCircleHalf, IconMoon, IconSun } from "justd-icons";
-import { useTheme } from "next-themes";
+
 import { Button, composeTailwindRenderProps, Tooltip } from "ui";
+import { useTheme } from "./theme-provider";
 
 export function ThemeSwitcher({
 	shape = "square",
@@ -9,7 +9,7 @@ export function ThemeSwitcher({
 	className,
 	...props
 }: React.ComponentProps<typeof Button>) {
-	const { theme, setTheme } = useTheme();
+	const { value: theme, set: setTheme } = useTheme();
 
 	const toggleTheme = () => {
 		const nextTheme =
