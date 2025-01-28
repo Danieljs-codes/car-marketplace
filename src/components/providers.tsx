@@ -3,8 +3,8 @@ import {
 	type ToOptions,
 	useRouter,
 } from "@tanstack/react-router";
-import { ThemeProvider } from "./theme-provider";
 import { RouterProvider } from "react-aria-components";
+import { ThemeProvider } from "./theme-provider";
 
 declare module "react-aria-components" {
 	interface RouterConfig {

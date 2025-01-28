@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-router";
 import { Meta, Scripts } from "@tanstack/start";
 import { useEffect, type ReactNode } from "react";
+import { Providers } from "~/components/providers";
 import { $getToastCookie } from "~/server/actions/misc";
 import { toast as showToast } from "sonner";
 import { Toast } from "ui";
@@ -112,10 +113,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 				<Meta />
 			</head>
 			<body>
-				{/* <Providers> */}
-				{children}
-
-				{/* </Providers> */}
+				<Providers>{children}</Providers>
 				<Scripts />
 				<ReactQueryDevtools initialIsOpen={false} />
 			</body>
