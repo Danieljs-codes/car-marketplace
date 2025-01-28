@@ -1,7 +1,5 @@
 import type { PropsWithChildren } from "react";
 
-import { ScriptOnce } from "@tanstack/react-router";
-import { outdent } from "outdent";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
@@ -93,7 +91,7 @@ function ThemeProvider({ children }: PropsWithChildren) {
 
 	return (
 		<ThemeContextProvider value={context}>
-			<ScriptOnce>
+			{/* <ScriptOnce>
 				{outdent`
 					function initTheme() {
 					if (typeof localStorage === 'undefined') return
@@ -118,7 +116,7 @@ function ThemeProvider({ children }: PropsWithChildren) {
 
 					initTheme()
 		`}
-			</ScriptOnce>
+			</ScriptOnce> */}
 			{children}
 		</ThemeContextProvider>
 	);
