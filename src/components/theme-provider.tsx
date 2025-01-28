@@ -50,7 +50,6 @@ function ThemeProvider({ children }: PropsWithChildren) {
 		for (const theme of themes) {
 			html.classList.remove(theme);
 		}
-		html.dataset.theme = resolvedTheme;
 		html.classList.add(resolvedTheme);
 		html.style.colorScheme = resolvedTheme;
 	}, [resolvedTheme]);
@@ -96,23 +95,29 @@ function ThemeProvider({ children }: PropsWithChildren) {
 		<ThemeContextProvider value={context}>
 			<ScriptOnce>
 				{outdent`
-          function initTheme() {
-            if (typeof localStorage === 'undefined') return
+					function initTheme() {
+					if (typeof localStorage === 'undefined') return
 
-            const localTheme = localStorage.getItem('theme')
-            const preferTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-            const resolvedTheme = localTheme === null || localTheme === 'system' ? preferTheme : localTheme
+					const localTheme = localStorage.getItem('theme')
+					const preferTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+					const resolvedTheme = localTheme === null || localTheme === 'system' ? preferTheme : localTheme
 
-            if (localTheme === null) {
-              localStorage.setItem('theme', 'system')
-            }
+					if (localTheme === null) {
+						localStorage.setItem('theme', 'system')
+					}
 
-            document.documentElement.dataset.theme = resolvedTheme
-            document.documentElement.style.colorScheme = resolvedTheme
-          }
+					const html = document.documentElement
+					const themes = ['light', 'dark']
+					for (const theme of themes) {
+						html.classList.remove(theme)
+					}
 
-          initTheme()
-        `}
+					html.style.colorScheme = resolvedTheme
+					html.classList.add(resolvedTheme)
+					}
+
+					initTheme()
+		`}
 			</ScriptOnce>
 			{children}
 		</ThemeContextProvider>
