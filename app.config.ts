@@ -5,7 +5,6 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 import { rootRoute, route, index, layout } from "@tanstack/virtual-file-routes";
 import { envOnlyMacros } from "vite-env-only";
 import tailwindcss from "@tailwindcss/vite";
-import { cloudflare } from "unenv";
 
 const config = {
 	appDirectory: "src",
@@ -38,9 +37,9 @@ const routes = rootRoute("root.tsx", [
 
 const app = defineConfig({
 	server: {
-		preset: "cloudflare-pages",
-		unenv: cloudflare,
+		preset: "vercel",
 	},
+
 	routers: {
 		api: {
 			entry: join(config.appDirectory, "entry-api.ts"),
