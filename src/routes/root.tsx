@@ -53,17 +53,16 @@ export const Route = createRootRouteWithContext<{
 					{
 						type: "module",
 						children: `
-					import RefreshRuntime from "/_build/@react-refresh"
-					RefreshRuntime.injectIntoGlobalHook(window)
-					window.$RefreshReg$ = () => {}
-					window.$RefreshSig$ = () => (type) => type
-				`,
+							import RefreshRuntime from "/_build/@react-refresh"
+							RefreshRuntime.injectIntoGlobalHook(window)
+							window.$RefreshReg$ = () => {}
+							window.$RefreshSig$ = () => (type) => type
+						`,
 					},
 				],
 	}),
 	loader: async () => {
 		const toast = await $getToastCookie();
-
 		return { toast };
 	},
 	component: RootComponent,
