@@ -60,7 +60,7 @@ export const Listing = () => {
 	});
 	const { data } = useSuspenseQuery(getCarDetailsQueryOptions(listingId));
 
-	console.log(data);
+
 
 	const { auth } = useRouteContext({
 		from: "/_main-layout-id/listings/$listingId",

@@ -106,13 +106,13 @@ export const maybeUserMiddleware = createMiddleware().server(
 	async ({ next }) => {
 		const request = getWebRequest();
 
-		console.log("Request headers", request.headers);
+		
 
 		const authData = await auth.api.getSession({
 			headers: request.headers,
 		});
 
-		console.log("Auth data", authData);
+
 
 		return next({
 			context: {

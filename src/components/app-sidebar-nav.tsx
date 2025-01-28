@@ -11,7 +11,7 @@ export default function AppSidebarNav() {
 
 	const items = matchesWithCrumbs.map(({ pathname, loaderData }) => {
 		return {
-			href: pathname as ValidRoutes,
+			href: pathname.replace(/\/$/, ""),
 			label: loaderData?.crumb,
 		};
 	});
@@ -22,7 +22,7 @@ export default function AppSidebarNav() {
 			label: "Dashboard",
 		},
 		...items,
-	];
+	] as const;
 
 	return (
 		<SidebarNav>
@@ -31,8 +31,11 @@ export default function AppSidebarNav() {
 				<Separator className="hidden h-6 @md:block" orientation="vertical" />
 				<Breadcrumbs className="hidden @md:flex">
 					{breadcrumbsItems.map((item, index) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						<Breadcrumbs.Item key={index} href={item.href}>
+						<Breadcrumbs.Item
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							key={index}
+							href={item.href as Exclude<ValidRoutes, "/listings/">}
+						>
 							{item.label}
 						</Breadcrumbs.Item>
 					))}

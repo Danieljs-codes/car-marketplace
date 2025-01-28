@@ -282,7 +282,7 @@ export const $createListing = createServerFn({
 		const category = data.get("category");
 		const images = data.getAll("images");
 
-		console.log({ images });
+
 
 		if (!images.length) {
 			throw new Error("At least one image is required");
@@ -338,7 +338,7 @@ export const $createListing = createServerFn({
 			}),
 		);
 
-		console.log({ data, seller: context.seller });
+		({ data, seller: context.seller });
 
 		// Modified insert statement
 		await db.insert(schema.carListings).values({

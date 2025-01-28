@@ -87,7 +87,6 @@ export const $initializePayment = createServerFn({ method: "GET" })
 			},
 		});
 
-		console.log(response);
 
 		if (!response.data) {
 			return {

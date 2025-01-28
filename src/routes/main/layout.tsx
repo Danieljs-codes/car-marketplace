@@ -16,8 +16,6 @@ export const Route = createFileRoute("/_main-layout-id")({
 function RouteComponent() {
 	const { auth } = Route.useRouteContext();
 
-	console.log(auth);
-
 	return (
 		<AppNavbar auth={auth}>
 			<Outlet />
