@@ -1,7 +1,6 @@
 import { IconCircleHalf, IconMoon, IconSun } from "justd-icons";
 
 import { Button, composeTailwindRenderProps, Tooltip } from "ui";
-import { useTheme } from "./theme-provider";
 
 export function ThemeSwitcher({
 	shape = "square",
@@ -9,13 +8,15 @@ export function ThemeSwitcher({
 	className,
 	...props
 }: React.ComponentProps<typeof Button>) {
-	const { value: theme, set: setTheme } = useTheme();
+	// const { value: theme, set: setTheme } = useTheme();
+	// Intentionally wanna widen the type to string
+	const theme = "dark" as string;
 
-	const toggleTheme = () => {
-		const nextTheme =
-			theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
-		setTheme(nextTheme);
-	};
+	// const toggleTheme = () => {
+	// 	const nextTheme =
+	// 		theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
+	// 	setTheme(nextTheme);
+	// };
 
 	return (
 		<Tooltip delay={0}>
@@ -28,7 +29,7 @@ export function ThemeSwitcher({
 					"**:data-[slot=icon]:text-fg",
 				)}
 				aria-label="Switch theme"
-				onPress={toggleTheme}
+				// onPress={toggleTheme}
 				{...props}
 			>
 				{theme === "light" ? (
